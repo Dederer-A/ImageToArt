@@ -128,22 +128,6 @@ Responsibilities:
 
 ---
 
-# Runtime
-
-## Bun
-
-Used for:
-
-* package management;
-* development scripts;
-* testing;
-* local tooling;
-* continuous integration.
-
-Compatibility with the `Node.js` ecosystem should be preserved.
-
----
-
 # User Interface
 
 The user interface is built using:
