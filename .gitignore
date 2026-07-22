@@ -1,0 +1,32 @@
+# Node
+node_modules/
+
+# Build
+dist/
+build/
+coverage/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Environment
+.env
+.env.*
+
+# Temporary
+tmp/
+temp/
+
+# Runtime cache
+.cache/
+
+# AI issue workspace (temporary)
+ai/issues/current/
