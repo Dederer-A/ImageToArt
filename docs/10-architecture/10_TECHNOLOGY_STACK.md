@@ -50,6 +50,18 @@ JavaScript source files should be avoided.
 
 ---
 
+# Dependency Management
+
+## pnpm
+
+The project uses pnpm to install and manage JavaScript and TypeScript dependencies.
+
+The `pnpm-lock.yaml` lockfile must be committed so that local development, continuous integration, and production builds use reproducible dependency versions.
+
+Dependency installation and project scripts should be run with pnpm.
+
+---
+
 # Frontend Framework
 
 ## Vue 3
