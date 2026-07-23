@@ -1,47 +1,70 @@
-# TECHNOLOGY STACK
+# ADR-010: Working Image Strategy
 
-**Document Type:** Informative
-**Authority:** Medium
-**Version:** 1.0
-**Status:** Active
+**Status:** Accepted
 
----
+**Date:** 2026-07-22
 
-# Purpose
-
-This document defines the implementation technologies used by the project.
-
-Unlike `00_ARCHITECTURE.md`, this document may evolve as technologies improve.
-
-Technology changes should preserve the architectural principles defined in `00_ARCHITECTURE.md`.
+**Decision Type:** Architecture
 
 ---
 
-# 3rd-Parties
+# Context
 
-| Name | Short description | Sub-components / notes |
-|---|---|---|
-| TypeScript | Required language for all application source | Strict mode; no JavaScript source. |
-| Vue 3 | Frontend framework | Composition API and `<script setup>` required. Options API should not be used. |
-| Vue I18n | Localization framework | English initially. |
-| Pinia | Application state management | Stores coordinate state; business algorithms stay outside stores. |
-| Tailwind CSS | Utility-first styling | Layout, spacing, typography, responsive behavior. |
-| shadcn-vue | Source-based generic UI primitives | Button, Input, Select, Checkbox, Switch, Slider, Tabs, Dialog, Popover, Dropdown Menu, Context Menu, Tooltip, Accordion, Scroll Area, Separator, Resizable Panels, Toast. |
-| Lucide Icons | Primary icon set for Vue | Use existing icons before adding custom icons. |
-| VueUse | Vue Composition API utilities | Keyboard/mouse, resize, clipboard, storage, measurements, reactive utilities, device capabilities. |
-| Capacitor | Web-to-native mobile packaging | Core, iOS, Android; isolates platform-specific code. |
-| pnpm | Package manager | Dependency management. |
-| Vite | Development server and production bundler | Dev server, production builds, assets. |
-| Vitest | Unit-test framework | Unit tests. |
-| Playwright | End-to-end test framework | Browser E2E tests. |
-| ESLint | Static analysis/linting | Must be clean before merging. |
-| Prettier | Automatic code formatter | Formatting automation. |
-| Git / GitHub | Version control and hosted collaboration | Issues, Projects, PRs, reviews. |
-| Tauri | Potential future desktop wrapper | Not required now; Electron is explicitly not planned. |
+The selected technology stack must provide:
 
-# Details
+* a single codebase;
+* web-first development;
+* native mobile deployment;
+* high performance;
+* excellent TypeScript support;
+* AI-friendly development;
+* long-term maintainability;
+* be free (MIT or Apache Licence prefered).
 
-## Internationalization
+---
+
+# Programming Language
+
+## TypeScript
+
+Used for all application source code.
+
+Reasons:
+
+* static typing;
+* excellent IDE support;
+* strong AI compatibility;
+* safer refactoring;
+* maintainability.
+
+JavaScript source files should be avoided.
+
+---
+
+# Frontend Framework
+
+## Vue 3
+
+The application uses Vue 3.
+
+Mandatory requirements:
+
+* Composition API
+* `<script setup>`
+* TypeScript
+
+Options API should not be used.
+
+Reasons:
+
+* excellent developer experience;
+* lightweight runtime;
+* strong TypeScript integration;
+* maintainable architecture.
+
+---
+
+# Internationalization
 
 The project uses Vue I18n for localization.
 
@@ -71,7 +94,39 @@ src/
 
 ---
 
-## User Interface
+# State Management
+
+## Pinia
+
+Pinia manages application state.
+
+Business logic should remain outside stores whenever practical.
+
+Stores should coordinate state, not implement algorithms.
+
+---
+
+# Build System
+
+## PNPM
+
+Responsibilities:
+
+* Dependencies Management
+
+
+## Vite
+
+Responsibilities:
+
+* development server;
+* production builds;
+* module bundling;
+* asset processing.
+
+---
+
+# User Interface
 
 The user interface is built using:
 
@@ -83,7 +138,11 @@ No heavy UI component framework should be introduced unless it provides substant
 
 Custom components are preferred.
 
-### shadcn-vue
+---
+
+# UI Component Library
+
+## shadcn-vue
 
 The project uses **shadcn-vue** as the foundation for generic user interface components.
 
@@ -94,9 +153,40 @@ The primary goals are:
 * improve accessibility;
 * reduce maintenance effort.
 
-Only generic UI primitives should be taken from shadcn-vue.
+Only generic UI primitives should be taken from shadcn-vue, such as:
+
+* Button
+* Input
+* Select
+* Checkbox
+* Switch
+* Slider
+* Tabs
+* Dialog
+* Popover
+* Dropdown Menu
+* Context Menu
+* Tooltip
+* Accordion
+* Scroll Area
+* Separator
+* Resizable Panels
+* Toast
 
 Application-specific components must always be implemented within the project.
+
+Examples include:
+
+* Image Viewport
+* Layer Panel
+* Layer List
+* Layer Properties
+* Operation Toolbar
+* Image Inspector
+* Histogram
+* Crop Tool
+* Grid Overlay
+* Status Bar
 
 The application should not depend on complex pre-built layouts or dashboard templates provided by external libraries.
 
@@ -104,9 +194,80 @@ UI libraries should provide building blocks, not application architecture.
 
 ---
 
-## Style / CSS
+# Icons
 
-Tailwind CSS Used as the primary styling framework for both application-specific components and shadcn-vue components.
+## Lucide Icons
+
+The project uses **Lucide Icons** as the primary icon set.
+
+Reasons:
+
+* lightweight;
+* consistent design language;
+* actively maintained;
+* excellent Vue integration;
+* large collection of commonly used icons.
+
+Icons should communicate actions clearly and consistently throughout the application.
+
+Custom icons should only be introduced when no suitable Lucide icon exists.
+
+---
+
+# Utility Libraries
+
+## VueUse
+
+The project uses **VueUse** for reusable Composition API utilities.
+
+VueUse should be preferred over custom implementations for common application functionality whenever it improves readability and maintainability.
+
+Typical use cases include:
+
+* keyboard shortcuts;
+* mouse interactions;
+* window size detection;
+* resize observers;
+* clipboard access;
+* local storage;
+* element measurements;
+* reactive utilities;
+* device capabilities.
+
+Application-specific business logic should never depend on VueUse.
+
+VueUse should remain a convenience layer for user interface and browser integration.
+
+---
+
+## Additional Libraries
+
+Third-party libraries should satisfy the following criteria before being introduced:
+
+* actively maintained;
+* widely adopted;
+* TypeScript support;
+* tree-shakeable;
+* compatible with long-term maintenance;
+* provide clear value over a custom implementation.
+
+Introducing a dependency requires evaluating its long-term maintenance cost in addition to its immediate development benefits.
+
+Dependencies should simplify the project, not increase its complexity.
+
+---
+
+# Styling
+
+The application uses a combination of:
+
+* Tailwind CSS
+* CSS Variables
+* Modern CSS features
+
+## Tailwind CSS
+
+Used as the primary styling framework for both application-specific components and shadcn-vue components.
 
 Tailwind should be used primarily for:
 
@@ -123,7 +284,7 @@ Tailwind CSS is used for application layout, spacing, typography and general sty
 
 Utility classes should be preferred for common styling tasks to improve consistency and reduce custom CSS.
 
-### CSS Variables
+## CSS Variables
 
 CSS Variables define the application's design tokens, including:
 
@@ -136,13 +297,13 @@ CSS Variables define the application's design tokens, including:
 
 Theme customization should be implemented primarily through CSS Variables.
 
-### Custom CSS
+## Custom CSS
 
 Custom CSS should be written only when utility classes cannot provide a clear or maintainable solution.
 
 Complex selectors and deeply nested rules should be avoided.
 
-### Layout
+## Layout
 
 Application layouts should use modern CSS features:
 
@@ -152,19 +313,19 @@ Application layouts should use modern CSS features:
 
 Layouts must adapt gracefully to different screen sizes while preserving usability.
 
-### Component Styling
+## Component Styling
 
 Reusable UI components should encapsulate their styling whenever practical.
 
 Application-specific components should expose only the styling APIs necessary for customization.
 
-### Responsive Design
+## Responsive Design
 
 Responsive behavior should be implemented using a mobile-first approach.
 
 The interface should reorganize itself to make efficient use of available screen space rather than removing functionality.
 
-### Animations
+## Animations
 
 Animations should be subtle, purposeful and performant.
 
@@ -174,9 +335,11 @@ Users who prefer reduced motion should receive an accessible experience consiste
 
 ---
 
-## Image Rendering
+# Image Rendering
 
-Primary rendering technology: Canvas 2D API
+Primary rendering technology:
+
+Canvas 2D API
 
 Future optimizations may include:
 
@@ -188,7 +351,7 @@ The rendering implementation should remain hidden behind the Rendering Engine.
 
 ---
 
-## Image Processing
+# Image Processing
 
 Image processing is implemented using pure TypeScript.
 
@@ -202,7 +365,7 @@ Whenever possible, algorithms should operate on standard browser image primitive
 
 ---
 
-## Mobile Platform
+# Mobile Platform
 
 Native mobile applications are packaged using Capacitor.
 
@@ -217,7 +380,7 @@ Platform-specific code should be isolated.
 
 ---
 
-## Desktop Platform
+# Desktop Platform
 
 Primary desktop platform:
 
@@ -229,7 +392,7 @@ Electron is not planned.
 
 ---
 
-## Testing
+# Testing
 
 Unit Testing
 
@@ -243,7 +406,7 @@ Testing should be integrated into continuous integration.
 
 ---
 
-## Code Quality
+# Code Quality
 
 Required tools:
 
@@ -297,23 +460,6 @@ Before introducing a new dependency, consider whether:
 - the functionality is already available in the browser;
 - it can be implemented with reasonable effort;
 - the dependency aligns with the project's architecture and principles.
-
----
-
-## Additional Libraries
-
-Third-party libraries should satisfy the following criteria before being introduced:
-
-* actively maintained;
-* widely adopted;
-* TypeScript support;
-* tree-shakeable;
-* compatible with long-term maintenance;
-* provide clear value over a custom implementation.
-
-Introducing a dependency requires evaluating its long-term maintenance cost in addition to its immediate development benefits.
-
-Dependencies should simplify the project, not increase its complexity.
 
 ---
 
