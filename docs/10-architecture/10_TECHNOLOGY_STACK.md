@@ -500,16 +500,3 @@ Replacing a framework, library or tool is acceptable provided that:
 * project principles continue to be respected.
 
 Technology serves the architecture, not the other way around.
-
-
-pnpm create vite@latest temporary-project -- --template vue-ts
-cd temporary-project
-pnpm add pinia eslint prettier
-pnpm add @lucide/vue
-pnpm add @vueuse/core vue-i18n
-pnpm add @capacitor/core
-pnpm add -D @capacitor/cli
-pnpm install tailwindcss @tailwindcss/vite
-pnpm dlx shadcn-vue@latest init
-pnpm dlx shadcn-vue@latest add button input select checkbox switch slider tabs dialog popover dropdown-menu context-menu tooltip accordion scroll-area separator resizable toast
-pnpm add @capacitor/ios @capacitor/android
