@@ -408,13 +408,9 @@ Electron is not planned.
 
 # Testing
 
-Unit Testing
+Vitest library for unit testing purpose.
 
-Vitest
-
-End-to-End Testing
-
-Playwright
+Playwright for E2E testing.
 
 Testing should be integrated into continuous integration.
 

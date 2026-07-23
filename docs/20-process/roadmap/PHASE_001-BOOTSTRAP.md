@@ -78,7 +78,7 @@ Documentation should be internally consistent and synchronized.
 Project initialized with:
 
 - TypeScript
-- React
+- Vue
 - Vite
 - Tailwind CSS
 - shadcn/ui
