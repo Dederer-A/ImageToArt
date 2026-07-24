@@ -21,14 +21,14 @@ Technology changes should preserve the architectural principles defined in `00_A
 
 The selected technology stack must provide:
 
-* a single codebase;
-* web-first development;
-* native mobile deployment;
-* high performance;
-* excellent TypeScript support;
-* AI-friendly development;
-* long-term maintainability;
-* be free (MIT or Apache Licence prefered).
+- a single codebase;
+- web-first development;
+- native mobile deployment;
+- high performance;
+- excellent TypeScript support;
+- AI-friendly development;
+- long-term maintainability;
+- be free (MIT or Apache Licence prefered).
 
 ---
 
@@ -40,11 +40,11 @@ Used for all application source code.
 
 Reasons:
 
-* static typing;
-* excellent IDE support;
-* strong AI compatibility;
-* safer refactoring;
-* maintainability.
+- static typing;
+- excellent IDE support;
+- strong AI compatibility;
+- safer refactoring;
+- maintainability.
 
 JavaScript source files should be avoided.
 
@@ -70,18 +70,18 @@ The application uses Vue 3.
 
 Mandatory requirements:
 
-* Composition API
-* `<script setup>`
-* TypeScript
+- Composition API
+- `<script setup>`
+- TypeScript
 
 Options API should not be used.
 
 Reasons:
 
-* excellent developer experience;
-* lightweight runtime;
-* strong TypeScript integration;
-* maintainable architecture.
+- excellent developer experience;
+- lightweight runtime;
+- strong TypeScript integration;
+- maintainable architecture.
 
 ---
 
@@ -133,10 +133,10 @@ Stores should coordinate state, not implement algorithms.
 
 Responsibilities:
 
-* development server;
-* production builds;
-* module bundling;
-* asset processing.
+- development server;
+- production builds;
+- module bundling;
+- asset processing.
 
 ---
 
@@ -144,9 +144,9 @@ Responsibilities:
 
 The user interface is built using:
 
-* HTML
-* CSS
-* Vue Components
+- HTML
+- CSS
+- Vue Components
 
 No heavy UI component framework should be introduced unless it provides substantial long-term value.
 
@@ -162,45 +162,45 @@ The project uses **shadcn-vue** as the foundation for generic user interface com
 
 The primary goals are:
 
-* accelerate development;
-* provide consistent visual appearance;
-* improve accessibility;
-* reduce maintenance effort.
+- accelerate development;
+- provide consistent visual appearance;
+- improve accessibility;
+- reduce maintenance effort.
 
 Only generic UI primitives should be taken from shadcn-vue, such as:
 
-* Button
-* Input
-* Select
-* Checkbox
-* Switch
-* Slider
-* Tabs
-* Dialog
-* Popover
-* Dropdown Menu
-* Context Menu
-* Tooltip
-* Accordion
-* Scroll Area
-* Separator
-* Resizable Panels
-* Toast
+- Button
+- Input
+- Select
+- Checkbox
+- Switch
+- Slider
+- Tabs
+- Dialog
+- Popover
+- Dropdown Menu
+- Context Menu
+- Tooltip
+- Accordion
+- Scroll Area
+- Separator
+- Resizable Panels
+- Toast
 
 Application-specific components must always be implemented within the project.
 
 Examples include:
 
-* Image Viewport
-* Layer Panel
-* Layer List
-* Layer Properties
-* Operation Toolbar
-* Image Inspector
-* Histogram
-* Crop Tool
-* Grid Overlay
-* Status Bar
+- Image Viewport
+- Layer Panel
+- Layer List
+- Layer Properties
+- Operation Toolbar
+- Image Inspector
+- Histogram
+- Crop Tool
+- Grid Overlay
+- Status Bar
 
 The application should not depend on complex pre-built layouts or dashboard templates provided by external libraries.
 
@@ -216,11 +216,11 @@ The project uses **Lucide Icons** as the primary icon set.
 
 Reasons:
 
-* lightweight;
-* consistent design language;
-* actively maintained;
-* excellent Vue integration;
-* large collection of commonly used icons.
+- lightweight;
+- consistent design language;
+- actively maintained;
+- excellent Vue integration;
+- large collection of commonly used icons.
 
 Icons should communicate actions clearly and consistently throughout the application.
 
@@ -238,15 +238,15 @@ VueUse should be preferred over custom implementations for common application fu
 
 Typical use cases include:
 
-* keyboard shortcuts;
-* mouse interactions;
-* window size detection;
-* resize observers;
-* clipboard access;
-* local storage;
-* element measurements;
-* reactive utilities;
-* device capabilities.
+- keyboard shortcuts;
+- mouse interactions;
+- window size detection;
+- resize observers;
+- clipboard access;
+- local storage;
+- element measurements;
+- reactive utilities;
+- device capabilities.
 
 Application-specific business logic should never depend on VueUse.
 
@@ -258,12 +258,12 @@ VueUse should remain a convenience layer for user interface and browser integrat
 
 Third-party libraries should satisfy the following criteria before being introduced:
 
-* actively maintained;
-* widely adopted;
-* TypeScript support;
-* tree-shakeable;
-* compatible with long-term maintenance;
-* provide clear value over a custom implementation.
+- actively maintained;
+- widely adopted;
+- TypeScript support;
+- tree-shakeable;
+- compatible with long-term maintenance;
+- provide clear value over a custom implementation.
 
 Introducing a dependency requires evaluating its long-term maintenance cost in addition to its immediate development benefits.
 
@@ -275,9 +275,9 @@ Dependencies should simplify the project, not increase its complexity.
 
 The application uses a combination of:
 
-* Tailwind CSS
-* CSS Variables
-* Modern CSS features
+- Tailwind CSS
+- CSS Variables
+- Modern CSS features
 
 ## Tailwind CSS
 
@@ -302,12 +302,12 @@ Utility classes should be preferred for common styling tasks to improve consiste
 
 CSS Variables define the application's design tokens, including:
 
-* colors;
-* spacing;
-* typography;
-* border radius;
-* shadows;
-* animation durations.
+- colors;
+- spacing;
+- typography;
+- border radius;
+- shadows;
+- animation durations.
 
 Theme customization should be implemented primarily through CSS Variables.
 
@@ -321,9 +321,9 @@ Complex selectors and deeply nested rules should be avoided.
 
 Application layouts should use modern CSS features:
 
-* Flexbox
-* CSS Grid
-* Container Queries (where appropriate)
+- Flexbox
+- CSS Grid
+- Container Queries (where appropriate)
 
 Layouts must adapt gracefully to different screen sizes while preserving usability.
 
@@ -357,9 +357,9 @@ Canvas 2D API
 
 Future optimizations may include:
 
-* OffscreenCanvas
-* ImageBitmap
-* Web Workers
+- OffscreenCanvas
+- ImageBitmap
+- Web Workers
 
 The rendering implementation should remain hidden behind the Rendering Engine.
 
@@ -367,15 +367,7 @@ The rendering implementation should remain hidden behind the Rendering Engine.
 
 # Image Processing
 
-Image processing is implemented using pure TypeScript.
-
-Algorithms should remain independent from:
-
-* user interface;
-* framework;
-* platform APIs.
-
-Whenever possible, algorithms should operate on standard browser image primitives.
+Image processing is implemented using OpenCV WASM library @techstark/opencv-js
 
 ---
 
@@ -385,10 +377,10 @@ Native mobile applications are packaged using Capacitor.
 
 The goal is to maximize code sharing between:
 
-* Web
-* Progressive Web App
-* iOS
-* Android
+- Web
+- Progressive Web App
+- iOS
+- Android
 
 Platform-specific code should be isolated.
 
@@ -420,8 +412,8 @@ Testing should be integrated into continuous integration.
 
 Required tools:
 
-* ESLint
-* Prettier
+- ESLint
+- Prettier
 
 Formatting should be automatic.
 
@@ -437,10 +429,10 @@ Hosted on GitHub.
 
 Development workflow uses:
 
-* GitHub Issues
-* GitHub Projects
-* Pull Requests
-* Code Reviews
+- GitHub Issues
+- GitHub Projects
+- Pull Requests
+- Code Reviews
 
 ---
 
@@ -459,6 +451,7 @@ Documentation changes are considered part of feature development.
 Dependencies are introduced only when they provide significant long-term value.
 
 The project should prefer:
+
 - browser standards over external libraries;
 - small focused libraries over large frameworks;
 - source-available components over opaque abstractions;
@@ -467,6 +460,7 @@ The project should prefer:
 Every dependency increases maintenance cost.
 
 Before introducing a new dependency, consider whether:
+
 - the functionality is already available in the browser;
 - it can be implemented with reasonable effort;
 - the dependency aligns with the project's architecture and principles.
@@ -479,11 +473,11 @@ Project documentation is intentionally structured to support AI-assisted softwar
 
 AI agents are expected to follow:
 
-* 00_PROJECT_GOVERNANCE.md
-* 10_PROJECT_VISION.md
-* 20_PROJECT_PRINCIPLES.md
-* 30_PROJECT_SCOPE.md
-* AGENTS.md
+- 00_PROJECT_GOVERNANCE.md
+- 10_PROJECT_VISION.md
+- 20_PROJECT_PRINCIPLES.md
+- 30_PROJECT_SCOPE.md
+- AGENTS.md
 
 before making architectural or implementation decisions.
 
@@ -495,8 +489,8 @@ Technology choices may evolve over time.
 
 Replacing a framework, library or tool is acceptable provided that:
 
-* architectural principles remain unchanged;
-* public behavior remains compatible where practical;
-* project principles continue to be respected.
+- architectural principles remain unchanged;
+- public behavior remains compatible where practical;
+- project principles continue to be respected.
 
 Technology serves the architecture, not the other way around.
