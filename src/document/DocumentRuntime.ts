@@ -1,11 +1,18 @@
 import cv from '@techstark/opencv-js';
+import type { HistoryRecord } from '@/history/HistoryRecord';
 
-export class DocumentState {
+// Non serializable
+export class DocumentRuntime {
+  document: Document; // serializable
   private srcMat: cv.Mat | null = null;
   private processedMat: cv.Mat | null = null; // Stays updated after each step
   private _isLoaded: boolean = false;
+  historyRecords: HistoryRecord[];
 
-  constructor() {}
+  constructor(document: Document) {
+    this.document = document;
+    this.historyRecords = [];
+  }
 
   /**
    * Initializes or resets the image state.
@@ -75,7 +82,7 @@ export class DocumentState {
    */
   public resetToOriginal(): void {
     if (!this.srcMat || !this._isLoaded) return;
-    
+
     if (this.processedMat) this.processedMat.delete();
     this.processedMat = this.srcMat.clone();
   }
@@ -91,8 +98,14 @@ export class DocumentState {
   }
 
   public dispose(): void {
-    if (this.srcMat) { this.srcMat.delete(); this.srcMat = null; }
-    if (this.processedMat) { this.processedMat.delete(); this.processedMat = null; }
+    if (this.srcMat) {
+      this.srcMat.delete();
+      this.srcMat = null;
+    }
+    if (this.processedMat) {
+      this.processedMat.delete();
+      this.processedMat = null;
+    }
     this._isLoaded = false;
   }
 

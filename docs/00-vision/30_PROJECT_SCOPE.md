@@ -23,44 +23,44 @@ The initial release should include:
 
 ## Image
 
-* Open image
-* Save processed image
-* Preserve original image
+- Open image
+- Save processed image
+- Preserve original image
 
 ## View
 
-* Zoom
-* Pan
-* Fit to screen
-* Actual size
+- Zoom
+- Pan
+- Fit to screen
+- Actual size
 
 ## Image Analysis
 
-* Grayscale
-* Contrast adjustment
-* Brightness adjustment
-* Blur
-* Edge detection
-* Crop
-* Grid overlay
+- Grayscale
+- Contrast adjustment
+- Brightness adjustment
+- Blur
+- Edge detection
+- Crop
+- Grid overlay
 
 ## Layer System
 
-* Layer stack
-* Enable / Disable layers
-* Reorder layers
-* Edit layer parameters
-* Remove layers
+- Layer stack
+- Enable / Disable layers
+- Reorder layers
+- Edit layer parameters
+- Remove layers
 
 ## History
 
-* Undo
-* Redo
+- Undo
+- Redo
 
 ## Export
 
-* PNG
-* JPEG
+- PNG
+- JPEG
 
 ---
 
@@ -68,16 +68,16 @@ The initial release should include:
 
 Features expected after MVP:
 
-* Perspective grid
-* Rule of thirds overlay
-* Golden ratio overlay
-* Posterization
-* Value isolation
-* Color isolation
-* Multiple grid styles
-* Layer presets
-* Project files
-* Workspace persistence
+- Perspective grid
+- Rule of thirds overlay
+- Golden ratio overlay
+- Posterization
+- Value isolation
+- Color isolation
+- Multiple grid styles
+- Layer presets
+- Project files
+- Workspace persistence
 
 ---
 
@@ -85,12 +85,12 @@ Features expected after MVP:
 
 Potential future improvements:
 
-* Plugin system
-* Cloud synchronization
-* Shared presets
-* Localization
-* Tablet-oriented workspace
-* Additional analysis overlays
+- Plugin system
+- Cloud synchronization
+- Shared presets
+- Localization
+- Tablet-oriented workspace
+- Additional analysis overlays
 
 Items in this section are ideas, not commitments.
 
@@ -100,18 +100,18 @@ Items in this section are ideas, not commitments.
 
 The following functionality does not belong to this project:
 
-* Painting tools
-* Brushes
-* Layers for artistic drawing
-* Photo retouching
-* RAW development
-* AI image generation
-* AI image editing
-* Face beautification
-* Vector graphics editing
-* Animation
-* Video editing
-* PSD editor replacement
+- Painting tools
+- Brushes
+- Layers for artistic drawing
+- Photo retouching
+- RAW development
+- AI image generation
+- AI image editing
+- Face beautification
+- Vector graphics editing
+- Animation
+- Video editing
+- PSD editor replacement
 
 ---
 
@@ -119,11 +119,11 @@ The following functionality does not belong to this project:
 
 A new feature should normally satisfy all of the following conditions:
 
-* helps artists analyze reference images;
-* does not significantly increase application complexity;
-* fits the existing architecture;
-* follows PROJECT_PRINCIPLES;
-* does not violate PROJECT_VISION.
+- helps artists analyze reference images;
+- does not significantly increase application complexity;
+- fits the existing architecture;
+- follows PROJECT_PRINCIPLES;
+- does not violate PROJECT_VISION.
 
 Features that fail these criteria should be rejected or postponed.
 

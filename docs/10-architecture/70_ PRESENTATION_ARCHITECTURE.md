@@ -21,14 +21,14 @@ The goal is to provide a responsive, maintainable and extensible user interface 
 
 The user interface must be:
 
-* intuitive;
-* responsive;
-* adaptive;
-* non-intrusive;
-* accessible;
-* modular;
-* extensible;
-* performant.
+- intuitive;
+- responsive;
+- adaptive;
+- non-intrusive;
+- accessible;
+- modular;
+- extensible;
+- performant.
 
 The interface should assist artists in studying reference images without distracting from the creative process.
 
@@ -40,9 +40,9 @@ The interface should assist artists in studying reference images without distrac
 
 The Presentation Layer is responsible only for:
 
-* displaying information;
-* collecting user input;
-* presenting application state.
+- displaying information;
+- collecting user input;
+- presenting application state.
 
 Business logic belongs to the Application Layer.
 
@@ -60,11 +60,11 @@ Application state belongs to the Document Model.
 
 UI components may own transient presentation state such as:
 
-* panel visibility;
-* dialog state;
-* temporary selections;
-* drag operations;
-* hover state.
+- panel visibility;
+- dialog state;
+- temporary selections;
+- drag operations;
+- hover state.
 
 ---
 
@@ -72,10 +72,10 @@ UI components may own transient presentation state such as:
 
 Components should be:
 
-* reusable;
-* composable;
-* loosely coupled;
-* independently testable.
+- reusable;
+- composable;
+- loosely coupled;
+- independently testable.
 
 Communication should occur through well-defined interfaces.
 
@@ -112,13 +112,13 @@ Provides access to global commands.
 
 Typical actions include:
 
-* open image;
-* save image;
-* export;
-* undo;
-* redo;
-* zoom controls;
-* view options.
+- open image;
+- save image;
+- export;
+- undo;
+- redo;
+- zoom controls;
+- view options.
 
 ---
 
@@ -128,12 +128,12 @@ The central workspace.
 
 Responsibilities:
 
-* image display;
-* zoom;
-* pan;
-* overlays;
-* selection visualization;
-* interaction feedback.
+- image display;
+- zoom;
+- pan;
+- overlays;
+- selection visualization;
+- interaction feedback.
 
 The Viewport never performs image processing.
 
@@ -145,11 +145,11 @@ Displays the layer stack.
 
 Supports:
 
-* add layer;
-* remove layer;
-* reorder layers;
-* enable/disable layers;
-* select layer.
+- add layer;
+- remove layer;
+- reorder layers;
+- enable/disable layers;
+- select layer.
 
 ---
 
@@ -167,10 +167,10 @@ Displays contextual information.
 
 Examples include:
 
-* zoom level;
-* image size;
-* cursor position;
-* processing status.
+- zoom level;
+- image size;
+- cursor position;
+- processing status.
 
 ---
 
@@ -180,15 +180,15 @@ The UI should be composed from reusable components.
 
 Application-specific components include:
 
-* Application Shell
-* Toolbar
-* Image Viewport
-* Layer Panel
-* Layer List
-* Layer Item
-* Property Inspector
-* Status Bar
-* Tool Panels
+- Application Shell
+- Toolbar
+- Image Viewport
+- Layer Panel
+- Layer List
+- Layer Item
+- Property Inspector
+- Status Bar
+- Tool Panels
 
 Generic UI components should come from the project's UI library.
 
@@ -202,11 +202,11 @@ Users should interact with visible objects whenever practical.
 
 Typical interactions include:
 
-* clicking;
-* dragging;
-* scrolling;
-* keyboard shortcuts;
-* context menus.
+- clicking;
+- dragging;
+- scrolling;
+- keyboard shortcuts;
+- context menus.
 
 The interface should minimize modal workflows.
 
@@ -222,10 +222,10 @@ Desktop devices may display multiple panels simultaneously.
 
 Smaller devices may:
 
-* collapse panels;
-* use drawers;
-* display bottom sheets;
-* switch to stacked layouts.
+- collapse panels;
+- use drawers;
+- display bottom sheets;
+- switch to stacked layouts.
 
 The underlying workflow should remain consistent.
 
@@ -237,10 +237,10 @@ The Viewport is the primary interaction area.
 
 Viewport transformations include:
 
-* zoom;
-* pan;
-* fit to screen;
-* actual size.
+- zoom;
+- pan;
+- fit to screen;
+- actual size.
 
 Viewport transformations must not modify the document.
 
@@ -252,11 +252,11 @@ Visual guides should be rendered as overlays.
 
 Examples include:
 
-* grids;
-* crop guides;
-* selection outlines;
-* rulers;
-* future composition guides.
+- grids;
+- crop guides;
+- selection outlines;
+- rulers;
+- future composition guides.
 
 Overlays should remain independent from image processing.
 
@@ -276,12 +276,12 @@ They do not directly modify the Document Model.
 
 The interface should support:
 
-* keyboard navigation;
-* touch screen support;
-* screen readers where practical;
-* sufficient contrast;
-* focus visibility;
-* reduced motion preferences.
+- keyboard navigation;
+- touch screen support;
+- screen readers where practical;
+- sufficient contrast;
+- focus visibility;
+- reduced motion preferences.
 
 Accessibility should be considered during component design rather than added later.
 
@@ -301,12 +301,12 @@ Don't localize only text.
 
 Also design for:
 
-* date formats;
-* number formats;
-* keyboard shortcuts (where applicable);
-* measurement units (if you ever add them);
-* text direction (LTR vs RTL);
-* pluralization rules.
+- date formats;
+- number formats;
+- keyboard shortcuts (where applicable);
+- measurement units (if you ever add them);
+- text direction (LTR vs RTL);
+- pluralization rules.
 
 Even if you don't implement these immediately, your architecture shouldn't prevent them.
 
@@ -338,11 +338,11 @@ New tools and image operations should integrate into the user interface without 
 
 The architecture should support adding:
 
-* new tool panels;
-* new layer types;
-* new property editors;
-* additional overlays;
-* future workspace layouts.
+- new tool panels;
+- new layer types;
+- new property editors;
+- additional overlays;
+- future workspace layouts.
 
 ---
 
@@ -354,10 +354,10 @@ Platform-specific adaptations should improve usability without changing applicat
 
 Examples include:
 
-* touch-friendly controls;
-* native sharing dialogs;
-* platform file pickers;
-* platform keyboard conventions.
+- touch-friendly controls;
+- native sharing dialogs;
+- platform file pickers;
+- platform keyboard conventions.
 
 ---
 
@@ -365,11 +365,11 @@ Examples include:
 
 Future versions may introduce:
 
-* multiple workspaces;
-* floating panels;
-* detachable windows;
-* customizable layouts;
-* multi-document support;
-* plugin-provided UI components.
+- multiple workspaces;
+- floating panels;
+- detachable windows;
+- customizable layouts;
+- multi-document support;
+- plugin-provided UI components.
 
 These additions should extend the existing Presentation Layer rather than replacing it.

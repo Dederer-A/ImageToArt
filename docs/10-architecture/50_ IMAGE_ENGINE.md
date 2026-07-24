@@ -245,7 +245,6 @@ For export, the Render Model typically contains:
 
 # Render Model Structure
 
-
 ```text
 Render Model
 

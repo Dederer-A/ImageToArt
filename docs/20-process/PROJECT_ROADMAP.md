@@ -1,8 +1,8 @@
 # Project Roadmap
 
-|    Status   | Phase                          |
+| Status      | Phase                          |
 | ----------- | ------------------------------ |
-| In Progress | Phase 1 — Project Bootstrap.   | 
+| In Progress | Phase 1 — Project Bootstrap.   |
 |             | Phase 2 — Core Infrastructure  |
 |             | Phase 3 — Rendering Pipeline   |
 |             | Phase 4 — Presentation Layer   |

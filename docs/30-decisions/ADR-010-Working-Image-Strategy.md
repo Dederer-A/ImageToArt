@@ -14,10 +14,10 @@ The application is designed for interactive analysis of reference images across 
 
 Modern cameras frequently produce images exceeding 20–50 megapixels. Processing such images at their native resolution significantly increases:
 
-* memory consumption;
-* processing time;
-* rendering latency;
-* battery usage on mobile devices.
+- memory consumption;
+- processing time;
+- rendering latency;
+- battery usage on mobile devices.
 
 For this application, preserving every original pixel is less important than providing a responsive and fluid user experience.
 
@@ -39,11 +39,11 @@ Depending on the capabilities of the current device, the Source Image may be opt
 
 Possible optimizations include:
 
-* orientation normalization;
-* color space conversion;
-* removal of unnecessary metadata;
-* conversion to an efficient internal pixel format;
-* resolution reduction to an appropriate working size.
+- orientation normalization;
+- color space conversion;
+- removal of unnecessary metadata;
+- conversion to an efficient internal pixel format;
+- resolution reduction to an appropriate working size.
 
 These optimizations are implementation details and must preserve the visual appearance of the imported image within acceptable tolerances.
 
@@ -61,23 +61,23 @@ The application is intended for image analysis rather than professional photo ed
 
 Artists primarily work with visual information such as:
 
-* composition;
-* proportions;
-* values;
-* edges;
-* shapes;
-* color relationships.
+- composition;
+- proportions;
+- values;
+- edges;
+- shapes;
+- color relationships.
 
 Maintaining extremely high pixel counts provides little practical value for these tasks while imposing a significant performance cost.
 
 Creating a device-appropriate Source Image provides several advantages:
 
-* lower memory usage;
-* faster rendering;
-* faster image processing;
-* smoother interaction;
-* better battery life;
-* more predictable performance across devices.
+- lower memory usage;
+- faster rendering;
+- faster image processing;
+- smoother interaction;
+- better battery life;
+- more predictable performance across devices.
 
 This approach aligns with the project's **Performance First** principle while maintaining non-destructive editing.
 
@@ -89,15 +89,15 @@ This approach aligns with the project's **Performance First** principle while ma
 
 Advantages:
 
-* maximum image fidelity;
-* simplest conceptual model.
+- maximum image fidelity;
+- simplest conceptual model.
 
 Disadvantages:
 
-* excessive memory usage;
-* poor performance on mobile devices;
-* unnecessary processing of invisible pixels;
-* increased battery consumption.
+- excessive memory usage;
+- poor performance on mobile devices;
+- unnecessary processing of invisible pixels;
+- increased battery consumption.
 
 Decision:
 
@@ -109,13 +109,13 @@ Rejected.
 
 Advantages:
 
-* simple implementation.
+- simple implementation.
 
 Disadvantages:
 
-* violates the non-destructive editing model;
-* makes undo/redo more complex;
-* increases the risk of accidental data modification.
+- violates the non-destructive editing model;
+- makes undo/redo more complex;
+- increases the risk of accidental data modification.
 
 Decision:
 
@@ -127,15 +127,15 @@ Rejected.
 
 Advantages:
 
-* maintains non-destructive processing;
-* significantly improves performance;
-* reduces memory consumption;
-* enables future optimizations.
+- maintains non-destructive processing;
+- significantly improves performance;
+- reduces memory consumption;
+- enables future optimizations.
 
 Disadvantages:
 
-* exported images may not always match the original imported resolution;
-* import may require additional preprocessing.
+- exported images may not always match the original imported resolution;
+- import may require additional preprocessing.
 
 Decision:
 
@@ -147,17 +147,17 @@ Accepted.
 
 Positive:
 
-* responsive user interface;
-* lower memory usage;
-* consistent performance across devices;
-* simplified processing pipeline;
-* deterministic rendering;
-* easier implementation of caching.
+- responsive user interface;
+- lower memory usage;
+- consistent performance across devices;
+- simplified processing pipeline;
+- deterministic rendering;
+- easier implementation of caching.
 
 Negative:
 
-* maximum export resolution may be limited by the working image resolution;
-* changing optimization strategy may require regenerating the Source Image.
+- maximum export resolution may be limited by the working image resolution;
+- changing optimization strategy may require regenerating the Source Image.
 
 ---
 
@@ -195,10 +195,10 @@ Rendered Images are transient and may be regenerated at any time.
 
 The optimal Source Image resolution should be determined dynamically based on:
 
-* available memory;
-* device capabilities;
-* screen resolution;
-* expected rendering performance.
+- available memory;
+- device capabilities;
+- screen resolution;
+- expected rendering performance.
 
 The implementation should avoid hard-coded resolution limits whenever practical.
 
@@ -210,12 +210,12 @@ Future versions may introduce additional optimizations without changing this arc
 
 Examples include:
 
-* multi-resolution image pyramids;
-* tile-based processing;
-* progressive image decoding;
-* GPU-optimized image representations;
-* adaptive working resolutions;
-* background preprocessing.
+- multi-resolution image pyramids;
+- tile-based processing;
+- progressive image decoding;
+- GPU-optimized image representations;
+- adaptive working resolutions;
+- background preprocessing.
 
 These enhancements should remain transparent to the rest of the application.
 
@@ -223,8 +223,8 @@ These enhancements should remain transparent to the rest of the application.
 
 # Related Documents
 
-* 20_PROJECT_PRINCIPLES.md
-* 00_ARCHITECTURE.md
-* 30_PERFORMANCE.md
-* 50_IMAGE_ENGINE.md
-* 20_DOCUMENT_MODEL.md
+- 20_PROJECT_PRINCIPLES.md
+- 00_ARCHITECTURE.md
+- 30_PERFORMANCE.md
+- 50_IMAGE_ENGINE.md
+- 20_DOCUMENT_MODEL.md

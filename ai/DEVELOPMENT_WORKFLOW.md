@@ -134,7 +134,6 @@ Every issue receives its own working directory.
 
 Use files from the ai/issues/_TEMPLATE/ directory as a template for all dedicated artifacts. Read _TEMPLATE/README.md first.
 
-
 ```
 ai/
     issues/

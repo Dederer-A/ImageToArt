@@ -1,3 +1,1 @@
-export class layer {
-    
-}
+export class layer {}

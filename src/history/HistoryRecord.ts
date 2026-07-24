@@ -1,3 +1,1 @@
-export class HistoryRecord {
-
-}
+export class HistoryRecord {}

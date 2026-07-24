@@ -31,12 +31,12 @@ Performance improvements should preserve correctness, maintainability and archit
 
 The application should:
 
-* open images quickly;
-* remain responsive while editing;
-* provide smooth viewport interaction;
-* minimize memory usage;
-* avoid unnecessary computations;
-* scale gracefully across supported devices.
+- open images quickly;
+- remain responsive while editing;
+- provide smooth viewport interaction;
+- minimize memory usage;
+- avoid unnecessary computations;
+- scale gracefully across supported devices.
 
 ---
 
@@ -44,10 +44,10 @@ The application should:
 
 The application supports:
 
-* desktop computers;
-* laptops;
-* tablets;
-* smartphones.
+- desktop computers;
+- laptops;
+- tablets;
+- smartphones.
 
 Performance strategies may differ between device classes while preserving a consistent user experience.
 
@@ -57,9 +57,9 @@ Performance strategies may differ between device classes while preserving a cons
 
 The application distinguishes between:
 
-* Imported File
-* Source Image
-* Rendered Image
+- Imported File
+- Source Image
+- Rendered Image
 
 The imported file represents the original user data.
 
@@ -69,10 +69,10 @@ For performance reasons, the Source Image may be optimized during import.
 
 Possible optimizations include:
 
-* orientation normalization;
-* color space conversion;
-* resolution reduction;
-* image format conversion.
+- orientation normalization;
+- color space conversion;
+- resolution reduction;
+- image format conversion.
 
 These optimizations must preserve the visual appearance of the image within acceptable tolerances.
 
@@ -84,10 +84,10 @@ The application should dynamically determine the optimal working resolution.
 
 Factors include:
 
-* available memory;
-* device capabilities;
-* screen resolution;
-* expected rendering performance.
+- available memory;
+- device capabilities;
+- screen resolution;
+- expected rendering performance.
 
 The goal is to maintain an excellent user experience rather than preserving unnecessary pixel data.
 
@@ -99,9 +99,9 @@ Image processing should be incremental.
 
 Whenever possible:
 
-* reuse previous results;
-* process only affected regions;
-* avoid full pipeline recomputation.
+- reuse previous results;
+- process only affected regions;
+- avoid full pipeline recomputation.
 
 Only operations affected by a change should be recalculated.
 
@@ -113,10 +113,10 @@ Rendering should prioritize responsiveness.
 
 Rendering should:
 
-* avoid blocking the user interface;
-* reuse cached data;
-* minimize redraws;
-* update only when necessary.
+- avoid blocking the user interface;
+- reuse cached data;
+- minimize redraws;
+- update only when necessary.
 
 Rendering quality may temporarily be reduced during interaction if it improves responsiveness, provided that full quality is restored immediately after interaction completes.
 
@@ -128,11 +128,11 @@ Caching is encouraged whenever it significantly reduces computation.
 
 Potential cache levels include:
 
-* decoded images;
-* intermediate processing results;
-* rendered layers;
-* thumbnails;
-* viewport representations.
+- decoded images;
+- intermediate processing results;
+- rendered layers;
+- thumbnails;
+- viewport representations.
 
 Cache invalidation should be deterministic.
 
@@ -162,10 +162,10 @@ Memory usage should remain predictable.
 
 The application should:
 
-* avoid unnecessary image duplication;
-* release unused resources promptly;
-* reuse buffers where practical;
-* minimize temporary allocations.
+- avoid unnecessary image duplication;
+- release unused resources promptly;
+- reuse buffers where practical;
+- minimize temporary allocations.
 
 Large images should never cause excessive memory consumption.
 
@@ -187,9 +187,9 @@ Viewport interaction should remain smooth.
 
 Operations including:
 
-* zooming;
-* panning;
-* resizing;
+- zooming;
+- panning;
+- resizing;
 
 should avoid unnecessary image recomputation.
 
@@ -231,9 +231,9 @@ Performance should degrade gracefully.
 
 When hardware resources are limited, the application should prefer:
 
-* reduced working resolution;
-* deferred processing;
-* smaller caches;
+- reduced working resolution;
+- deferred processing;
+- smaller caches;
 
 rather than becoming unresponsive.
 
@@ -263,11 +263,11 @@ Performance should be evaluated using representative image sizes and realistic e
 
 Testing should include:
 
-* image loading;
-* viewport interaction;
-* layer manipulation;
-* export;
-* memory consumption.
+- image loading;
+- viewport interaction;
+- layer manipulation;
+- export;
+- memory consumption.
 
 Regression testing should detect significant performance degradation.
 
@@ -277,12 +277,12 @@ Regression testing should detect significant performance degradation.
 
 Future implementations may introduce:
 
-* GPU acceleration;
-* worker-based processing;
-* tile-based rendering;
-* progressive rendering;
-* multi-resolution image pyramids;
-* additional caching strategies.
+- GPU acceleration;
+- worker-based processing;
+- tile-based rendering;
+- progressive rendering;
+- multi-resolution image pyramids;
+- additional caching strategies.
 
 These optimizations should remain implementation details and must not affect the architectural model.
 

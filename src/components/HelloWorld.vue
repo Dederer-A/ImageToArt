@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref } from 'vue';
 // import { useI18n } from 'vue-i18n';
-import viteLogo from '../assets/vite.svg'
-import heroImg from '../assets/hero.png'
-import vueLogo from '../assets/vue.svg'
+import viteLogo from '../assets/vite.svg';
+import heroImg from '../assets/hero.png';
+import vueLogo from '../assets/vue.svg';
 
-const count = ref(0)
+const count = ref(0);
 // const { t, locale } = useI18n();
 // Example function to programmatically switch languages
 // const switchLanguage = (lang) => {
@@ -21,12 +21,10 @@ const count = ref(0)
       <img :src="viteLogo" class="vite" alt="Vite logo" />
     </div>
     <div>
-      <h1>{{ $t("common.welcome.title") }}</h1>
+      <h1>{{ $t('common.welcome.title') }}</h1>
       <p>Edit <code>src/App.vue</code> and save to test <code>HMR</code></p>
     </div>
-    <button type="button" class="counter" @click="count++">
-      Count is {{ count }}
-    </button>
+    <button type="button" class="counter" @click="count++">Count is {{ count }}</button>
   </section>
 
   <div class="ticks"></div>
