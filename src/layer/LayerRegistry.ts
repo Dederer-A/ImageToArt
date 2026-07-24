@@ -2,7 +2,7 @@ export class LayerRegistry {
   private static instance: LayerRegistry;
   private registry = new Map<string, LayerImplementation>();
 
-  private constructor() {}
+  private constructor() {} // Singletone pattern implementation
 
   public static getInstance(): LayerRegistry {
     if (!LayerRegistry.instance) {

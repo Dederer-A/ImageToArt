@@ -1,4 +1,4 @@
-export class layer {
+export class Layer {
   id: string;
   type: string;
   enabled: boolean;
