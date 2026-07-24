@@ -12,6 +12,6 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    exclude: ['@techstark/opencv-js'],
+    exclude: ['@opencvjs/web'],
   },
 });

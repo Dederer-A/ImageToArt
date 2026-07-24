@@ -1,3 +1,4 @@
 allowBuilds:
+  '@swc/core': false
   maplibre-gl: false
   vue-demi: true
