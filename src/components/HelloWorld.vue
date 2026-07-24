@@ -4,8 +4,13 @@ import { ref } from 'vue';
 import viteLogo from '../assets/vite.svg';
 import heroImg from '../assets/hero.png';
 import vueLogo from '../assets/vue.svg';
+import { LayerRegistry } from '@/layer/LayerRegistry';
 
 const count = ref(0);
+
+const layerList = LayerRegistry.getInstance().list();
+
+console.log('!!!!!!!!!!!! custom log');
 // const { t, locale } = useI18n();
 // Example function to programmatically switch languages
 // const switchLanguage = (lang) => {
@@ -25,6 +30,12 @@ const count = ref(0);
       <p>Edit <code>src/App.vue</code> and save to test <code>HMR</code></p>
     </div>
     <button type="button" class="counter" @click="count++">Count is {{ count }}</button>
+    <div>
+      List of Layer Implementations:
+      <ul>
+        <li v-for="layer in layerList">{{ layer.name }} v.{{ layer.version }}</li>
+      </ul>
+    </div>
   </section>
 
   <div class="ticks"></div>

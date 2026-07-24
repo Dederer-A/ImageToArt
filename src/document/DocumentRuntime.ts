@@ -1,13 +1,15 @@
 import cv from '@techstark/opencv-js';
+import type { Document } from './Document';
 import type { HistoryRecord } from '@/history/HistoryRecord';
 
 // Non serializable
 export class DocumentRuntime {
   document: Document; // serializable
-  private srcMat: cv.Mat | null = null;
-  private processedMat: cv.Mat | null = null; // Stays updated after each step
-  private _isLoaded: boolean = false;
   historyRecords: HistoryRecord[];
+
+  srcMat: cv.Mat | null = null;
+  processedMat: cv.Mat | null = null; // Stays updated after each step
+  _isLoaded: boolean = false;
 
   constructor(document: Document) {
     this.document = document;
