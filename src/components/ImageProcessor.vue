@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
+
+import Button from '@/components/ui/button/Button.vue';
+
 import imgTiger from '@/assets/tiger.jpg';
 import { OpenCVService } from '../Image/OpenCVService';
 
@@ -15,7 +18,7 @@ onMounted(async () => {
     await openCVService.init();
     isCvLoading.value = false;
   } catch (error) {
-    console.error(error);
+    console.error("Can't initialize OpenCV. Reason: " + error);
   }
 });
 
@@ -34,7 +37,7 @@ const processImage = () => {
     // Вариант Б: Можно было бы передать строку id, как раньше:
     // openCVService.convertToGray('my-image-id', 'canvas-output')
   } catch (e) {
-    console.error(e);
+    console.error("Can't process image. Reason: " + e);
   }
 };
 </script>
@@ -48,7 +51,7 @@ const processImage = () => {
 
       <div class="images-container">
         <!-- Исходный элемент IMG -->
-        <div class="box">
+        <div class="box" :hidden="true">
           <h3>Оригинал (img)</h3>
           <img
             ref="sourceImgRef"
@@ -60,16 +63,18 @@ const processImage = () => {
           />
         </div>
 
+        <div>
+          <Button :disabled="!isImageLoaded" @click="processImage" size="xs">
+            {{ isImageLoaded ? 'Сделать черно-белым' : 'Ожидание загрузки картинки...' }}
+          </Button>
+        </div>
+
         <!-- Canvas для вывода результата обработки -->
         <div class="box">
           <h3>Результат (canvas)</h3>
           <canvas id="canvas-output" width="300" height="200"></canvas>
         </div>
       </div>
-
-      <button :disabled="!isImageLoaded" @click="processImage">
-        {{ isImageLoaded ? 'Сделать черно-белым' : 'Ожидание загрузки картинки...' }}
-      </button>
     </div>
   </div>
 </template>

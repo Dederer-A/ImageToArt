@@ -119,7 +119,7 @@ src/
 
 ## Pinia
 
-Pinia manages application state.
+Pinia and pinia-plugin-persistedstate manages application state.
 
 Business logic should remain outside stores whenever practical.
 
