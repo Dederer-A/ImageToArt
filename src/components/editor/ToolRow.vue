@@ -3,34 +3,23 @@ import { computed, useSlots } from 'vue';
 
 import { Switch } from '@/components/ui/switch';
 
-const props = defineProps<{
-  modelValue: boolean;
+interface Props {
   title: string;
-  disabled?: boolean;
-}>();
+}
 
-const emit = defineEmits<{
-  (e: 'update:modelValue', value: boolean): void;
-}>();
+defineProps<Props>();
+const isEnabled = defineModel<boolean>({ required: true });
 
 const slots = useSlots();
-
-const enabled = computed({
-  get: () => props.modelValue,
-  set: (value) => emit('update:modelValue', value),
-});
-
 const hasControl = computed(() => !!slots.default);
 </script>
 
 <template>
-  <div class="flex items-start gap-4 py-3" :class="{ 'opacity-50': disabled }">
-    <Switch v-model:checked="enabled" :disabled="disabled" class="min-h-5 shrink-0" />
+  <div class="flex items-start gap-4 py-3" :class="{ 'opacity-50': false }">
+    <Switch v-model="isEnabled" class="min-h-5 shrink-0" />
 
     <div class="w-28 shrink-0 truncate text-sm font-medium">
-      <div class="text-sm font-medium">
-        {{ title }}
-      </div>
+      <div class="text-sm font-medium">{{ title }}</div>
     </div>
 
     <div v-if="hasControl" class="flex min-w-0 flex-1">

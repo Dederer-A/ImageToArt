@@ -10,9 +10,12 @@ import RotateToolControl from '@/components/tools/RotateToolControl.vue';
 import SliderToolControl from '@/components/tools/SliderToolControl.vue';
 import ToolList from '@/components/editor/ToolList.vue';
 import ToolRow from '@/components/editor/ToolRow.vue';
+import SwitchWrapper from '@/components/tools/SwitchWrapper.vue';
+
+import Switch from '@/components/ui/switch/Switch.vue';
 
 defineProps<{
-  image: string;
+  image: string; // Base64 image representation compatible with IMG Tag
 }>();
 
 const cropPresets = ['Free', 'Original', '3:2', '16:9', '4:3', '1:1', 'Portrait', 'Landscape'];
@@ -30,7 +33,7 @@ const crop = reactive({
 });
 
 const rotate = reactive({
-  enabled: false,
+  enabled: true,
 
   rotateLeft: false,
   rotateRight: false,
@@ -40,7 +43,7 @@ const rotate = reactive({
 });
 
 const blackAndWhite = reactive({
-  enabled: false,
+  enabled: true,
   value: 0,
 });
 
@@ -103,6 +106,14 @@ function manageRulers() {
 function manageMeasurements() {
   // TODO
 }
+
+function blackAndWhiteSwitcher(value: boolean) {
+  console.log('blackAndWhiteSwitcher: ' + value);
+}
+function blackAndWhiteValue(value: number) {
+  console.log('blackAndWhiteValue: ' + value);
+  blackAndWhite.enabled = true;
+}
 </script>
 
 <template>
@@ -130,8 +141,8 @@ function manageMeasurements() {
           <RotateToolControl v-model="rotate" />
         </ToolRow>
 
-        <ToolRow v-model="blackAndWhite.enabled" title="Black & White">
-          <SliderToolControl v-model="blackAndWhite.value" />
+        <ToolRow v-model="blackAndWhite.enabled" title="Black & White" @update:model-value="blackAndWhiteSwitcher">
+          <SliderToolControl v-model="blackAndWhite.value" @update:model-value="blackAndWhiteValue" />
         </ToolRow>
 
         <ToolRow v-model="posterize.enabled" title="Posterize">

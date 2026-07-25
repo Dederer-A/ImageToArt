@@ -1,12 +1,24 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 
 import EditorScreen from '@/components/editor/EditorScreen.vue';
 import HomeScreen from '@/components/home/HomeScreen.vue';
 
-const fileInput = ref<HTMLInputElement>();
+import { OpenCVService } from '@/Image/OpenCVService';
+import { useDocumentStore } from './document/Document';
 
+const fileInput = ref<HTMLInputElement>();
 const image = ref('');
+
+const openCVService = OpenCVService.getInstance();
+
+onMounted(async () => {
+  try {
+    await openCVService.init();
+  } catch (error) {
+    console.error("Can't initialize OpenCV. Reason: " + error);
+  }
+});
 
 function selectImage() {
   fileInput.value?.click();
@@ -21,6 +33,8 @@ async function onFileSelected(event: Event) {
   }
 
   image.value = await readAsBase64(file);
+  const document = useDocumentStore();
+  document.sourceImage = image.value;
 
   // Allow selecting the same file again.
   input.value = '';
