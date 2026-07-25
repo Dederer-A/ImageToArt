@@ -1,37 +1,25 @@
 import { defineStore } from 'pinia';
-import { ref } from 'vue';
 
 import type { HistoryRecord } from '@/history/HistoryRecord';
 
-class DocumentRuntime {
+interface DocumentRuntime {
   documentId: string;
   historyRecords: HistoryRecord[];
-
-  constructor(documentId: string) {
-    this.documentId = documentId;
-    this.historyRecords = [];
-  }
-  render() {}
 }
 
-export const useDocumentRuntimeStore = defineStore(
-  'documentRuntime',
-  () => {
-    const documentRuntime = ref<DocumentRuntime | null>(null);
-
-    function initializeRuntime(documentId: string) {
-      documentRuntime.value = new DocumentRuntime(documentId);
-    }
-
-    function clearRuntime() {
-      documentRuntime.value = null;
-    }
-
+export const useDocumentRuntimeStore = defineStore('documentRuntime', {
+  state: (): DocumentRuntime => {
     return {
-      documentRuntime,
-      initializeRuntime,
-      clearRuntime,
+      documentId: '',
+      historyRecords: [],
     };
   },
-  { persist: false }
-);
+  actions: {
+    initialize(documentId: string) {
+      console.log('DocumentRuntime initialized for Document: ' + documentId);
+      this.documentId = documentId;
+      this.historyRecords = [];
+    },
+  },
+  persist: false,
+});
