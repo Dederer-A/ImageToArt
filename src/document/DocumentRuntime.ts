@@ -1,8 +1,9 @@
 import { defineStore } from 'pinia';
 
 import type { HistoryRecord } from '@/history/HistoryRecord';
+import { type Document } from './Document';
 
-interface DocumentRuntime {
+export interface DocumentRuntime {
   documentId: string;
   historyRecords: HistoryRecord[];
 }
@@ -15,9 +16,9 @@ export const useDocumentRuntimeStore = defineStore('documentRuntime', {
     };
   },
   actions: {
-    initialize(documentId: string) {
-      console.log('DocumentRuntime initialized for Document: ' + documentId);
-      this.documentId = documentId;
+    initialize(document: Document) {
+      console.log('DocumentRuntime initialized for Document: ' + document.id);
+      this.documentId = document.id;
       this.historyRecords = [];
     },
   },

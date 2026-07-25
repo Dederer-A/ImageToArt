@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import type { Layer } from '@/layer/Layer';
 import { useDocumentRuntimeStore } from './DocumentRuntime';
 
-interface Document {
+export interface Document {
   id: string;
   sourceImage: string | null; // base64 source image representation
   layers: Layer[];
