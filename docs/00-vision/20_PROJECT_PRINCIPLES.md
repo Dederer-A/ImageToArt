@@ -79,11 +79,11 @@ Uploading images to external servers must always be an explicit user decision.
 
 The same codebase should support:
 
-* Desktop browsers
-* Mobile browsers
-* Progressive Web App
-* iOS
-* Android
+- Desktop browsers
+- Mobile browsers
+- Progressive Web App
+- iOS
+- Android
 
 Platform-specific code should be minimized and isolated in the source code base.
 

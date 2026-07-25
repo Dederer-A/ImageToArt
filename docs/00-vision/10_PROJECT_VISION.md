@@ -31,12 +31,12 @@ There is currently no lightweight application focused exclusively on helping art
 
 This application is intended for:
 
-* traditional artists;
-* digital artists;
-* art students;
-* art teachers;
-* hobby artists;
-* anyone studying drawing or painting from reference images.
+- traditional artists;
+- digital artists;
+- art students;
+- art teachers;
+- hobby artists;
+- anyone studying drawing or painting from reference images.
 
 ---
 
@@ -60,14 +60,14 @@ Growth should come from improving analysis capabilities rather than expanding in
 
 This project is not intended to become:
 
-* a photo editor;
-* a Photoshop replacement;
-* a RAW processing application;
-* a digital painting application;
-* an illustration tool;
-* an AI image generator;
-* an AI image editing application;
-* a general-purpose graphics editor.
+- a photo editor;
+- a Photoshop replacement;
+- a RAW processing application;
+- a digital painting application;
+- an illustration tool;
+- an AI image generator;
+- an AI image editing application;
+- a general-purpose graphics editor.
 
 Features that do not directly improve reference image analysis should normally not be implemented.
 
@@ -77,10 +77,10 @@ Features that do not directly improve reference image analysis should normally n
 
 The project is successful when an artist can:
 
-* load any reference image;
-* analyze it using multiple analysis tools;
-* compare different analysis techniques;
-* export the resulting image if needed;
+- load any reference image;
+- analyze it using multiple analysis tools;
+- compare different analysis techniques;
+- export the resulting image if needed;
 
 without requiring any additional software.
 

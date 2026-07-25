@@ -185,14 +185,14 @@ Do not mix them.
 
 Read only the documentation related to your task.
 
-| Task | Read |
-|-------|------|
-| UI | PRESENTATION_ARCHITECTURE |
-| Rendering | IMAGE_ENGINE, RENDERER |
-| Layers | DOCUMENT_MODEL, LAYER_ENGINE |
-| Import / Export | IMPORT_EXPORT |
-| Performance | PERFORMANCE |
-| Architecture | ARCHITECTURE + ADRs |
+| Task            | Read                         |
+| --------------- | ---------------------------- |
+| UI              | PRESENTATION_ARCHITECTURE    |
+| Rendering       | IMAGE_ENGINE, RENDERER       |
+| Layers          | DOCUMENT_MODEL, LAYER_ENGINE |
+| Import / Export | IMPORT_EXPORT                |
+| Performance     | PERFORMANCE                  |
+| Architecture    | ARCHITECTURE + ADRs          |
 
 ---
 

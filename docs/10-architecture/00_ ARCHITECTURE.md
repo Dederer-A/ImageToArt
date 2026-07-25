@@ -346,13 +346,13 @@ Consumers request Render Models appropriate for their responsibilities.
 
 Examples include:
 
-| Context | Consumer |
-|----------|----------|
-| Screen | Renderer |
-| Export | Import / Export Engine |
-| Thumbnail | Thumbnail Generator (future) |
-| Print | Print Engine (future) |
-| AI Analysis | AI Engine (future) |
+| Context     | Consumer                     |
+| ----------- | ---------------------------- |
+| Screen      | Renderer                     |
+| Export      | Import / Export Engine       |
+| Thumbnail   | Thumbnail Generator (future) |
+| Print       | Print Engine (future)        |
+| AI Analysis | AI Engine (future)           |
 
 The Image Engine determines what should be rendered.
 
@@ -364,13 +364,13 @@ Consumers determine how the Render Model is used.
 
 Runtime resources are owned by the subsystem that creates them.
 
-| Runtime Object | Owner |
-|----------------|-------|
-| Document Runtime | Image Engine |
-| Working Image | Image Engine |
-| Pipeline Cache | Image Engine |
-| Render Model | Image Engine |
-| Viewport | Presentation Layer |
+| Runtime Object   | Owner              |
+| ---------------- | ------------------ |
+| Document Runtime | Image Engine       |
+| Working Image    | Image Engine       |
+| Pipeline Cache   | Image Engine       |
+| Render Model     | Image Engine       |
+| Viewport         | Presentation Layer |
 
 Ownership must remain explicit throughout the architecture.
 

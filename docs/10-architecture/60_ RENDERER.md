@@ -122,10 +122,10 @@ Commands do not modify the underlying Processed Image.
 
 This gives several long-term advantages:
 
-* The Image Engine emits a platform-independent rendering description.
-* The Renderer becomes a thin interpreter of that description.
-* Commands can be cached, replayed, diffed, or even recorded for debugging.
-* A future WebGPU renderer could translate the same command stream into GPU draw calls, while a Canvas 2D renderer interprets it directly.
+- The Image Engine emits a platform-independent rendering description.
+- The Renderer becomes a thin interpreter of that description.
+- Commands can be cached, replayed, diffed, or even recorded for debugging.
+- A future WebGPU renderer could translate the same command stream into GPU draw calls, while a Canvas 2D renderer interprets it directly.
 
 ---
 

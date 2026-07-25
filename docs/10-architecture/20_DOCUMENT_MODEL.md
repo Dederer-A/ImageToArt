@@ -134,12 +134,12 @@ Example:
 
 ```json
 {
-    "id": "layer-42",
-    "type": "contrast",
-    "enabled": true,
-    "parameters": {
-        "amount": 35
-    }
+  "id": "layer-42",
+  "type": "contrast",
+  "enabled": true,
+  "parameters": {
+    "amount": 35
+  }
 }
 ```
 

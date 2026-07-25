@@ -11,7 +11,7 @@
 
 This document defines the mindset expected from any AI assistant contributing to this project.
 
-It complements the architecture and development documentation by describing *how* decisions should be made rather than *what* should be implemented.
+It complements the architecture and development documentation by describing _how_ decisions should be made rather than _what_ should be implemented.
 
 ---
 

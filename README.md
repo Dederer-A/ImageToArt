@@ -26,6 +26,7 @@ Start the development server:
 
 ```bash
 pnpm dev
+pnpm exec vite --force
 ```
 
 Build the application:

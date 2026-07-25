@@ -1,16 +1,27 @@
-import type { HistoryRecord } from "@/history/HistoryRecord"
-import type { layer } from "@/layer/Layer"
+import { defineStore } from 'pinia';
 
-export class Document {
-    id: string
-    sourceImage!: string // base64 representation
-    layers: layer[]
-    historyRecords: HistoryRecord[]
+import type { Layer } from '@/layer/Layer';
 
-    constructor(sourceImage: string) {
-        this.id = crypto.randomUUID()
-        this.sourceImage = sourceImage
-        this.layers = []
-        this.historyRecords = []
-    }
+interface Document {
+  id: string;
+  sourceImage: string | null; // base64 source image representation
+  layers: Layer[];
 }
+
+export const useDocumentStore = defineStore('document', {
+  state: (): Document => {
+    return {
+      id: crypto.randomUUID(),
+      sourceImage: null,
+      layers: [],
+    };
+  },
+  // getters: {},
+  // actions: {},
+  persist: {
+    storage: localStorage,
+    afterHydrate: (ctx) => {
+      console.log('Document afterHydrate event: ' + ctx.store.$id);
+    },
+  },
+});

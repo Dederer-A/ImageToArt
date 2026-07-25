@@ -197,10 +197,10 @@ Boolean variables should read naturally.
 Examples:
 
 ```typescript
-isVisible
-hasSelection
-canExport
-supportsWebGPU
+isVisible;
+hasSelection;
+canExport;
+supportsWebGPU;
 ```
 
 ---
@@ -212,11 +212,11 @@ Use descriptive handler names.
 Examples:
 
 ```typescript
-onClick()
+onClick();
 
-onImageLoaded()
+onImageLoaded();
 
-onLayerRemoved()
+onLayerRemoved();
 ```
 
 ---

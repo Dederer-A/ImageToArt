@@ -18,16 +18,16 @@ const messages: LocaleMessages = {};
 Object.keys(modules).forEach((path) => {
   // Matches './{locale}/{filename}.json' -> e.g., './en/common.json'
   const matched = path.match(/\.\/([\w-]+)\/([\w-]+)\.json$/);
-  
+
   if (matched && matched.length === 3) {
     const locale = matched[1];
     const fileName = matched[2];
-    
+
     // Initialize the locale object if it doesn't exist
     if (!messages[locale]) {
       messages[locale] = {};
     }
-    
+
     // Assign the JSON content under the filename namespace
     messages[locale][fileName] = modules[path].default || modules[path];
   }
@@ -35,9 +35,9 @@ Object.keys(modules).forEach((path) => {
 
 // 5. Create and export the i18n instance
 const i18n = createI18n({
-  legacy: false,          // Set to false to use Composition API
-  locale: 'en',           // Set default locale
-  fallbackLocale: 'en',   // Set fallback locale
+  legacy: false, // Set to false to use Composition API
+  locale: 'en', // Set default locale
+  fallbackLocale: 'en', // Set fallback locale
   messages,
 });
 

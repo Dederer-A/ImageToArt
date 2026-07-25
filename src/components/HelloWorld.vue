@@ -1,16 +1,52 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue';
 // import { useI18n } from 'vue-i18n';
-import viteLogo from '../assets/vite.svg'
-import heroImg from '../assets/hero.png'
-import vueLogo from '../assets/vue.svg'
+import viteLogo from '../assets/vite.svg';
+import heroImg from '../assets/hero.png';
+import vueLogo from '../assets/vue.svg';
+import { LayerRegistry } from '@/layer/LayerRegistry';
 
-const count = ref(0)
+import type { OpenCV } from '@opencvjs/web';
+
+const count = ref(0);
+const isReady = ref(false);
+const buildInfo = ref('');
+const matrixSize = ref('');
+
+const layerList = LayerRegistry.getInstance().list();
+
+console.log('!!!!!!!!!!!! custom log');
 // const { t, locale } = useI18n();
 // Example function to programmatically switch languages
 // const switchLanguage = (lang) => {
 //   locale.value = lang;
 // }
+
+onMounted(async () => {
+  try {
+    // 1. Динамический импорт загрузчика, чтобы Vite не ругался при сборке
+    const { loadOpenCV } = await import('@opencvjs/web');
+
+    // 2. Инициализируем WebAssembly модуль OpenCV
+    const cv: typeof OpenCV = await loadOpenCV();
+    isReady.value = true;
+
+    // 3. Получаем информацию о сборке (для проверки работоспособности)
+    buildInfo.value = cv.getBuildInformation().split('\n')[0]; // Берём первую строку
+    console.log('CV: ' + cv.getVersionString);
+    console.log('CV: ' + cv.getBuildInformation());
+
+    // 4. Пример создания и деструктуризации матрицы
+    const mat = new cv.Mat(150, 300, cv.CV_8UC4); // 150x300 пикселей, RGBA
+    matrixSize.value = `${mat.cols}x${mat.rows} (каналов: ${mat.channels()})`;
+    console.log('CV: ' + `${mat.cols}x${mat.rows} (каналов: ${mat.channels()})`);
+
+    // Обязательно очищаем память WASM после работы с объектами cv.Mat!
+    mat.delete();
+  } catch (error) {
+    console.error('Не удалось загрузить OpenCV.js:', error);
+  }
+});
 </script>
 
 <template>
@@ -21,12 +57,16 @@ const count = ref(0)
       <img :src="viteLogo" class="vite" alt="Vite logo" />
     </div>
     <div>
-      <h1>{{ $t("common.welcome.title") }}</h1>
+      <h1>{{ $t('common.welcome.title') }}</h1>
       <p>Edit <code>src/App.vue</code> and save to test <code>HMR</code></p>
     </div>
-    <button type="button" class="counter" @click="count++">
-      Count is {{ count }}
-    </button>
+    <button type="button" class="counter" @click="count++">Count is {{ count }}</button>
+    <div>
+      List of Layer Implementations:
+      <ul>
+        <li v-for="layer in layerList">{{ layer.name }} v.{{ layer.version }}</li>
+      </ul>
+    </div>
   </section>
 
   <div class="ticks"></div>
