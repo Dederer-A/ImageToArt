@@ -154,7 +154,7 @@ Custom components are preferred.
 
 ---
 
-# UI Component Library
+# UI Libraries
 
 ## shadcn-vue
 
@@ -208,8 +208,6 @@ UI libraries should provide building blocks, not application architecture.
 
 ---
 
-# Icons
-
 ## Lucide Icons
 
 The project uses **Lucide Icons** as the primary icon set.
@@ -227,57 +225,6 @@ Icons should communicate actions clearly and consistently throughout the applica
 Custom icons should only be introduced when no suitable Lucide icon exists.
 
 ---
-
-# Utility Libraries
-
-## VueUse
-
-The project uses **VueUse** for reusable Composition API utilities.
-
-VueUse should be preferred over custom implementations for common application functionality whenever it improves readability and maintainability.
-
-Typical use cases include:
-
-- keyboard shortcuts;
-- mouse interactions;
-- window size detection;
-- resize observers;
-- clipboard access;
-- local storage;
-- element measurements;
-- reactive utilities;
-- device capabilities.
-
-Application-specific business logic should never depend on VueUse.
-
-VueUse should remain a convenience layer for user interface and browser integration.
-
----
-
-## Additional Libraries
-
-Third-party libraries should satisfy the following criteria before being introduced:
-
-- actively maintained;
-- widely adopted;
-- TypeScript support;
-- tree-shakeable;
-- compatible with long-term maintenance;
-- provide clear value over a custom implementation.
-
-Introducing a dependency requires evaluating its long-term maintenance cost in addition to its immediate development benefits.
-
-Dependencies should simplify the project, not increase its complexity.
-
----
-
-# Styling
-
-The application uses a combination of:
-
-- Tailwind CSS
-- CSS Variables
-- Modern CSS features
 
 ## Tailwind CSS
 
@@ -346,6 +293,49 @@ Animations should be subtle, purposeful and performant.
 Animations should improve usability by communicating state changes rather than serving decorative purposes.
 
 Users who prefer reduced motion should receive an accessible experience consistent with platform accessibility settings.
+
+---
+
+# Utility Libraries
+
+## VueUse
+
+The project uses **VueUse** for reusable Composition API utilities.
+
+VueUse should be preferred over custom implementations for common application functionality whenever it improves readability and maintainability.
+
+Typical use cases include:
+
+- keyboard shortcuts;
+- mouse interactions;
+- window size detection;
+- resize observers;
+- clipboard access;
+- local storage;
+- element measurements;
+- reactive utilities;
+- device capabilities.
+
+Application-specific business logic should never depend on VueUse.
+
+VueUse should remain a convenience layer for user interface and browser integration.
+
+---
+
+## Additional Libraries
+
+Third-party libraries should satisfy the following criteria before being introduced:
+
+- actively maintained;
+- widely adopted;
+- TypeScript support;
+- tree-shakeable;
+- compatible with long-term maintenance;
+- provide clear value over a custom implementation.
+
+Introducing a dependency requires evaluating its long-term maintenance cost in addition to its immediate development benefits.
+
+Dependencies should simplify the project, not increase its complexity.
 
 ---
 
