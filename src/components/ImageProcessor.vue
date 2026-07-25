@@ -3,8 +3,12 @@ import { ref, onMounted } from 'vue';
 
 import Button from '@/components/ui/button/Button.vue';
 
+import { useDocumentStore } from '@/document/Document';
+
 import imgTiger from '@/assets/tiger.jpg';
 import { OpenCVService } from '../Image/OpenCVService';
+
+const documentStore = useDocumentStore();
 
 const openCVService = OpenCVService.getInstance();
 const isCvLoading = ref(true);
@@ -44,6 +48,7 @@ const processImage = () => {
 
 <template>
   <div class="processor">
+    <div>Document id: {{ documentStore.id }}</div>
     <div v-if="isCvLoading" class="loader">⏳ Загрузка OpenCV WASM...</div>
 
     <div v-else class="content">

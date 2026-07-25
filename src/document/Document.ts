@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
-
 import type { Layer } from '@/layer/Layer';
+import { useDocumentRuntimeStore } from './DocumentRuntime';
 
 interface Document {
   id: string;
@@ -21,7 +21,8 @@ export const useDocumentStore = defineStore('document', {
   persist: {
     storage: localStorage,
     afterHydrate: (ctx) => {
-      console.log('Document afterHydrate event: ' + ctx.store.$id);
+      const documentStore = useDocumentRuntimeStore();
+      documentStore.initialize(ctx.store.id);
     },
   },
 });

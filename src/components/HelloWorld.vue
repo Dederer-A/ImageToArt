@@ -33,8 +33,6 @@ onMounted(async () => {
 
     // 3. Получаем информацию о сборке (для проверки работоспособности)
     buildInfo.value = cv.getBuildInformation().split('\n')[0]; // Берём первую строку
-    console.log('CV: ' + cv.getVersionString);
-    console.log('CV: ' + cv.getBuildInformation());
 
     // 4. Пример создания и деструктуризации матрицы
     const mat = new cv.Mat(150, 300, cv.CV_8UC4); // 150x300 пикселей, RGBA
