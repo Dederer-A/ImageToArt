@@ -27,4 +27,6 @@ export class LayerRegistry {
 export interface LayerImplementation {
   name: string;
   version: string;
+
+  render(src: ImageData, parameters: any): ImageData;
 }

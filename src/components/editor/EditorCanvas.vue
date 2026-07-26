@@ -1,7 +1,14 @@
 <script setup lang="ts">
+import { useTemplateRef, watch, onMounted } from 'vue';
 import { useViewport } from '@/composables/useViewport';
 
-withDefaults(
+import { useDocumentStore } from '@/document/Document';
+import { useDocumentRuntimeStore } from '@/document/DocumentRuntime';
+import { ImageEngine } from '@/Image/ImageEngine';
+import { ImageRenderer } from '@/Image/ImageRenderer';
+import { Layer } from '@/layer/Layer';
+
+const props = withDefaults(
   defineProps<{
     src?: string;
   }>(),
@@ -10,11 +17,62 @@ withDefaults(
   }
 );
 
+const imageRef = useTemplateRef<HTMLImageElement>('imageRef');
+const displayImageRef = useTemplateRef<HTMLImageElement>('displayImageRef');
+
+const documentRuntime = useDocumentRuntimeStore();
+watch(
+  () => documentRuntime.version,
+  (_newValue) => {
+    console.log('[EditorCanvas] watcher: documentRuntime');
+    if (displayImageRef.value == null) return;
+    ImageRenderer.renderImageDataToImage(displayImageRef.value);
+  }
+);
+
 const emit = defineEmits<{
   (e: 'click'): void;
 }>();
 
+// Update Document state and create new DocumentRuntime when image changed
+watch(
+  () => props.src,
+  (newValue) => {
+    initializeDocument(newValue);
+  },
+  { deep: true, immediate: true }
+);
+
+onMounted(() => {
+  // The element is now guaranteed to exist
+  console.log(imageRef.value);
+  initializeDocument(props.src);
+});
+
 const { transform } = useViewport(); // viewport,
+
+function initializeDocument(newValue: string) {
+  console.log(`[EditorCanvas] watch new image: ${newValue.substring(0, 50)}`);
+  console.log(`[EditorCanvas] watch img tag: ${imageRef.value}`);
+  if (imageRef.value == null) return;
+  if (displayImageRef.value == null) return;
+
+  const imageData = ImageEngine.imageToImageData(imageRef.value);
+  const document = useDocumentStore();
+  document.sourceImage = newValue;
+  document.layers = [];
+  document.layers.push(new Layer('blackAndWhite', true, { value: 25 }));
+
+  // TODO fill layers with disabled by default
+
+  const documentRuntime = useDocumentRuntimeStore();
+  documentRuntime.initialize(document);
+  documentRuntime.srcImageData = imageData;
+  documentRuntime.currentImageData = null; // ImageEngine.cloneImageData(imageData);
+  console.log('[EditorScreen] new Document and DocumentRuntime configured');
+
+  ImageEngine.process();
+}
 </script>
 
 <template>
@@ -25,9 +83,9 @@ const { transform } = useViewport(); // viewport,
       :style="transform"
       class="absolute inset-0 flex items-center justify-center origin-center will-change-transform"
     >
+      <img ref="imageRef" :src="src" style="display: none" />
       <img
-        v-if="src"
-        :src="src"
+        ref="displayImageRef"
         alt="Image"
         draggable="false"
         class="max-h-full max-w-full object-contain pointer-events-none"

@@ -12,9 +12,7 @@ import ToolList from '@/components/editor/ToolList.vue';
 import ToolRow from '@/components/editor/ToolRow.vue';
 
 import { useDocumentStore } from '@/document/Document';
-import { useDocumentRuntimeStore } from '@/document/DocumentRuntime';
 import { ImageEngine } from '@/Image/ImageEngine';
-// import { OpenCVService } from '@/Image/OpenCVService';
 
 const props = defineProps<{
   image: string; // Base64 image representation compatible with IMG Tag
@@ -23,25 +21,6 @@ const props = defineProps<{
 const cropPresets = [['Portrait', 'Landscape'], ['Free', 'Original', '3:2', '16:9', '4:3', '1:1'], ['Instagram']];
 
 const uiVisible = ref(true);
-
-// Update Document state and create new DocumentRuntime when image changed
-watch(
-  () => props.image,
-  (newValue) => {
-    console.log(`!!Image ${newValue.substring(0, 20)}`);
-    const document = useDocumentStore();
-    document.sourceImage = newValue;
-    document.layers = [];
-    // TODO fill layers with disabled by default
-
-    const documentRuntime = useDocumentRuntimeStore();
-    documentRuntime.initialize(document);
-    // documentRuntime.srcMat = OpenCVService.getInstance().base64ToMat(document.sourceImage);
-
-    ImageEngine.process(document, documentRuntime);
-  },
-  { deep: true, immediate: true }
-);
 
 // -----------------------------------------------------------------------------
 // Temporary editor state.
@@ -62,7 +41,7 @@ const toolState = reactive({
   },
   blackAndWhite: {
     enabled: true,
-    value: 0,
+    value: 50,
   },
   posterize: {
     enabled: false,
@@ -93,6 +72,15 @@ const toolState = reactive({
 
 watch(toolState.blackAndWhite, (newValue) => {
   console.log('Изменилось свойство внутри blackAndWhite:', newValue);
+  const document = useDocumentStore();
+  const layers = document.layers;
+  for (const layer of layers) {
+    if (layer.type == 'blackAndWhite') {
+      layer.parameters = newValue;
+    }
+  }
+  // TODO send event
+  ImageEngine.process();
 });
 
 // -----------------------------------------------------------------------------

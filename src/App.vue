@@ -1,23 +1,11 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 
 import EditorScreen from '@/components/editor/EditorScreen.vue';
 import HomeScreen from '@/components/home/HomeScreen.vue';
 
-import { OpenCVService } from '@/Image/OpenCVService';
-
 const fileInput = ref<HTMLInputElement>();
 const image = ref('');
-
-const openCVService = OpenCVService.getInstance();
-
-onMounted(async () => {
-  try {
-    await openCVService.init();
-  } catch (error) {
-    console.error("Can't initialize OpenCV. Reason: " + error);
-  }
-});
 
 function selectImage() {
   fileInput.value?.click();
