@@ -71,17 +71,24 @@ const toolState = reactive({
 });
 
 watch(toolState.blackAndWhite, (newValue) => {
-  // console.log('Изменилось свойство внутри blackAndWhite:', newValue);
+  applyChanges('blackAndWhite', newValue);
+});
+watch(toolState.posterize, (newValue) => {
+  applyChanges('posterize', newValue);
+});
+
+function applyChanges(type: string, newValue: any) {
+  console.log(`Изменилось свойство внутри ${type}: ${newValue}`);
   const document = useDocumentStore();
   const layers = document.layers;
   for (const layer of layers) {
-    if (layer.type == 'blackAndWhite') {
+    if (layer.type == type) {
       layer.parameters = newValue;
     }
   }
   const documentRuntime = useDocumentRuntimeStore();
   documentRuntime.version++;
-});
+}
 
 onMounted(() => {
   const documentRuntime = useDocumentRuntimeStore();
@@ -132,7 +139,7 @@ function manageMeasurements() {
 
     <EditorToolbar :visible="uiVisible" @back="goBack" @export="downloadImage" />
 
-    <BottomToolPanel :visible="uiVisible" :height="50">
+    <BottomToolPanel :visible="uiVisible" :height="35">
       <ToolList class="divide-y divide-border">
         <ToolRow v-model="toolState.crop.enabled" title="Crop">
           <CropToolControl v-model="toolState.crop.preset" :presets="cropPresets" />

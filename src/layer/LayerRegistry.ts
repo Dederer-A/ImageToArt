@@ -12,6 +12,7 @@ export class LayerRegistry {
   }
 
   public register(layerImplementation: LayerImplementation): void {
+    console.log(`[LayerRegistry] register: ${layerImplementation.name}`);
     this.registry.set(layerImplementation.name, layerImplementation);
   }
 

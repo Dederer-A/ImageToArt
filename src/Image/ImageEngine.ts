@@ -3,6 +3,8 @@ import { useDocumentRuntimeStore } from '@/document/DocumentRuntime';
 
 import { LayerRegistry } from '@/layer/LayerRegistry';
 
+const MAX_SIDE_SIZE = 2000;
+
 export class ImageEngine {
   public static process() {
     const document = useDocumentStore();
@@ -53,7 +55,7 @@ export class ImageEngine {
         const img = new Image();
 
         img.onload = () => {
-          const maxSide = 1000;
+          const maxSide = MAX_SIDE_SIZE;
           let width = img.naturalWidth || img.width;
           let height = img.naturalHeight || img.height;
 

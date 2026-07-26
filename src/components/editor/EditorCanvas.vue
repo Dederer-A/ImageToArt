@@ -20,16 +20,16 @@ const props = withDefaults(
 );
 
 const imageRef = useTemplateRef<HTMLImageElement>('imageRef');
-const displayImageRef = useTemplateRef<HTMLImageElement>('displayImageRef');
+const displayImageRef = useTemplateRef<HTMLCanvasElement>('displayImageRef');
 
 const documentRuntime = useDocumentRuntimeStore();
 
 const debouncedDraw = debounce(() => {
-  console.log('[EditorCanvas] watcher: documentRuntime');
+  console.log('[EditorCanvas] debouncedDraw');
   if (displayImageRef.value == null) return;
   ImageEngine.process();
-  ImageRenderer.renderImageDataToImage(displayImageRef.value);
-}, 50);
+  ImageRenderer.renderImageDataToCanvas(displayImageRef.value);
+}, 5);
 
 onUnmounted(() => {
   debouncedDraw.cancel();
@@ -38,7 +38,6 @@ onUnmounted(() => {
 watch(
   () => documentRuntime.version,
   (_newValue) => {
-    console.log('[EditorCanvas] watcher: documentRuntime');
     debouncedDraw();
   }
 );
@@ -68,7 +67,8 @@ function handleImageLoad() {
   const document = useDocumentStore();
   document.sourceImage = props.src;
   document.layers = [];
-  document.layers.push(new Layer('blackAndWhite', true, { value: 25 }));
+  document.layers.push(new Layer('blackAndWhite', false, { value: 25 }));
+  document.layers.push(new Layer('posterize', false, { value: 50 }));
 
   // TODO fill layers with disabled by default
 
@@ -91,7 +91,13 @@ function handleImageLoad() {
       class="absolute inset-0 flex items-center justify-center origin-center will-change-transform"
     >
       <img ref="imageRef" :src="src" style="display: none" @load="handleImageLoad" />
-      <img
+      <!-- <img
+        ref="displayImageRef"
+        alt="Image"
+        draggable="false"
+        class="max-h-full max-w-full object-contain pointer-events-none"
+      /> -->
+      <canvas
         ref="displayImageRef"
         alt="Image"
         draggable="false"

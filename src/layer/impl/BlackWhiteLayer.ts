@@ -1,6 +1,4 @@
 import { type LayerImplementation } from '@/layer/LayerRegistry';
-// import { OpenCVService } from '@/Image/OpenCVService';
-// import { useDocumentRuntimeStore } from '@/document/DocumentRuntime';
 
 export class BlackWhiteLayer implements LayerImplementation {
   name: string = 'blackAndWhite';
@@ -13,7 +11,7 @@ export class BlackWhiteLayer implements LayerImplementation {
   }
 }
 
-export function blackAndWhite(src: ImageData, value: number): ImageData {
+function blackAndWhite(src: ImageData, value: number): ImageData {
   const dst = new ImageData(src.width, src.height);
 
   const t = Math.max(0, Math.min(100, value)) / 100;

@@ -1,6 +1,32 @@
 import { useDocumentRuntimeStore } from '@/document/DocumentRuntime';
 
 export class ImageRenderer {
+  static renderImageDataToCanvas(displayCanvas: HTMLCanvasElement) {
+    const documentRuntime = useDocumentRuntimeStore();
+    const imageData = documentRuntime.currentImageData;
+
+    console.log('[ImageRender] renderImageDataToCanvas');
+
+    if (!imageData) {
+      return;
+    }
+
+    // Resize canvas if needed
+    if (displayCanvas.width !== imageData.width || displayCanvas.height !== imageData.height) {
+      displayCanvas.width = imageData.width;
+      displayCanvas.height = imageData.height;
+    }
+
+    const ctx = displayCanvas.getContext('2d');
+    if (!ctx) {
+      return;
+    }
+
+    ctx.putImageData(imageData, 0, 0);
+  }
+}
+
+/*
   static renderImageDataToImage(displayImage: HTMLImageElement) {
     const documentRuntime = useDocumentRuntimeStore();
     const imageData = documentRuntime.currentImageData;
@@ -30,4 +56,4 @@ export class ImageRenderer {
       }
     }, 'image/png');
   }
-}
+*/
