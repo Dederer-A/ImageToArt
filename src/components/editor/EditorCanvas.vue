@@ -8,7 +8,6 @@ import { useDocumentStore } from '@/document/Document';
 import { useDocumentRuntimeStore } from '@/document/DocumentRuntime';
 import { ImageEngine } from '@/Image/ImageEngine';
 import { ImageRenderer } from '@/Image/ImageRenderer';
-import { Layer } from '@/layer/Layer';
 
 const props = withDefaults(
   defineProps<{

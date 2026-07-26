@@ -57,7 +57,7 @@ const toolState = reactive({
   },
   grid: {
     enabled: false,
-    value: 50,
+    value: 1,
   },
   perspectiveGrid: {
     enabled: false,
@@ -78,6 +78,9 @@ watch(toolState.posterize, (newValue) => {
 });
 watch(toolState.blur, (newValue) => {
   applyChanges('blur', newValue);
+});
+watch(toolState.grid, (newValue) => {
+  applyChanges('grid', newValue);
 });
 
 function applyChanges(type: string, newValue: any) {
@@ -170,7 +173,7 @@ function manageMeasurements() {
         </ToolRow>
 
         <ToolRow v-model="toolState.grid.enabled" title="Grid">
-          <SliderToolControl v-model="toolState.grid.value" />
+          <SliderToolControl v-model="toolState.grid.value" :min="1" :max="8" />
         </ToolRow>
 
         <ToolRow v-model="toolState.perspectiveGrid.enabled" title="Perspective Grid">

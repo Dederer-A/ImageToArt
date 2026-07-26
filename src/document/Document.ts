@@ -24,6 +24,7 @@ export const useDocumentStore = defineStore('document', {
       this.layers.push(new Layer('blur', false, { value: 0 }));
       this.layers.push(new Layer('blackAndWhite', false, { value: 25 }));
       this.layers.push(new Layer('posterize', false, { value: 50 }));
+      this.layers.push(new Layer('grid', false, { value: 1 }));
     },
   },
   persist: {
