@@ -9,6 +9,7 @@ export interface DocumentRuntime {
   srcImageData: ImageData | null;
   currentImageData: ImageData | null;
   version: number;
+  cache: Map<string, ImageData>;
 }
 
 export const useDocumentRuntimeStore = defineStore('documentRuntime', {
@@ -19,6 +20,7 @@ export const useDocumentRuntimeStore = defineStore('documentRuntime', {
       srcImageData: null,
       currentImageData: null,
       version: 0,
+      cache: new Map(),
     };
   },
   actions: {

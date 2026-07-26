@@ -1,3 +1,4 @@
+import type { DocumentRuntime } from '@/document/DocumentRuntime';
 import { type LayerImplementation } from '@/layer/LayerRegistry';
 
 export class BlackWhiteLayer implements LayerImplementation {
@@ -5,14 +6,20 @@ export class BlackWhiteLayer implements LayerImplementation {
   version: string = '1.0.0';
   properties: any = { value: 0 };
 
-  render(src: ImageData, parameters: any): ImageData {
+  render(documentRuntime: DocumentRuntime, src: ImageData, parameters: any): ImageData {
     console.log(`[BlackWhiteLayer] render(): ${JSON.stringify(parameters)}`);
-    return blackAndWhite(src, parameters.value);
+    return blackAndWhite(documentRuntime, src, parameters.value);
   }
 }
 
-function blackAndWhite(src: ImageData, value: number): ImageData {
-  const dst = new ImageData(src.width, src.height);
+function blackAndWhite(documentRuntime: DocumentRuntime, src: ImageData, value: number): ImageData {
+  const cacheName = 'blackAndWhite';
+  let dst = documentRuntime.cache.get(cacheName);
+  if (dst === undefined) {
+    dst = new ImageData(src.width, src.height);
+    documentRuntime.cache.set(cacheName, dst);
+    console.log('[BlackWhiteLayer] blackAndWhite(): cache miss, creating new ImageData');
+  }
 
   const t = Math.max(0, Math.min(100, value)) / 100;
 

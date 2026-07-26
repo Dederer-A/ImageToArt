@@ -10,7 +10,7 @@ export class ImageEngine {
     const document = useDocumentStore();
     const documentRuntime = useDocumentRuntimeStore();
 
-    console.log(`[ImageEngine] process(${document.id})`);
+    console.log('[ImageEngine] process');
     if (documentRuntime.srcImageData == null) return;
     documentRuntime.currentImageData = ImageEngine.cloneImageData(documentRuntime.srcImageData);
 
@@ -18,6 +18,7 @@ export class ImageEngine {
       const layerImplementation = LayerRegistry.getInstance().get(layer.type);
       if (layer.enabled && layerImplementation != null && documentRuntime.currentImageData != null) {
         documentRuntime.currentImageData = layerImplementation.render(
+          documentRuntime,
           documentRuntime.currentImageData,
           layer.parameters
         );

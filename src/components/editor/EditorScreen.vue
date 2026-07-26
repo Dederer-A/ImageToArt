@@ -39,6 +39,10 @@ const toolState = reactive({
     flipHorizontal: false,
     flipVertical: false,
   },
+  contrast: {
+    enabled: true,
+    value: 50,
+  },
   blackAndWhite: {
     enabled: true,
     value: 50,
@@ -47,17 +51,31 @@ const toolState = reactive({
     enabled: false,
     value: 50,
   },
-  enhancement: {
-    enabled: false,
-    value: 50,
-  },
   blur: {
     enabled: false,
     value: 0,
   },
+  squint: {
+    enabled: false,
+    value: 0,
+  },
+  edge: {
+    enabled: false,
+    value: 0,
+  },
+  gamma: {
+    enabled: false,
+    value: 50,
+  },
   grid: {
     enabled: false,
     value: 1,
+  },
+  goldenRatio: {
+    enabled: false,
+  },
+  ruleOfThirds: {
+    enabled: false,
   },
   perspectiveGrid: {
     enabled: false,
@@ -81,6 +99,28 @@ watch(toolState.blur, (newValue) => {
 });
 watch(toolState.grid, (newValue) => {
   applyChanges('grid', newValue);
+});
+
+watch(toolState.contrast, (newValue) => {
+  applyChanges('contrast', newValue);
+});
+watch(toolState.gamma, (newValue) => {
+  applyChanges('gamma', newValue);
+});
+// watch(toolState.saturation, (newValue) => {
+//   applyChanges('saturation', newValue);
+// });
+watch(toolState.squint, (newValue) => {
+  applyChanges('squint', newValue);
+});
+watch(toolState.edge, (newValue) => {
+  applyChanges('edge', newValue);
+});
+watch(toolState.goldenRatio, (newValue) => {
+  applyChanges('goldenRatio', newValue);
+});
+watch(toolState.ruleOfThirds, (newValue) => {
+  applyChanges('ruleOfThirds', newValue);
 });
 
 function applyChanges(type: string, newValue: any) {
@@ -156,6 +196,14 @@ function manageMeasurements() {
           <RotateToolControl v-model="toolState.rotate" />
         </ToolRow>
 
+        <ToolRow v-model="toolState.contrast.enabled" title="Contrast">
+          <SliderToolControl v-model="toolState.contrast.value" />
+        </ToolRow>
+
+        <ToolRow v-model="toolState.gamma.enabled" title="Gamma">
+          <SliderToolControl v-model="toolState.gamma.value" />
+        </ToolRow>
+
         <ToolRow v-model="toolState.blackAndWhite.enabled" title="Black & White">
           <SliderToolControl v-model="toolState.blackAndWhite.value" />
         </ToolRow>
@@ -164,8 +212,12 @@ function manageMeasurements() {
           <SliderToolControl v-model="toolState.posterize.value" />
         </ToolRow>
 
-        <ToolRow v-model="toolState.enhancement.enabled" title="Enhancement">
-          <SliderToolControl v-model="toolState.enhancement.value" />
+        <ToolRow v-model="toolState.squint.enabled" title="Squint">
+          <SliderToolControl v-model="toolState.squint.value" />
+        </ToolRow>
+
+        <ToolRow v-model="toolState.edge.enabled" title="Edge">
+          <SliderToolControl v-model="toolState.edge.value" />
         </ToolRow>
 
         <ToolRow v-model="toolState.blur.enabled" title="Blur">
@@ -179,6 +231,10 @@ function manageMeasurements() {
         <ToolRow v-model="toolState.perspectiveGrid.enabled" title="Perspective Grid">
           <ActionToolControl @click="managePerspectiveGrid" />
         </ToolRow>
+
+        <ToolRow v-model="toolState.goldenRatio.enabled" title="Golden Ratio"> </ToolRow>
+
+        <ToolRow v-model="toolState.ruleOfThirds.enabled" title="Rule of Thirds"> </ToolRow>
 
         <ToolRow v-model="toolState.rulers.enabled" title="Rulers">
           <ActionToolControl @click="manageRulers" />
