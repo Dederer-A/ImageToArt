@@ -25,17 +25,6 @@ async function onFileSelected(event: Event) {
   // Allow selecting the same file again.
   input.value = '';
 }
-
-// function readAsBase64(file: File): Promise<string> {
-//   return new Promise((resolve, reject) => {
-//     const reader = new FileReader();
-
-//     reader.onload = () => resolve(reader.result as string);
-//     reader.onerror = reject;
-
-//     reader.readAsDataURL(file);
-//   });
-// }
 </script>
 
 <template>

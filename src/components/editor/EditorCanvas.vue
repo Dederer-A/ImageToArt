@@ -63,20 +63,15 @@ function handleImageLoad() {
   if (imageRef.value == null) return;
   if (displayImageRef.value == null) return;
 
-  const imageData = ImageEngine.imageToImageData(imageRef.value);
   const document = useDocumentStore();
-  document.sourceImage = props.src;
-  document.layers = [];
-  document.layers.push(new Layer('blur', false, { value: 0 }));
-  document.layers.push(new Layer('blackAndWhite', false, { value: 25 }));
-  document.layers.push(new Layer('posterize', false, { value: 50 }));
-
-  // TODO fill layers with disabled by default
+  document.initialize(props.src);
 
   const documentRuntime = useDocumentRuntimeStore();
+  const imageData = ImageEngine.imageToImageData(imageRef.value);
+
   documentRuntime.initialize(document);
   documentRuntime.srcImageData = imageData;
-  documentRuntime.currentImageData = null; // ImageEngine.cloneImageData(imageData);
+  documentRuntime.currentImageData = null;
   console.log('[EditorScreen] new Document and DocumentRuntime configured');
 
   ImageEngine.process();
