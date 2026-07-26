@@ -41,7 +41,8 @@ export function blackAndWhite(src: ImageData, value: number): ImageData {
   return dst;
 }
 
-export function _blackAndWhite(src: ImageData, value: number): ImageData {
+/*
+export function blackAndWhite(src: ImageData, value: number): ImageData {
   const dst = new ImageData(src.width, src.height);
 
   const s = Math.max(0, Math.min(100, value)) / 100;
@@ -91,3 +92,4 @@ function grayscale(imageData: ImageData): ImageData {
 
   return dst;
 }
+*/

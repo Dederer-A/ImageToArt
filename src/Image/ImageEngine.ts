@@ -21,7 +21,6 @@ export class ImageEngine {
         );
       }
     }
-    documentRuntime.version++;
   }
 
   static cloneImageData(image: ImageData | null): ImageData | null {
@@ -44,6 +43,85 @@ export class ImageEngine {
     ctx.drawImage(img, 0, 0);
 
     return ctx.getImageData(0, 0, canvas.width, canvas.height);
+  }
+
+  static resizeFileToBase64(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+
+      reader.onload = (readerEvent) => {
+        const img = new Image();
+
+        img.onload = () => {
+          const maxSide = 1000;
+          let width = img.naturalWidth || img.width;
+          let height = img.naturalHeight || img.height;
+
+          // Calculate aspect ratio scaling
+          if (width > maxSide || height > maxSide) {
+            if (width > height) {
+              height = Math.round((height * maxSide) / width);
+              width = maxSide;
+            } else {
+              width = Math.round((width * maxSide) / height);
+              height = maxSide;
+            }
+          }
+
+          // Render to canvas
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+
+          if (!ctx) {
+            reject(new Error('Could not get 2D canvas context'));
+            return;
+          }
+
+          ctx.drawImage(img, 0, 0, width, height);
+
+          // Export to Base64 JPEG (90% quality)
+          const base64 = canvas.toDataURL('image/jpeg', 0.9);
+          resolve(base64);
+        };
+
+        img.onerror = () => reject(new Error('Failed to load image file into element'));
+        img.src = readerEvent.target?.result as string;
+      };
+
+      reader.onerror = () => reject(new Error('Failed to read file source'));
+      reader.readAsDataURL(file);
+    });
+  }
+
+  static resizeImageToBase64(img: HTMLImageElement): string | null {
+    const maxSide = 2000;
+    let width = img.naturalWidth || img.width;
+    let height = img.naturalHeight || img.height;
+
+    // Calculate new dimensions while maintaining aspect ratio
+    if (width > maxSide || height > maxSide) {
+      if (width > height) {
+        height = Math.round((height * maxSide) / width);
+        width = maxSide;
+      } else {
+        width = Math.round((width * maxSide) / height);
+        height = maxSide;
+      }
+    }
+
+    // Create an off-screen canvas to perform the resize
+    const canvas = document.createElement('canvas');
+    canvas.width = width;
+    canvas.height = height;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return null;
+
+    // Draw and export
+    ctx.drawImage(img, 0, 0, width, height);
+    return canvas.toDataURL('image/jpeg', 0.9);
   }
 
   /*

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, ref, watch } from 'vue';
+import { reactive, ref, watch, onMounted } from 'vue';
 
 import ActionToolControl from '@/components/tools/ActionToolControl.vue';
 import BottomToolPanel from '@/components/editor/BottomToolPanel.vue';
@@ -12,7 +12,7 @@ import ToolList from '@/components/editor/ToolList.vue';
 import ToolRow from '@/components/editor/ToolRow.vue';
 
 import { useDocumentStore } from '@/document/Document';
-import { ImageEngine } from '@/Image/ImageEngine';
+import { useDocumentRuntimeStore } from '@/document/DocumentRuntime';
 
 const props = defineProps<{
   image: string; // Base64 image representation compatible with IMG Tag
@@ -71,7 +71,7 @@ const toolState = reactive({
 });
 
 watch(toolState.blackAndWhite, (newValue) => {
-  console.log('Изменилось свойство внутри blackAndWhite:', newValue);
+  // console.log('Изменилось свойство внутри blackAndWhite:', newValue);
   const document = useDocumentStore();
   const layers = document.layers;
   for (const layer of layers) {
@@ -79,8 +79,13 @@ watch(toolState.blackAndWhite, (newValue) => {
       layer.parameters = newValue;
     }
   }
-  // TODO send event
-  ImageEngine.process();
+  const documentRuntime = useDocumentRuntimeStore();
+  documentRuntime.version++;
+});
+
+onMounted(() => {
+  const documentRuntime = useDocumentRuntimeStore();
+  documentRuntime.version++;
 });
 
 // -----------------------------------------------------------------------------
