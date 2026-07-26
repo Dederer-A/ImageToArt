@@ -1,24 +1,25 @@
 import { type LayerImplementation } from '@/layer/LayerRegistry';
+import type { DocumentRuntime } from '@/document/DocumentRuntime';
 
 export class GammaLayer implements LayerImplementation {
   name: string = 'gamma';
   version: string = '1.0.0';
   properties: any = { value: 0 };
 
-  render(src: ImageData, parameters: any): ImageData {
+  render(documentRuntime: DocumentRuntime, src: ImageData, parameters: any): ImageData {
     console.log(`[GammaLayer] render(): ${JSON.stringify(parameters)}`);
-    return gamma(src, parameters.value);
+    return gamma(documentRuntime, src, parameters.value);
   }
 }
 
-export function gamma(src: ImageData, slider: number): ImageData {
+export function gamma(_documentRuntime: DocumentRuntime, src: ImageData, slider: number): ImageData {
   slider = Math.max(0, Math.min(100, slider));
 
   if (slider === 50) {
     return new ImageData(new Uint8ClampedArray(src.data), src.width, src.height);
   }
 
-  const dst = new ImageData(src.width, src.height);
+  let dst = new ImageData(src.width, src.height);
 
   const srcPixels = src.data;
   const dstPixels = dst.data;

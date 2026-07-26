@@ -1,18 +1,20 @@
 import { imageDataRGBA } from 'stackblur-canvas';
 import { type LayerImplementation } from '@/layer/LayerRegistry';
+import type { DocumentRuntime } from '@/document/DocumentRuntime';
 
 export class BlurLayer implements LayerImplementation {
   name: string = 'blur';
   version: string = '1.0.0';
   properties: any = { value: 0 };
 
-  render(src: ImageData, parameters: any): ImageData {
+  render(documentRuntime: DocumentRuntime, src: ImageData, parameters: any): ImageData {
     console.log(`[BlurLayer] render(): ${JSON.stringify(parameters)}`);
-    return stackblur(src, parameters.value);
+    return stackblur(documentRuntime, src, parameters.value);
   }
 }
 
-export function stackblur(src: ImageData, slider: number): ImageData { // stackblur
+export function stackblur(_documentRuntime: DocumentRuntime, src: ImageData, slider: number): ImageData {
+  // stackblur
   slider = Math.max(0, Math.min(100, slider));
 
   if (slider === 0) {
@@ -32,7 +34,7 @@ export function stackblur(src: ImageData, slider: number): ImageData { // stackb
 
   const radius = Math.round(MIN_RADIUS + (MAX_RADIUS - MIN_RADIUS) * t);
 
-  const dst = new ImageData(new Uint8ClampedArray(src.data), src.width, src.height);
+  let dst = new ImageData(new Uint8ClampedArray(src.data), src.width, src.height);
 
   imageDataRGBA(dst, 0, 0, dst.width, dst.height, radius);
 

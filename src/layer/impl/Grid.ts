@@ -1,24 +1,25 @@
 import { type LayerImplementation } from '@/layer/LayerRegistry';
+import type { DocumentRuntime } from '@/document/DocumentRuntime';
 
 export class GridLayer implements LayerImplementation {
   name: string = 'grid';
   version: string = '1.0.0';
   properties: any = { value: 0 };
 
-  render(src: ImageData, parameters: any): ImageData {
+  render(documentRuntime: DocumentRuntime, src: ImageData, parameters: any): ImageData {
     console.log(`[GridLayer] render(): ${JSON.stringify(parameters)}`);
-    return grid(src, parameters.value);
+    return grid(documentRuntime, src, parameters.value);
   }
 }
 
-function grid(src: ImageData, slider: number): ImageData {
+function grid(_documentRuntime: DocumentRuntime, src: ImageData, slider: number): ImageData {
   slider = Math.max(0, Math.min(8, Math.round(slider)));
 
-  if (slider === 0) {
+  if (slider === 0 || slider === 1) {
     return new ImageData(new Uint8ClampedArray(src.data), src.width, src.height);
   }
 
-  const dst = new ImageData(new Uint8ClampedArray(src.data), src.width, src.height);
+  let dst = new ImageData(new Uint8ClampedArray(src.data), src.width, src.height);
 
   const pixels = dst.data;
 

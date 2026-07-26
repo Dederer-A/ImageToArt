@@ -1,3 +1,5 @@
+import type { DocumentRuntime } from '@/document/DocumentRuntime';
+
 export class LayerRegistry {
   private static instance: LayerRegistry;
   private registry = new Map<string, LayerImplementation>();
@@ -29,5 +31,5 @@ export interface LayerImplementation {
   name: string;
   version: string;
 
-  render(src: ImageData, parameters: any): ImageData;
+  render(documentRuntime: DocumentRuntime, src: ImageData, parameters: any): ImageData;
 }

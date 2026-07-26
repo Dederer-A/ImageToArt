@@ -1,18 +1,19 @@
 import { type LayerImplementation } from '@/layer/LayerRegistry';
+import type { DocumentRuntime } from '@/document/DocumentRuntime';
 
 export class GoldenRatioLayer implements LayerImplementation {
   name: string = 'goldenRatio';
   version: string = '1.0.0';
   properties: any = { value: 0 };
 
-  render(src: ImageData, parameters: any): ImageData {
+  render(documentRuntime: DocumentRuntime, src: ImageData, parameters: any): ImageData {
     console.log(`[GoldenRatio] render(): ${JSON.stringify(parameters)}`);
-    return goldenRatio(src, parameters.value);
+    return goldenRatio(documentRuntime, src, parameters.value);
   }
 }
 
-export function goldenRatio(src: ImageData, _value: number): ImageData {
-  const dst = new ImageData(new Uint8ClampedArray(src.data), src.width, src.height);
+export function goldenRatio(_documentRuntime: DocumentRuntime, src: ImageData, _value: number): ImageData {
+  let dst = new ImageData(new Uint8ClampedArray(src.data), src.width, src.height);
 
   const pixels = dst.data;
 
