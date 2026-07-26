@@ -67,6 +67,7 @@ function handleImageLoad() {
   const document = useDocumentStore();
   document.sourceImage = props.src;
   document.layers = [];
+  document.layers.push(new Layer('blur', false, { value: 0 }));
   document.layers.push(new Layer('blackAndWhite', false, { value: 25 }));
   document.layers.push(new Layer('posterize', false, { value: 50 }));
 

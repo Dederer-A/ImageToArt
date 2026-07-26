@@ -31,6 +31,7 @@
     "pinia-plugin-persistedstate": "^4.7.1",
     "prettier": "^3.9.6",
     "reka-ui": "^2.10.1",
+    "stackblur-canvas": "^3.0.1",
     "tailwind-merge": "^3.6.0",
     "tailwindcss": "^4.3.3",
     "vaul-vue": "^0.4.1",

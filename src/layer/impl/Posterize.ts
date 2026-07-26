@@ -10,6 +10,7 @@ export class PosterizeLayer implements LayerImplementation {
     return posterize(src, parameters.value);
   }
 }
+
 export function posterize(src: ImageData, slider: number): ImageData {
   slider = Math.max(0, Math.min(100, slider));
 

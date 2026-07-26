@@ -10,6 +10,7 @@ import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
 import { LayerRegistry } from './layer/LayerRegistry.ts';
 import { BlackWhiteLayer } from './layer/impl/BlackWhiteLayer.ts';
 import { PosterizeLayer } from './layer/impl/Posterize.ts';
+import { BlurLayer } from './layer/impl/Blur.ts';
 
 // Create Vue Application
 const app = createApp(App);
@@ -22,6 +23,7 @@ pinia.use(piniaPluginPersistedstate);
 const layerRegistry = LayerRegistry.getInstance();
 layerRegistry.register(new BlackWhiteLayer());
 layerRegistry.register(new PosterizeLayer());
+layerRegistry.register(new BlurLayer());
 
 // Configure and Run Vue Application
 app.use(pinia);

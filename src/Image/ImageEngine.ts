@@ -16,7 +16,7 @@ export class ImageEngine {
 
     for (const layer of document.layers) {
       const layerImplementation = LayerRegistry.getInstance().get(layer.type);
-      if (layerImplementation != null && documentRuntime.currentImageData != null) {
+      if (layer.enabled && layerImplementation != null && documentRuntime.currentImageData != null) {
         documentRuntime.currentImageData = layerImplementation.render(
           documentRuntime.currentImageData,
           layer.parameters

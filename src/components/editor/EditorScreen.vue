@@ -76,6 +76,9 @@ watch(toolState.blackAndWhite, (newValue) => {
 watch(toolState.posterize, (newValue) => {
   applyChanges('posterize', newValue);
 });
+watch(toolState.blur, (newValue) => {
+  applyChanges('blur', newValue);
+});
 
 function applyChanges(type: string, newValue: any) {
   console.log(`Изменилось свойство внутри ${type}: ${newValue}`);
@@ -83,6 +86,7 @@ function applyChanges(type: string, newValue: any) {
   const layers = document.layers;
   for (const layer of layers) {
     if (layer.type == type) {
+      layer.enabled = newValue.enabled;
       layer.parameters = newValue;
     }
   }
