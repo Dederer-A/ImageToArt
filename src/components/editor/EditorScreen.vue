@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { reactive, ref, watch, onMounted } from 'vue';
 
-import ActionToolControl from '@/components/tools/ActionToolControl.vue';
+// import ActionToolControl from '@/components/tools/ActionToolControl.vue';
 import BottomToolPanel from '@/components/editor/BottomToolPanel.vue';
-import CropToolControl from '@/components/tools/CropToolControl.vue';
+// import CropToolControl from '@/components/tools/CropToolControl.vue';
 import EditorCanvas from '@/components/editor/EditorCanvas.vue';
 import EditorToolbar from '@/components/editor/EditorToolbar.vue';
-import RotateToolControl from '@/components/tools/RotateToolControl.vue';
+// import RotateToolControl from '@/components/tools/RotateToolControl.vue';
 import SliderToolControl from '@/components/tools/SliderToolControl.vue';
 import ToolList from '@/components/editor/ToolList.vue';
 import ToolRow from '@/components/editor/ToolRow.vue';
@@ -18,7 +18,7 @@ const props = defineProps<{
   image: string; // Base64 image representation compatible with IMG Tag
 }>();
 
-const cropPresets = [['Portrait', 'Landscape'], ['Free', 'Original', '3:2', '16:9', '4:3', '1:1'], ['Instagram']];
+// const cropPresets = [['Portrait', 'Landscape'], ['Free', 'Original', '3:2', '16:9', '4:3', '1:1'], ['Instagram']];
 
 const uiVisible = ref(true);
 
@@ -28,9 +28,9 @@ const uiVisible = ref(true);
 // -----------------------------------------------------------------------------
 
 const toolState = reactive({
-  crop: {
+  gridPresets: {
     enabled: false,
-    preset: 'Original',
+    preset: 'Grid',
   },
   rotate: {
     enabled: false,
@@ -186,15 +186,15 @@ function manageMeasurements() {
 
     <EditorToolbar :visible="uiVisible" @back="goBack" @export="downloadImage" />
 
-    <BottomToolPanel :visible="uiVisible" :height="35">
+    <BottomToolPanel :visible="uiVisible" :height="30">
       <ToolList class="divide-y divide-border">
-        <ToolRow v-model="toolState.crop.enabled" title="Crop">
+        <!-- <ToolRow v-model="toolState.crop.enabled" title="Crop">
           <CropToolControl v-model="toolState.crop.preset" :presets="cropPresets" />
-        </ToolRow>
+        </ToolRow> -->
 
-        <ToolRow v-model="toolState.rotate.enabled" title="Rotate">
+        <!-- <ToolRow v-model="toolState.rotate.enabled" title="Rotate">
           <RotateToolControl v-model="toolState.rotate" />
-        </ToolRow>
+        </ToolRow> -->
 
         <ToolRow v-model="toolState.contrast.enabled" title="Contrast">
           <SliderToolControl v-model="toolState.contrast.value" />
@@ -228,21 +228,41 @@ function manageMeasurements() {
           <SliderToolControl v-model="toolState.grid.value" :min="1" :max="8" />
         </ToolRow>
 
-        <ToolRow v-model="toolState.perspectiveGrid.enabled" title="Perspective Grid">
-          <ActionToolControl @click="managePerspectiveGrid" />
-        </ToolRow>
-
         <ToolRow v-model="toolState.goldenRatio.enabled" title="Golden Ratio"> </ToolRow>
 
         <ToolRow v-model="toolState.ruleOfThirds.enabled" title="Rule of Thirds"> </ToolRow>
 
-        <ToolRow v-model="toolState.rulers.enabled" title="Rulers">
-          <ActionToolControl @click="manageRulers" />
+        <ToolRow v-model="toolState.gridPresets.enabled" title="Grid Presets">
+          <!-- <div class="flex gap-2 pb-1">
+            <ButtonGroup>
+              <Button size="sm" variant="outline">Grid</Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger as-child>
+                  <Button variant="outline" size="icon" aria-label="More Options">
+                    <MoreHorizontalIcon />
+                  </Button>
+                  <DropdownMenuContent align="end" class="w-52">
+                    <DropdownMenuItem> 2 </DropdownMenuItem>
+                    <DropdownMenuItem> 3 </DropdownMenuItem>
+                    <DropdownMenuItem> 4 </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenuTrigger>
+              </DropdownMenu>
+            </ButtonGroup>
+          </div> -->
         </ToolRow>
 
-        <ToolRow v-model="toolState.measurements.enabled" title="Measurements">
+        <!-- <ToolRow v-model="toolState.perspectiveGrid.enabled" title="Perspective Grid">
+          <ActionToolControl @click="managePerspectiveGrid" />
+        </ToolRow> -->
+
+        <!-- <ToolRow v-model="toolState.rulers.enabled" title="Rulers">
+          <ActionToolControl @click="manageRulers" />
+        </ToolRow> -->
+
+        <!-- <ToolRow v-model="toolState.measurements.enabled" title="Measurements">
           <ActionToolControl @click="manageMeasurements" />
-        </ToolRow>
+        </ToolRow> -->
       </ToolList>
     </BottomToolPanel>
   </div>

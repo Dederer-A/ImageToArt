@@ -33,7 +33,7 @@ const value = computed({
           :key="item + ':' + index"
           size="sm"
           :disabled="disabled"
-          :variant="item === value ? 'secondary' : 'outline'"
+          :variant="item === value ? 'default' : 'outline'"
           @click="value = item"
         >
           <span v-if="item == 'Portrait'">
