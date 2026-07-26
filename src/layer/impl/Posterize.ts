@@ -14,9 +14,9 @@ export class PosterizeLayer implements LayerImplementation {
 export function posterize(src: ImageData, slider: number): ImageData {
   slider = Math.max(0, Math.min(100, slider));
 
-//   if (slider === 0) {
-//     return new ImageData(new Uint8ClampedArray(src.data), src.width, src.height);
-//   }
+  //   if (slider === 0) {
+  //     return new ImageData(new Uint8ClampedArray(src.data), src.width, src.height);
+  //   }
 
   const dst = new ImageData(src.width, src.height);
 

@@ -12,7 +12,7 @@ export class BlurLayer implements LayerImplementation {
   }
 }
 
-function stackblur(src: ImageData, slider: number): ImageData {
+export function stackblur(src: ImageData, slider: number): ImageData { // stackblur
   slider = Math.max(0, Math.min(100, slider));
 
   if (slider === 0) {
