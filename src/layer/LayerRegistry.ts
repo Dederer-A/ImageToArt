@@ -12,6 +12,7 @@ export class LayerRegistry {
   }
 
   public register(layerImplementation: LayerImplementation): void {
+    console.log(`[LayerRegistry] register: ${layerImplementation.name}`);
     this.registry.set(layerImplementation.name, layerImplementation);
   }
 
@@ -27,4 +28,6 @@ export class LayerRegistry {
 export interface LayerImplementation {
   name: string;
   version: string;
+
+  render(src: ImageData, parameters: any): ImageData;
 }

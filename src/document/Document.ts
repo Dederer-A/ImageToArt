@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia';
-import type { Layer } from '@/layer/Layer';
+import { Layer } from '@/layer/Layer';
 import { useDocumentRuntimeStore } from './DocumentRuntime';
 
-interface Document {
+export interface Document {
   id: string;
   sourceImage: string | null; // base64 source image representation
   layers: Layer[];
@@ -17,7 +17,16 @@ export const useDocumentStore = defineStore('document', {
     };
   },
   // getters: {},
-  // actions: {},
+  actions: {
+    initialize(srcImage: string) {
+      this.sourceImage = srcImage;
+      this.layers = [];
+      this.layers.push(new Layer('blur', false, { value: 0 }));
+      this.layers.push(new Layer('blackAndWhite', false, { value: 25 }));
+      this.layers.push(new Layer('posterize', false, { value: 50 }));
+      this.layers.push(new Layer('grid', false, { value: 1 }));
+    },
+  },
   persist: {
     storage: localStorage,
     afterHydrate: (ctx) => {

@@ -20,7 +20,9 @@ const emit = defineEmits<{
 
 <template>
   <div class="w-28 shrink-0 truncate text-sm font-medium">
-    <div class="text-sm font-medium">{{ label }} >></div>
+    <div class="text-sm font-medium">
+      {{ label }}
+    </div>
   </div>
   <!-- <span class="min-h-5">{{ label }}</span> -->
 

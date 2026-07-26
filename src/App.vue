@@ -3,9 +3,9 @@ import { ref } from 'vue';
 
 import EditorScreen from '@/components/editor/EditorScreen.vue';
 import HomeScreen from '@/components/home/HomeScreen.vue';
+import { ImageEngine } from '@/Image/ImageEngine';
 
 const fileInput = ref<HTMLInputElement>();
-
 const image = ref('');
 
 function selectImage() {
@@ -20,21 +20,10 @@ async function onFileSelected(event: Event) {
     return;
   }
 
-  image.value = await readAsBase64(file);
+  image.value = await ImageEngine.resizeFileToBase64(file);
 
   // Allow selecting the same file again.
   input.value = '';
-}
-
-function readAsBase64(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-
-    reader.onload = () => resolve(reader.result as string);
-    reader.onerror = reject;
-
-    reader.readAsDataURL(file);
-  });
 }
 </script>
 

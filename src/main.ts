@@ -9,6 +9,9 @@ import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
 
 import { LayerRegistry } from './layer/LayerRegistry.ts';
 import { BlackWhiteLayer } from './layer/impl/BlackWhiteLayer.ts';
+import { PosterizeLayer } from './layer/impl/Posterize.ts';
+import { BlurLayer } from './layer/impl/Blur.ts';
+import { GridLayer } from './layer/impl/Grid.ts';
 
 // Create Vue Application
 const app = createApp(App);
@@ -20,6 +23,9 @@ pinia.use(piniaPluginPersistedstate);
 // Register all Layer Implementation
 const layerRegistry = LayerRegistry.getInstance();
 layerRegistry.register(new BlackWhiteLayer());
+layerRegistry.register(new PosterizeLayer());
+layerRegistry.register(new BlurLayer());
+layerRegistry.register(new GridLayer());
 
 // Configure and Run Vue Application
 app.use(pinia);
