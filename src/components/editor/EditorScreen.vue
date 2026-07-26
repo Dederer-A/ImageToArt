@@ -14,12 +14,13 @@ import ToolRow from '@/components/editor/ToolRow.vue';
 import { useDocumentStore } from '@/document/Document';
 import { useDocumentRuntimeStore } from '@/document/DocumentRuntime';
 import { ImageEngine } from '@/Image/ImageEngine';
+// import { OpenCVService } from '@/Image/OpenCVService';
 
 const props = defineProps<{
   image: string; // Base64 image representation compatible with IMG Tag
 }>();
 
-const cropPresets = ['Free', 'Original', '3:2', '16:9', '4:3', '1:1', 'Portrait', 'Landscape'];
+const cropPresets = [['Portrait', 'Landscape'], ['Free', 'Original', '3:2', '16:9', '4:3', '1:1'], ['Instagram']];
 
 const uiVisible = ref(true);
 
@@ -35,6 +36,7 @@ watch(
 
     const documentRuntime = useDocumentRuntimeStore();
     documentRuntime.initialize(document);
+    // documentRuntime.srcMat = OpenCVService.getInstance().base64ToMat(document.sourceImage);
 
     ImageEngine.process(document, documentRuntime);
   },
