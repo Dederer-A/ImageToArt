@@ -40,11 +40,11 @@ const toolState = reactive({
     flipVertical: false,
   },
   contrast: {
-    enabled: true,
+    enabled: false,
     value: 50,
   },
   blackAndWhite: {
-    enabled: true,
+    enabled: false,
     value: 50,
   },
   posterize: {
@@ -198,35 +198,49 @@ function manageMeasurements() {
         </ToolRow> -->
 
         <ToolRow v-model="toolState.contrast.enabled" title="Contrast">
-          <SliderToolControl v-model="toolState.contrast.value" />
+          <SliderToolControl
+            v-model="toolState.contrast.value"
+            @update:model-value="toolState.contrast.enabled = true"
+          />
         </ToolRow>
 
         <ToolRow v-model="toolState.gamma.enabled" title="Gamma">
-          <SliderToolControl v-model="toolState.gamma.value" />
+          <SliderToolControl v-model="toolState.gamma.value" @update:model-value="toolState.gamma.enabled = true" />
         </ToolRow>
 
         <ToolRow v-model="toolState.blackAndWhite.enabled" title="Black & White">
-          <SliderToolControl v-model="toolState.blackAndWhite.value" />
+          <SliderToolControl
+            v-model="toolState.blackAndWhite.value"
+            @update:model-value="toolState.blackAndWhite.enabled = true"
+          />
         </ToolRow>
 
         <ToolRow v-model="toolState.posterize.enabled" title="Posterize">
-          <SliderToolControl v-model="toolState.posterize.value" />
+          <SliderToolControl
+            v-model="toolState.posterize.value"
+            @update:model-value="toolState.posterize.enabled = true"
+          />
         </ToolRow>
 
         <ToolRow v-model="toolState.squint.enabled" title="Squint">
-          <SliderToolControl v-model="toolState.squint.value" />
+          <SliderToolControl v-model="toolState.squint.value" @update:model-value="toolState.squint.enabled = true" />
         </ToolRow>
 
         <ToolRow v-model="toolState.edge.enabled" title="Edge">
-          <SliderToolControl v-model="toolState.edge.value" />
+          <SliderToolControl v-model="toolState.edge.value" @update:model-value="toolState.edge.enabled = true" />
         </ToolRow>
 
         <ToolRow v-model="toolState.blur.enabled" title="Blur">
-          <SliderToolControl v-model="toolState.blur.value" />
+          <SliderToolControl v-model="toolState.blur.value" @update:model-value="toolState.blur.enabled = true" />
         </ToolRow>
 
         <ToolRow v-model="toolState.grid.enabled" title="Grid">
-          <SliderToolControl v-model="toolState.grid.value" :min="1" :max="8" />
+          <SliderToolControl
+            v-model="toolState.grid.value"
+            :min="1"
+            :max="8"
+            @update:model-value="toolState.grid.enabled = true"
+          />
         </ToolRow>
 
         <ToolRow v-model="toolState.goldenRatio.enabled" title="Golden Ratio"> </ToolRow>

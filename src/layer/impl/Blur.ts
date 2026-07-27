@@ -22,7 +22,7 @@ export function stackblur(_documentRuntime: DocumentRuntime, src: ImageData, sli
 
   let dst = new ImageData(new Uint8ClampedArray(src.data), src.width, src.height);
 
-  imageDataRGBA(dst, 0, 0, dst.width, dst.height, radius);
+  imageDataRGBA(dst, 0, 0, dst.width, dst.height, Math.floor(radius));
 
   return dst;
 }
