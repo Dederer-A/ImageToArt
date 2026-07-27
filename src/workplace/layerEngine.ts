@@ -1,7 +1,7 @@
 import type { VariantRuntime } from './runtime';
 
 export interface LayerEngine {
-  name: string;
+  type: string;
   version: string;
   order: number;
   defaultProperties: any;

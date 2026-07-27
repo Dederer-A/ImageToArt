@@ -1,16 +1,17 @@
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
-import type { Document, Layer } from './document';
+
+import type { Document, Variant } from './document';
 import { LayerRegistry } from './document';
 import type { LayerEngine } from './layerEngine';
-import type { VariantRuntime } from './runtime';
+import { VariantRuntime } from './runtime';
 
 export const useWorkplaceStore = defineStore('workplace', () => {
   // Properties
   const document = ref<Document>();
   const currentVariantId = ref<string>();
   const layerRegistry = new LayerRegistry();
-  const variantRuntimes = ref<Record<string, VariantRuntime>>({});
+  const variantRuntimes = ref<Record<string, VariantRuntime>>({}); // Where key is the variantId and value is the VariantRuntime instance
 
   // Computed properties
   const currentVariant = computed(() => {
@@ -20,7 +21,7 @@ export const useWorkplaceStore = defineStore('workplace', () => {
 
   const currentVariantRuntime = computed(() => {
     if (!currentVariantId.value) return undefined;
-    return variantRuntimes.value[currentVariantId.value];
+    return getVariantRuntime(currentVariantId.value);
   });
 
   const currentSourceImageData = computed(() => {
@@ -33,6 +34,16 @@ export const useWorkplaceStore = defineStore('workplace', () => {
   });
 
   // Functions
+  // Local function to get or create a VariantRuntime for a given variantId
+  function getVariantRuntime(variantId: string): VariantRuntime {
+    let runtime = variantRuntimes.value[variantId];
+    if (!runtime) {
+      runtime = new VariantRuntime(variantId);
+      variantRuntimes.value[variantId] = runtime;
+    }
+    return runtime;
+  }
+
   function initializeDocument(filename: string, imageData: ImageData) {
     document.value = {
       id: crypto.randomUUID(),
@@ -45,31 +56,31 @@ export const useWorkplaceStore = defineStore('workplace', () => {
 
   function createVariant() {
     if (!document.value) return;
-    const newVariant = {
+    const newVariant: Variant = {
       id: crypto.randomUUID(),
-      layers: new Map<string, Layer>(),
+      layers: {},
     };
     layerRegistry.list().forEach((layerEngine) => {
-      newVariant.layers.set(layerEngine.name, {
+      newVariant.layers[layerEngine.type] = {
         enabled: false,
-        type: layerEngine.name,
+        type: layerEngine.type,
         properties: { ...layerEngine.defaultProperties },
-      });
+      };
     });
     /*
-    newVariant.layers.set('contrast', { enabled: true, type: 'contrast', properties: { value: 50 } });
-    newVariant.layers.set('saturation', { enabled: true, type: 'saturation', properties: { value: 0 } });
-    newVariant.layers.set('gamma', { enabled: true, type: 'gamma', properties: { value: 50 } });
-    newVariant.layers.set('blur', { enabled: true, type: 'blur', properties: { value: 0 } });
-    newVariant.layers.set('blackAndWhite', { enabled: true, type: 'blackAndWhite', properties: { value: 50 } });
-    newVariant.layers.set('posterize', { enabled: true, type: 'posterize', properties: { value: 0 } });
-    newVariant.layers.set('squint', { enabled: true, type: 'squint', properties: { value: 0 } });
-    newVariant.layers.set('edge', { enabled: true, type: 'edge', properties: { value: 0 } });
+    newVariant.layers['contrast'] = { enabled: true, type: 'contrast', properties: { value: 50 } };
+    newVariant.layers['saturation'] = { enabled: true, type: 'saturation', properties: { value: 0 } };
+    newVariant.layers['gamma'] = { enabled: true, type: 'gamma', properties: { value: 50 } };
+    newVariant.layers['blur'] = { enabled: true, type: 'blur', properties: { value: 0 } };
+    newVariant.layers['blackAndWhite'] = { enabled: true, type: 'blackAndWhite', properties: { value: 50 } };
+    newVariant.layers['posterize'] = { enabled: true, type: 'posterize', properties: { value: 0 } };
+    newVariant.layers['squint'] = { enabled: true, type: 'squint', properties: { value: 0 } };
+    newVariant.layers['edge'] = { enabled: true, type: 'edge', properties: { value: 0 } };
 
     // Grid and others should be the last
-    newVariant.layers.set('grid', { enabled: true, type: 'grid', properties: { value: 4 } });
-    newVariant.layers.set('goldenRatio', { enabled: true, type: 'goldenRatio', properties: {} });
-    newVariant.layers.set('ruleOfThirds', { enabled: true, type: 'ruleOfThirds', properties: {} });
+    newVariant.layers['grid'] = { enabled: true, type: 'grid', properties: { value: 4 } };
+    newVariant.layers['goldenRatio'] = { enabled: true, type: 'goldenRatio', properties: {} };
+    newVariant.layers['ruleOfThirds'] = { enabled: true, type: 'ruleOfThirds', properties: {} };
     */
     document.value.variants.push(newVariant);
     currentVariantId.value = newVariant.id;

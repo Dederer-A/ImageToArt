@@ -1,3 +1,5 @@
+import type { LayerEngine } from './layerEngine';
+
 export interface Document {
   id: string;
   filename?: string;
@@ -7,10 +9,8 @@ export interface Document {
 
 export interface Variant {
   id: string;
-  layers: Map<string, Layer>; // Where key is the layer type (LayerEngine) and value is the layer instance
+  layers: Record<string, Layer>; // Where key is the layer type (LayerEngine) and value is the layer instance
 }
-
-import type { LayerEngine } from './layerEngine';
 
 export interface Layer {
   enabled: boolean;
@@ -25,13 +25,13 @@ export class LayerRegistry {
   constructor() {}
 
   public register(layerEngine: LayerEngine): void {
-    console.log(`[LayerRegistry] register: ${layerEngine.name}`);
-    this.registry.set(layerEngine.name, layerEngine);
+    console.log(`[LayerRegistry] register: ${layerEngine.type}`);
+    this.registry.set(layerEngine.type, layerEngine);
     this.sortedLayerEngines = [...this.registry.values()].sort((a, b) => a.order - b.order);
   }
 
-  public get(name: string): LayerEngine | undefined {
-    return this.registry.get(name);
+  public get(type: string): LayerEngine | undefined {
+    return this.registry.get(type);
   }
 
   public list(): LayerEngine[] {
