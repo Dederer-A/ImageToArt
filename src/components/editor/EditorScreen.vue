@@ -157,7 +157,7 @@ function goBack() {
 function downloadImage() {
   // TODO
 }
-
+/*
 function managePerspectiveGrid() {
   // TODO
 }
@@ -169,6 +169,7 @@ function manageRulers() {
 function manageMeasurements() {
   // TODO
 }
+*/
 </script>
 
 <template>
