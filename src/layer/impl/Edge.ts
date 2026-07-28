@@ -31,7 +31,7 @@ export function edge(documentRuntime: DocumentRuntime, src: ImageData, slider: n
 
   // ------------------------------------------------------------
 
-  const blurred = stackblur(documentRuntime, src, (slider * MAX_BLUR) / 100);
+  const blurred = stackblur(documentRuntime, src, Math.floor((slider * MAX_BLUR) / 100));
 
   const width = blurred.width;
   const height = blurred.height;
