@@ -58,6 +58,7 @@ export const useWorkplaceStore = defineStore('workplace', () => {
     if (!document.value) return;
     const newVariant: Variant = {
       id: crypto.randomUUID(),
+      readOnly: document.value.variants.length === 0, // The first variant is read-only
       layers: {},
     };
     layerRegistry.list().forEach((layerEngine) => {

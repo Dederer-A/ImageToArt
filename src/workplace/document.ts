@@ -9,6 +9,7 @@ export interface Document {
 
 export interface Variant {
   id: string;
+  readOnly: boolean;
   layers: Record<string, Layer>; // Where key is the layer type (LayerEngine) and value is the layer instance
 }
 
