@@ -84,7 +84,12 @@ export const useWorkplaceStore = defineStore('workplace', () => {
     newVariant.layers['ruleOfThirds'] = { enabled: true, type: 'ruleOfThirds', properties: {} };
     */
     document.value.variants.push(newVariant);
-    currentVariantId.value = newVariant.id;
+
+    if (newVariant.readOnly) {
+      createVariant();
+    } else {
+      currentVariantId.value = newVariant.id;
+    }
   }
 
   function duplicateCurrentVariant() {
