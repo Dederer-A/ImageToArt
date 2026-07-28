@@ -1,18 +1,19 @@
-import { type LayerImplementation } from '@/layer/LayerRegistry';
-import type { DocumentRuntime } from '@/document/DocumentRuntime';
+import type { LayerEngine } from '@/workplace/layerEngine';
+import type { VariantRuntime } from '@/workplace/runtime';
 
-export class RuleOfThirdsLayer implements LayerImplementation {
-  name: string = 'ruleOfThirds';
+export class RuleOfThirdsLayer implements LayerEngine {
+  type: string = 'ruleOfThirds';
   version: string = '1.0.0';
-  properties: any = { value: 0 };
+  order: number = 1100;
+  defaultProperties: any = {};
 
-  render(documentRuntime: DocumentRuntime, src: ImageData, parameters: any): ImageData {
+  render(variantRuntime: VariantRuntime, src: ImageData, parameters: any): ImageData {
     console.log(`[ruleOfThirds] render(): ${JSON.stringify(parameters)}`);
-    return ruleOfThirds(documentRuntime, src, parameters.value);
+    return ruleOfThirds(variantRuntime, src, parameters.value);
   }
 }
 
-export function ruleOfThirds(_documentRuntime: DocumentRuntime, src: ImageData, _value: number): ImageData {
+export function ruleOfThirds(_variantRuntime: VariantRuntime, src: ImageData, _value: number): ImageData {
   let dst = new ImageData(new Uint8ClampedArray(src.data), src.width, src.height);
 
   const pixels = dst.data;

@@ -8,7 +8,7 @@ interface Props {
 }
 
 defineProps<Props>();
-const isEnabled = defineModel<boolean>({ required: true });
+const isEnabled = defineModel<boolean>({ required: false });
 
 const slots = useSlots();
 const hasControl = computed(() => !!slots.default);

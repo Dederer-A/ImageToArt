@@ -1,25 +1,26 @@
-import { type LayerImplementation } from '@/layer/LayerRegistry';
-import type { DocumentRuntime } from '@/document/DocumentRuntime';
+import type { LayerEngine } from '@/workplace/layerEngine';
+import type { VariantRuntime } from '@/workplace/runtime';
 
-export class ContrastLayer implements LayerImplementation {
-  name: string = 'contrast';
+export class ContrastLayer implements LayerEngine {
+  type: string = 'contrast';
   version: string = '1.0.0';
-  properties: any = { value: 0 };
+  order: number = 100;
+  defaultProperties: any = { value: 50 };
 
-  render(documentRuntime: DocumentRuntime, src: ImageData, parameters: any): ImageData {
+  render(variantRuntime: VariantRuntime, src: ImageData, parameters: any): ImageData {
     console.log(`[Contrast] render(): ${JSON.stringify(parameters)}`);
-    return contrast(documentRuntime, src, parameters.value);
+    return contrast(variantRuntime, src, parameters.value);
   }
 }
 
-export function contrast(documentRuntime: DocumentRuntime, src: ImageData, slider: number): ImageData {
+export function contrast(variantRuntime: VariantRuntime, src: ImageData, slider: number): ImageData {
   slider = Math.max(0, Math.min(100, slider));
 
   const cacheName = 'contrast';
-  let dst = documentRuntime.cache.get(cacheName);
+  let dst = variantRuntime.cache.get(cacheName);
   if (dst === undefined) {
     dst = new ImageData(src.width, src.height);
-    documentRuntime.cache.set(cacheName, dst);
+    variantRuntime.cache.set(cacheName, dst);
     console.log('[ContrastLayer] contrast(): cache miss, creating new ImageData');
   }
 

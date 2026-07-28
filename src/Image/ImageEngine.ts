@@ -1,29 +1,29 @@
-import { useDocumentStore } from '@/document/Document';
-import { useDocumentRuntimeStore } from '@/document/DocumentRuntime';
+import { debounce } from 'lodash-es';
 
-import { LayerRegistry } from '@/layer/LayerRegistry';
+import { useWorkplaceStore } from '@/workplace/index';
 
 const MAX_SIDE_SIZE = 2000;
 
-export class ImageEngine {
-  public static process() {
-    const document = useDocumentStore();
-    const documentRuntime = useDocumentRuntimeStore();
-
-    console.log('[ImageEngine] process');
-    if (documentRuntime.srcImageData == null) return;
-    documentRuntime.currentImageData = ImageEngine.cloneImageData(documentRuntime.srcImageData);
-
-    for (const layer of document.layers) {
-      const layerImplementation = LayerRegistry.getInstance().get(layer.type);
-      if (layer.enabled && layerImplementation != null && documentRuntime.currentImageData != null) {
-        documentRuntime.currentImageData = layerImplementation.render(
-          documentRuntime,
-          documentRuntime.currentImageData,
-          layer.parameters
-        );
-      }
+const debouncedDraw = debounce((documentRuntime: any) => {
+  console.log('[ImageEngine] processImageData [debounced]');
+  const workspaceStore = useWorkplaceStore();
+  const layers = Object.values(workspaceStore.currentVariant.layers);
+  const srcImageData = workspaceStore.currentSourceImageData;
+  if (!srcImageData) return;
+  let currentImageData: ImageData = srcImageData; // ImageEngine.cloneImageData(srcImageData); // TODO optimization required here
+  for (const layer of layers) {
+    const layerEngine = workspaceStore.layerRegistry.get(layer.type);
+    // TODO change if logic. If something goes wrong stop processing
+    if (layer.enabled && layerEngine != null) {
+      currentImageData = layerEngine.render(documentRuntime, currentImageData, layer.properties);
     }
+  }
+  workspaceStore.updateCurrentVariantImageData(currentImageData);
+}, 5);
+
+export class ImageEngine {
+  public static processImageData(documentRuntime: any) {
+    debouncedDraw(documentRuntime);
   }
 
   static cloneImageData(image: ImageData | null): ImageData | null {
@@ -46,6 +46,51 @@ export class ImageEngine {
     ctx.drawImage(img, 0, 0);
 
     return ctx.getImageData(0, 0, canvas.width, canvas.height);
+  }
+
+  static resizeFileToImageData(file: File): Promise<ImageData> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+
+      reader.onload = (readerEvent) => {
+        const img = new Image();
+
+        img.onload = () => {
+          const maxSide = MAX_SIDE_SIZE;
+          let width = img.naturalWidth || img.width;
+          let height = img.naturalHeight || img.height;
+
+          // Calculate aspect ratio scaling
+          if (width > maxSide || height > maxSide) {
+            if (width > height) {
+              height = Math.round((height * maxSide) / width);
+              width = maxSide;
+            } else {
+              width = Math.round((width * maxSide) / height);
+              height = maxSide;
+            }
+          }
+
+          // Render to canvas
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+
+          const ctx = canvas.getContext('2d');
+          if (!ctx) {
+            reject(new Error('Could not get 2D canvas context'));
+            return;
+          }
+          ctx.drawImage(img, 0, 0, width, height);
+          const imageData = ctx.getImageData(0, 0, width, height);
+          resolve(imageData);
+        };
+        img.onerror = () => reject(new Error('Failed to load image file into element'));
+        img.src = readerEvent.target?.result as string;
+      };
+      reader.onerror = () => reject(new Error('Failed to read file source'));
+      reader.readAsDataURL(file);
+    });
   }
 
   static resizeFileToBase64(file: File): Promise<string> {

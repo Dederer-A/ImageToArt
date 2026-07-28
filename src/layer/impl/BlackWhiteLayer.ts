@@ -1,23 +1,24 @@
-import type { DocumentRuntime } from '@/document/DocumentRuntime';
-import { type LayerImplementation } from '@/layer/LayerRegistry';
+import type { LayerEngine } from '@/workplace/layerEngine';
+import type { VariantRuntime } from '@/workplace/runtime';
 
-export class BlackWhiteLayer implements LayerImplementation {
-  name: string = 'blackAndWhite';
+export class BlackWhiteLayer implements LayerEngine {
+  type: string = 'blackAndWhite';
   version: string = '1.0.0';
-  properties: any = { value: 0 };
+  order: number = 500;
+  defaultProperties: any = { value: 50 };
 
-  render(documentRuntime: DocumentRuntime, src: ImageData, parameters: any): ImageData {
+  render(variantRuntime: VariantRuntime, src: ImageData, parameters: any): ImageData {
     console.log(`[BlackWhiteLayer] render(): ${JSON.stringify(parameters)}`);
-    return blackAndWhite(documentRuntime, src, parameters.value);
+    return blackAndWhite(variantRuntime, src, parameters.value);
   }
 }
 
-function blackAndWhite(documentRuntime: DocumentRuntime, src: ImageData, value: number): ImageData {
+function blackAndWhite(variantRuntime: VariantRuntime, src: ImageData, value: number): ImageData {
   const cacheName = 'blackAndWhite';
-  let dst = documentRuntime.cache.get(cacheName);
+  let dst = variantRuntime.cache.get(cacheName);
   if (dst === undefined) {
     dst = new ImageData(src.width, src.height);
-    documentRuntime.cache.set(cacheName, dst);
+    variantRuntime.cache.set(cacheName, dst);
     console.log('[BlackWhiteLayer] blackAndWhite(): cache miss, creating new ImageData');
   }
 

@@ -1,18 +1,19 @@
-import { type LayerImplementation } from '@/layer/LayerRegistry';
-import type { DocumentRuntime } from '@/document/DocumentRuntime';
+import type { LayerEngine } from '@/workplace/layerEngine';
+import type { VariantRuntime } from '@/workplace/runtime';
 
-export class PosterizeLayer implements LayerImplementation {
-  name: string = 'posterize';
+export class PosterizeLayer implements LayerEngine {
+  type: string = 'posterize';
   version: string = '1.0.0';
-  properties: any = { value: 0 };
+  order: number = 600;
+  defaultProperties: any = { value: 0 };
 
-  render(documentRuntime: DocumentRuntime, src: ImageData, parameters: any): ImageData {
+  render(variantRuntime: VariantRuntime, src: ImageData, parameters: any): ImageData {
     console.log(`[PosterizeLayer] render(): ${JSON.stringify(parameters)}`);
-    return posterize(documentRuntime, src, parameters.value);
+    return posterize(variantRuntime, src, parameters.value);
   }
 }
 
-export function posterize(documentRuntime: DocumentRuntime, src: ImageData, slider: number): ImageData {
+export function posterize(variantRuntime: VariantRuntime, src: ImageData, slider: number): ImageData {
   slider = Math.max(0, Math.min(100, slider));
 
   //   if (slider === 0) {
@@ -20,10 +21,10 @@ export function posterize(documentRuntime: DocumentRuntime, src: ImageData, slid
   //   }
 
   const cacheName = 'posterize';
-  let dst = documentRuntime.cache.get(cacheName);
+  let dst = variantRuntime.cache.get(cacheName);
   if (dst === undefined) {
     dst = new ImageData(src.width, src.height);
-    documentRuntime.cache.set(cacheName, dst);
+    variantRuntime.cache.set(cacheName, dst);
     console.log('[PosterizeLayer] posterize(): cache miss, creating new ImageData');
   }
 

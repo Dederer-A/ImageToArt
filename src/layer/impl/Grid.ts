@@ -1,18 +1,19 @@
-import { type LayerImplementation } from '@/layer/LayerRegistry';
-import type { DocumentRuntime } from '@/document/DocumentRuntime';
+import type { LayerEngine } from '@/workplace/layerEngine';
+import type { VariantRuntime } from '@/workplace/runtime';
 
-export class GridLayer implements LayerImplementation {
-  name: string = 'grid';
+export class GridLayer implements LayerEngine {
+  type: string = 'grid';
   version: string = '1.0.0';
-  properties: any = { value: 0 };
+  order: number = 900;
+  defaultProperties: any = { value: 4 };
 
-  render(documentRuntime: DocumentRuntime, src: ImageData, parameters: any): ImageData {
+  render(variantRuntime: VariantRuntime, src: ImageData, parameters: any): ImageData {
     console.log(`[GridLayer] render(): ${JSON.stringify(parameters)}`);
-    return grid(documentRuntime, src, parameters.value);
+    return grid(variantRuntime, src, parameters.value);
   }
 }
 
-function grid(_documentRuntime: DocumentRuntime, src: ImageData, slider: number): ImageData {
+function grid(_variantRuntime: VariantRuntime, src: ImageData, slider: number): ImageData {
   slider = Math.max(0, Math.min(8, Math.round(slider)));
 
   if (slider === 0 || slider === 1) {

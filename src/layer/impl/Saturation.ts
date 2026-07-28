@@ -1,18 +1,19 @@
-import { type LayerImplementation } from '@/layer/LayerRegistry';
-import type { DocumentRuntime } from '@/document/DocumentRuntime';
+import type { LayerEngine } from '@/workplace/layerEngine';
+import type { VariantRuntime } from '@/workplace/runtime';
 
-export class SaturationLayer implements LayerImplementation {
-  name: string = 'saturation';
+export class SaturationLayer implements LayerEngine {
+  type: string = 'saturation';
   version: string = '1.0.0';
-  properties: any = { value: 0 };
+  order: number = 200;
+  defaultProperties: any = { value: 0 };
 
-  render(documentRuntime: DocumentRuntime, src: ImageData, parameters: any): ImageData {
+  render(variantRuntime: VariantRuntime, src: ImageData, parameters: any): ImageData {
     console.log(`[Saturation] render(): ${JSON.stringify(parameters)}`);
-    return saturation(documentRuntime, src, parameters.value);
+    return saturation(variantRuntime, src, parameters.value);
   }
 }
 
-export function saturation(documentRuntime: DocumentRuntime, src: ImageData, slider: number): ImageData {
+export function saturation(variantRuntime: VariantRuntime, src: ImageData, slider: number): ImageData {
   slider = Math.max(0, Math.min(100, slider));
 
   if (slider === 0) {
@@ -20,10 +21,10 @@ export function saturation(documentRuntime: DocumentRuntime, src: ImageData, sli
   }
 
   const cacheName = 'saturation';
-  let dst = documentRuntime.cache.get(cacheName);
+  let dst = variantRuntime.cache.get(cacheName);
   if (dst === undefined) {
     dst = new ImageData(src.width, src.height);
-    documentRuntime.cache.set(cacheName, dst);
+    variantRuntime.cache.set(cacheName, dst);
     console.log('[SaturationLayer] saturation(): cache miss, creating new ImageData');
   }
 

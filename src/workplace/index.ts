@@ -1,10 +1,9 @@
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 
-import type { Document, Variant } from './document';
-import { LayerRegistry } from './document';
-import type { LayerEngine } from './layerEngine';
+import { LayerRegistry, type Document, type Variant } from './document';
 import { VariantRuntime } from './runtime';
+import { ImageEngine } from '@/Image/ImageEngine';
 
 export const useWorkplaceStore = defineStore('workplace', () => {
   // Properties
@@ -15,8 +14,11 @@ export const useWorkplaceStore = defineStore('workplace', () => {
 
   // Computed properties
   const currentVariant = computed(() => {
-    if (!document.value || !currentVariantId.value) return undefined;
-    return document.value.variants.find((v) => v.id === currentVariantId.value);
+    if (!document.value || !currentVariantId.value)
+      throw new Error('[WorkplaceStore] currentVariant: document or currentVariantId is null');
+    const variant = document.value.variants.find((v) => v.id === currentVariantId.value);
+    if (!variant) throw new Error('[WorkplaceStore] currentVariant: variant not found');
+    return variant;
   });
 
   const currentVariantRuntime = computed(() => {
@@ -25,6 +27,7 @@ export const useWorkplaceStore = defineStore('workplace', () => {
   });
 
   const currentSourceImageData = computed(() => {
+    console.log(`[WorkplaceStore] currentSourceImageData: document=${document.value ? 'exists' : 'null'}`);
     if (!document.value) return undefined;
     return document.value.imageData;
   });
@@ -45,6 +48,9 @@ export const useWorkplaceStore = defineStore('workplace', () => {
   }
 
   function initializeDocument(filename: string, imageData: ImageData) {
+    console.log(
+      `[WorkplaceStore] initializeDocument(): filename=${filename}, imageData=${imageData.width}x${imageData.height}`
+    );
     document.value = {
       id: crypto.randomUUID(),
       filename,
@@ -52,6 +58,7 @@ export const useWorkplaceStore = defineStore('workplace', () => {
       variants: [],
     };
     createVariant();
+    imageProcess();
   }
 
   function createVariant() {
@@ -68,21 +75,7 @@ export const useWorkplaceStore = defineStore('workplace', () => {
         properties: { ...layerEngine.defaultProperties },
       };
     });
-    /*
-    newVariant.layers['contrast'] = { enabled: true, type: 'contrast', properties: { value: 50 } };
-    newVariant.layers['saturation'] = { enabled: true, type: 'saturation', properties: { value: 0 } };
-    newVariant.layers['gamma'] = { enabled: true, type: 'gamma', properties: { value: 50 } };
-    newVariant.layers['blur'] = { enabled: true, type: 'blur', properties: { value: 0 } };
-    newVariant.layers['blackAndWhite'] = { enabled: true, type: 'blackAndWhite', properties: { value: 50 } };
-    newVariant.layers['posterize'] = { enabled: true, type: 'posterize', properties: { value: 0 } };
-    newVariant.layers['squint'] = { enabled: true, type: 'squint', properties: { value: 0 } };
-    newVariant.layers['edge'] = { enabled: true, type: 'edge', properties: { value: 0 } };
-
-    // Grid and others should be the last
-    newVariant.layers['grid'] = { enabled: true, type: 'grid', properties: { value: 4 } };
-    newVariant.layers['goldenRatio'] = { enabled: true, type: 'goldenRatio', properties: {} };
-    newVariant.layers['ruleOfThirds'] = { enabled: true, type: 'ruleOfThirds', properties: {} };
-    */
+    // console.log(`[WorkplaceStore] createVariant[${document.value.variants.length}]: ${JSON.stringify(newVariant)}`);
     document.value.variants.push(newVariant);
 
     if (newVariant.readOnly) {
@@ -113,15 +106,42 @@ export const useWorkplaceStore = defineStore('workplace', () => {
     }
   }
 
-  function registerLayerEngine(layerEngine: LayerEngine) {
-    layerRegistry.register(layerEngine);
+  function imageProcess() {
+    if (!document.value || !currentVariant.value || !currentVariantRuntime.value) return;
+    // TODO in case of the first Variant do need to render, just copy the source image data to the variant image data
+    ImageEngine.processImageData(currentVariantRuntime.value);
   }
 
-  function getLayerEngine(name: string): LayerEngine | undefined {
-    return layerRegistry.get(name);
+  function updateCurrentVariantImageData(imageData: ImageData) {
+    if (!document.value || !currentVariant.value || !currentVariantRuntime.value) return;
+    currentVariantRuntime.value.imageData = ImageEngine.cloneImageData(imageData);
+  }
+
+  function initialize() {
+    layerRegistry.initialize();
+  }
+
+  function updateLayerProperty(layerType: string, property: string, value: any) {
+    if (!document.value || !currentVariant.value || !currentVariantRuntime.value) return;
+    const layer = currentVariant.value.layers[layerType];
+    if (!layer) return;
+    layer.enabled = true; // Right now it's not possible to change value without making layer enabled
+    layer.properties[property] = value;
+    imageProcess();
+  }
+
+  function updateLayerEnable(layerType: string, value: boolean) {
+    if (!document.value || !currentVariant.value || !currentVariantRuntime.value) return;
+    const layer = currentVariant.value.layers[layerType];
+    if (!layer) return;
+    layer.enabled = value;
+    imageProcess();
   }
 
   return {
+    // Properties
+    layerRegistry,
+
     // Computed properties
     currentVariant,
     currentVariantRuntime,
@@ -129,13 +149,15 @@ export const useWorkplaceStore = defineStore('workplace', () => {
     currentVariantImageData,
 
     // Functions
+    initialize,
     initializeDocument,
 
     createVariant,
     duplicateCurrentVariant,
     deleteCurrentVariant,
 
-    registerLayerEngine,
-    getLayerEngine,
+    updateLayerProperty,
+    updateLayerEnable,
+    updateCurrentVariantImageData, // Should be used only in ImageEngine
   };
 });

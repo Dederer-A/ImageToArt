@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, ref, watch, onMounted } from 'vue';
+import { ref } from 'vue';
 
 // import ActionToolControl from '@/components/tools/ActionToolControl.vue';
 import BottomToolPanel from '@/components/editor/BottomToolPanel.vue';
@@ -11,136 +11,13 @@ import SliderToolControl from '@/components/tools/SliderToolControl.vue';
 import ToolList from '@/components/editor/ToolList.vue';
 import ToolRow from '@/components/editor/ToolRow.vue';
 
-import { useDocumentStore } from '@/document/Document';
-import { useDocumentRuntimeStore } from '@/document/DocumentRuntime';
-
-const props = defineProps<{
-  image: string; // Base64 image representation compatible with IMG Tag
-}>();
-
 // const cropPresets = [['Portrait', 'Landscape'], ['Free', 'Original', '3:2', '16:9', '4:3', '1:1'], ['Instagram']];
 
+import { useWorkplaceStore } from '@/workplace/index';
+
+const workplace = useWorkplaceStore();
+
 const uiVisible = ref(true);
-
-// -----------------------------------------------------------------------------
-// Temporary editor state.
-// Later this state will move into Pinia.
-// -----------------------------------------------------------------------------
-
-const toolState = reactive({
-  gridPresets: {
-    enabled: false,
-    preset: 'Grid',
-  },
-  rotate: {
-    enabled: false,
-    rotateLeft: false,
-    rotateRight: false,
-    flipHorizontal: false,
-    flipVertical: false,
-  },
-  contrast: {
-    enabled: false,
-    value: 50,
-  },
-  blackAndWhite: {
-    enabled: false,
-    value: 50,
-  },
-  posterize: {
-    enabled: false,
-    value: 50,
-  },
-  blur: {
-    enabled: false,
-    value: 0,
-  },
-  squint: {
-    enabled: false,
-    value: 0,
-  },
-  edge: {
-    enabled: false,
-    value: 0,
-  },
-  gamma: {
-    enabled: false,
-    value: 50,
-  },
-  grid: {
-    enabled: false,
-    value: 1,
-  },
-  goldenRatio: {
-    enabled: false,
-  },
-  ruleOfThirds: {
-    enabled: false,
-  },
-  perspectiveGrid: {
-    enabled: false,
-  },
-  rulers: {
-    enabled: false,
-  },
-  measurements: {
-    enabled: false,
-  },
-});
-
-watch(toolState.blackAndWhite, (newValue) => {
-  applyChanges('blackAndWhite', newValue);
-});
-watch(toolState.posterize, (newValue) => {
-  applyChanges('posterize', newValue);
-});
-watch(toolState.blur, (newValue) => {
-  applyChanges('blur', newValue);
-});
-watch(toolState.grid, (newValue) => {
-  applyChanges('grid', newValue);
-});
-
-watch(toolState.contrast, (newValue) => {
-  applyChanges('contrast', newValue);
-});
-watch(toolState.gamma, (newValue) => {
-  applyChanges('gamma', newValue);
-});
-// watch(toolState.saturation, (newValue) => {
-//   applyChanges('saturation', newValue);
-// });
-watch(toolState.squint, (newValue) => {
-  applyChanges('squint', newValue);
-});
-watch(toolState.edge, (newValue) => {
-  applyChanges('edge', newValue);
-});
-watch(toolState.goldenRatio, (newValue) => {
-  applyChanges('goldenRatio', newValue);
-});
-watch(toolState.ruleOfThirds, (newValue) => {
-  applyChanges('ruleOfThirds', newValue);
-});
-
-function applyChanges(type: string, newValue: any) {
-  console.log(`Изменилось свойство внутри ${type}: ${newValue}`);
-  const document = useDocumentStore();
-  const layers = document.layers;
-  for (const layer of layers) {
-    if (layer.type == type) {
-      layer.enabled = newValue.enabled;
-      layer.parameters = newValue;
-    }
-  }
-  const documentRuntime = useDocumentRuntimeStore();
-  documentRuntime.version++;
-}
-
-onMounted(() => {
-  const documentRuntime = useDocumentRuntimeStore();
-  documentRuntime.version++;
-});
 
 // -----------------------------------------------------------------------------
 // Events
@@ -170,11 +47,19 @@ function manageMeasurements() {
   // TODO
 }
 */
+
+function updateLayerProperty(layerType: string, propertyName: string, event: any) {
+  workplace.updateLayerProperty(layerType, propertyName, event);
+}
+
+function updateLayerEnable(layerType: string, event: boolean | undefined) {
+  workplace.updateLayerEnable(layerType, event ? event : false);
+}
 </script>
 
 <template>
   <div class="relative h-dvh w-full overflow-hidden bg-background">
-    <EditorCanvas :src="image" @click="toggleUi">
+    <EditorCanvas @click="toggleUi">
       <template #viewport-overlay>
         <!-- Perspective Grid -->
         <!-- Crop Overlay -->
@@ -197,58 +82,112 @@ function manageMeasurements() {
           <RotateToolControl v-model="toolState.rotate" />
         </ToolRow> -->
 
-        <ToolRow v-model="toolState.contrast.enabled" title="Contrast">
+        <ToolRow
+          :model-value="workplace.currentVariant.layers['contrast'].enabled"
+          @update:model-value="updateLayerEnable('contrast', $event)"
+          title="Contrast"
+        >
           <SliderToolControl
-            v-model="toolState.contrast.value"
-            @update:model-value="toolState.contrast.enabled = true"
+            :model-value="workplace.currentVariant.layers['contrast'].properties.value"
+            @update:model-value="updateLayerProperty('contrast', 'value', $event)"
           />
         </ToolRow>
 
-        <ToolRow v-model="toolState.gamma.enabled" title="Gamma">
-          <SliderToolControl v-model="toolState.gamma.value" @update:model-value="toolState.gamma.enabled = true" />
-        </ToolRow>
-
-        <ToolRow v-model="toolState.blackAndWhite.enabled" title="Black & White">
+        <ToolRow
+          :model-value="workplace.currentVariant.layers['gamma'].enabled"
+          @update:model-value="updateLayerEnable('gamma', $event)"
+          title="Gamma"
+        >
           <SliderToolControl
-            v-model="toolState.blackAndWhite.value"
-            @update:model-value="toolState.blackAndWhite.enabled = true"
+            :model-value="workplace.currentVariant.layers['gamma'].properties.value"
+            @update:model-value="updateLayerProperty('gamma', 'value', $event)"
           />
         </ToolRow>
 
-        <ToolRow v-model="toolState.posterize.enabled" title="Posterize">
+        <ToolRow
+          :model-value="workplace.currentVariant.layers['blackAndWhite'].enabled"
+          @update:model-value="updateLayerEnable('blackAndWhite', $event)"
+          title="Black & White"
+        >
           <SliderToolControl
-            v-model="toolState.posterize.value"
-            @update:model-value="toolState.posterize.enabled = true"
+            :model-value="workplace.currentVariant.layers['blackAndWhite'].properties.value"
+            @update:model-value="updateLayerProperty('blackAndWhite', 'value', $event)"
           />
         </ToolRow>
 
-        <ToolRow v-model="toolState.squint.enabled" title="Squint">
-          <SliderToolControl v-model="toolState.squint.value" @update:model-value="toolState.squint.enabled = true" />
-        </ToolRow>
-
-        <ToolRow v-model="toolState.edge.enabled" title="Edge">
-          <SliderToolControl v-model="toolState.edge.value" @update:model-value="toolState.edge.enabled = true" />
-        </ToolRow>
-
-        <ToolRow v-model="toolState.blur.enabled" title="Blur">
-          <SliderToolControl v-model="toolState.blur.value" @update:model-value="toolState.blur.enabled = true" />
-        </ToolRow>
-
-        <ToolRow v-model="toolState.grid.enabled" title="Grid">
+        <ToolRow
+          :model-value="workplace.currentVariant.layers['posterize'].enabled"
+          @update:model-value="updateLayerEnable('posterize', $event)"
+          title="Posterize"
+        >
           <SliderToolControl
-            v-model="toolState.grid.value"
+            :model-value="workplace.currentVariant.layers['posterize'].properties.value"
+            @update:model-value="updateLayerProperty('posterize', 'value', $event)"
+          />
+        </ToolRow>
+
+        <ToolRow
+          :model-value="workplace.currentVariant.layers['squint'].enabled"
+          @update:model-value="updateLayerEnable('squint', $event)"
+          title="Squint"
+        >
+          <SliderToolControl
+            :model-value="workplace.currentVariant.layers['squint'].properties.value"
+            @update:model-value="updateLayerProperty('squint', 'value', $event)"
+          />
+        </ToolRow>
+
+        <ToolRow
+          :model-value="workplace.currentVariant.layers['edge'].enabled"
+          @update:model-value="updateLayerEnable('edge', $event)"
+          title="Edge"
+        >
+          <SliderToolControl
+            :model-value="workplace.currentVariant.layers['edge'].properties.value"
+            @update:model-value="updateLayerProperty('edge', 'value', $event)"
+          />
+        </ToolRow>
+
+        <ToolRow
+          :model-value="workplace.currentVariant.layers['blur'].enabled"
+          @update:model-value="updateLayerEnable('blur', $event)"
+          title="Blur"
+        >
+          <SliderToolControl
+            :model-value="workplace.currentVariant.layers['blur'].properties.value"
+            @update:model-value="updateLayerProperty('blur', 'value', $event)"
+          />
+        </ToolRow>
+
+        <ToolRow
+          :model-value="workplace.currentVariant.layers['grid'].enabled"
+          @update:model-value="updateLayerEnable('grid', $event)"
+          title="Grid"
+        >
+          <SliderToolControl
+            :model-value="workplace.currentVariant.layers['grid'].properties.value"
+            @update:model-value="updateLayerProperty('grid', 'value', $event)"
             :min="1"
             :max="8"
-            @update:model-value="toolState.grid.enabled = true"
           />
         </ToolRow>
 
-        <ToolRow v-model="toolState.goldenRatio.enabled" title="Golden Ratio"> </ToolRow>
+        <ToolRow
+          :model-value="workplace.currentVariant.layers['goldenRatio'].enabled"
+          @update:model-value="updateLayerEnable('goldenRatio', $event)"
+          title="Golden Ratio"
+        >
+        </ToolRow>
 
-        <ToolRow v-model="toolState.ruleOfThirds.enabled" title="Rule of Thirds"> </ToolRow>
+        <ToolRow
+          :model-value="workplace.currentVariant.layers['ruleOfThirds'].enabled"
+          @update:model-value="updateLayerEnable('ruleOfThirds', $event)"
+          title="Rule of Thirds"
+        >
+        </ToolRow>
 
-        <ToolRow v-model="toolState.gridPresets.enabled" title="Grid Presets">
-          <!-- <div class="flex gap-2 pb-1">
+        <!-- <ToolRow v-model="toolState.gridPresets.enabled" title="Grid Presets"> -->
+        <!-- <div class="flex gap-2 pb-1">
             <ButtonGroup>
               <Button size="sm" variant="outline">Grid</Button>
               <DropdownMenu>
@@ -265,7 +204,7 @@ function manageMeasurements() {
               </DropdownMenu>
             </ButtonGroup>
           </div> -->
-        </ToolRow>
+        <!-- </ToolRow> -->
 
         <!-- <ToolRow v-model="toolState.perspectiveGrid.enabled" title="Perspective Grid">
           <ActionToolControl @click="managePerspectiveGrid" />

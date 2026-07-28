@@ -1,19 +1,20 @@
-import { type LayerImplementation } from '@/layer/LayerRegistry';
-import type { DocumentRuntime } from '@/document/DocumentRuntime';
+import type { VariantRuntime } from '@/workplace/runtime';
 import { stackblur } from './Blur';
+import type { LayerEngine } from '@/workplace/layerEngine';
 
-export class EdgeLayer implements LayerImplementation {
-  name: string = 'edge';
+export class EdgeLayer implements LayerEngine {
+  type: string = 'edge';
   version: string = '1.0.0';
-  properties: any = { value: 0 };
+  order: number = 800;
+  defaultProperties: any = { value: 0 };
 
-  render(documentRuntime: DocumentRuntime, src: ImageData, parameters: any): ImageData {
+  render(variantRuntime: VariantRuntime, src: ImageData, parameters: any): ImageData {
     console.log(`[edge] render(): ${JSON.stringify(parameters)}`);
-    return edge(documentRuntime, src, parameters.value);
+    return edge(variantRuntime, src, parameters.value);
   }
 }
 
-export function edge(documentRuntime: DocumentRuntime, src: ImageData, slider: number): ImageData {
+export function edge(variantRuntime: VariantRuntime, src: ImageData, slider: number): ImageData {
   slider = Math.max(0, Math.min(100, slider));
 
   // ------------------------------------------------------------
@@ -31,7 +32,7 @@ export function edge(documentRuntime: DocumentRuntime, src: ImageData, slider: n
 
   // ------------------------------------------------------------
 
-  const blurred = stackblur(documentRuntime, src, Math.floor((slider * MAX_BLUR) / 100));
+  const blurred = stackblur(variantRuntime, src, Math.floor((slider * MAX_BLUR) / 100));
 
   const width = blurred.width;
   const height = blurred.height;

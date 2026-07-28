@@ -1,27 +1,52 @@
 <script setup lang="ts">
-import { ref, useTemplateRef, watch, onUnmounted } from 'vue';
+import { onMounted, ref, useTemplateRef, watch } from 'vue';
 import { useViewport } from '@/composables/useViewport';
 
-import { debounce } from 'lodash-es';
+// import { debounce } from 'lodash-es';
 
-import { useDocumentStore } from '@/document/Document';
-import { useDocumentRuntimeStore } from '@/document/DocumentRuntime';
-import { ImageEngine } from '@/Image/ImageEngine';
-import { ImageRenderer } from '@/Image/ImageRenderer';
+import { useWorkplaceStore } from '@/workplace/index';
 
-const props = withDefaults(
-  defineProps<{
-    src?: string;
-  }>(),
-  {
-    src: '',
-  }
-);
+const workplace = useWorkplaceStore();
 
-const imageRef = useTemplateRef<HTMLImageElement>('imageRef');
 const originalImageRef = useTemplateRef<HTMLCanvasElement>('originalImageRef');
 const displayImageRef = useTemplateRef<HTMLCanvasElement>('displayImageRef');
 
+onMounted(() => {
+  console.log('[EditorCanvas] onMounted');
+  const imageData = workplace.currentSourceImageData;
+  if (imageData) {
+    drawToCanvas(imageData, originalImageRef.value!);
+    drawToCanvas(imageData, displayImageRef.value!);
+  }
+});
+
+watch(
+  () => workplace.currentSourceImageData,
+  (newValue) => {
+    // console.log('[EditorCanvas] currentSourceImageData changed');
+    drawToCanvas(newValue, originalImageRef.value!);
+  }
+);
+
+watch(
+  () => workplace.currentVariantImageData,
+  (newValue) => {
+    // console.log('[EditorCanvas] currentVariantImageData changed');
+    if (!newValue) return; // TODO display canvas cleanup required here
+    drawToCanvas(newValue, displayImageRef.value!);
+  }
+);
+
+function drawToCanvas(imageData: ImageData | undefined, canvas: HTMLCanvasElement) {
+  if (!imageData) return;
+  canvas.width = imageData.width;
+  canvas.height = imageData.height;
+  const ctx = canvas.getContext('2d')!;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.putImageData(imageData, 0, 0);
+}
+
+/*
 const documentRuntime = useDocumentRuntimeStore();
 
 const debouncedDraw = debounce(() => {
@@ -41,43 +66,13 @@ watch(
     debouncedDraw();
   }
 );
+*/
 
 const emit = defineEmits<{
   (e: 'click'): void;
 }>();
 
 const { transform } = useViewport(); // viewport,
-
-function handleImageLoad() {
-  console.log(`[EditorCanvas] handleImageLoad`);
-
-  if (imageRef.value == null) return;
-  if (displayImageRef.value == null) return;
-
-  const document = useDocumentStore();
-  document.initialize(props.src);
-
-  const documentRuntime = useDocumentRuntimeStore();
-  const imageData = ImageEngine.imageToImageData(imageRef.value);
-
-  documentRuntime.initialize(document);
-  documentRuntime.srcImageData = imageData;
-  documentRuntime.currentImageData = null;
-  console.log('[EditorScreen] new Document and DocumentRuntime configured');
-
-  ImageEngine.process();
-
-  const canvas = originalImageRef.value;
-  const image = imageRef.value;
-  if (!canvas) return;
-  canvas.width = image.naturalWidth;
-  canvas.height = image.naturalHeight;
-
-  const ctx = canvas.getContext('2d')!;
-
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.drawImage(image, 0, 0);
-}
 
 const originalOpacity = ref(0);
 const HOLD_DELAY = 250;
@@ -155,7 +150,7 @@ function onPointerUp(e: PointerEvent) {
     >
       <div class="relative">
         <!-- Hidden source image -->
-        <img ref="imageRef" :src="src" style="display: none" @load="handleImageLoad" />
+        <!-- <img ref="imageRef" style="display: none" @load="handleImageLoad" /> -->
 
         <!-- Edited -->
         <canvas ref="displayImageRef" class="block max-h-full max-w-full object-contain" />

@@ -7,19 +7,6 @@ import App from './App.vue';
 import { createPinia } from 'pinia';
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
 
-import { LayerRegistry } from './layer/LayerRegistry.ts';
-import { BlackWhiteLayer } from './layer/impl/BlackWhiteLayer.ts';
-import { PosterizeLayer } from './layer/impl/Posterize.ts';
-import { BlurLayer } from './layer/impl/Blur.ts';
-import { GridLayer } from './layer/impl/Grid.ts';
-import { ContrastLayer } from './layer/impl/Contrast.ts';
-import { SaturationLayer } from './layer/impl/Saturation.ts';
-import { SquintLayer } from './layer/impl/Squint.ts';
-import { GammaLayer } from './layer/impl/Gamma.ts';
-import { GoldenRatioLayer } from './layer/impl/GoldenRatio.ts';
-import { RuleOfThirdsLayer } from './layer/impl/RuleOfThirds.ts';
-import { EdgeLayer } from './layer/impl/Edge.ts';
-
 // Create Vue Application
 const app = createApp(App);
 
@@ -27,21 +14,8 @@ const app = createApp(App);
 const pinia = createPinia();
 pinia.use(piniaPluginPersistedstate);
 
-// Register all Layer Implementation
-const layerRegistry = LayerRegistry.getInstance();
-layerRegistry.register(new BlackWhiteLayer());
-layerRegistry.register(new PosterizeLayer());
-layerRegistry.register(new BlurLayer());
-layerRegistry.register(new GridLayer());
-layerRegistry.register(new ContrastLayer());
-layerRegistry.register(new SaturationLayer());
-layerRegistry.register(new SquintLayer());
-layerRegistry.register(new GammaLayer());
-layerRegistry.register(new GoldenRatioLayer());
-layerRegistry.register(new RuleOfThirdsLayer());
-layerRegistry.register(new EdgeLayer());
-
 // Configure and Run Vue Application
 app.use(pinia);
 app.use(i18n);
 app.mount('#app');
+

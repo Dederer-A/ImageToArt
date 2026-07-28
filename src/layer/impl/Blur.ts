@@ -1,19 +1,20 @@
+import type { LayerEngine } from '@/workplace/layerEngine';
+import type { VariantRuntime } from '@/workplace/runtime';
 import { imageDataRGBA } from 'stackblur-canvas';
-import { type LayerImplementation } from '@/layer/LayerRegistry';
-import type { DocumentRuntime } from '@/document/DocumentRuntime';
 
-export class BlurLayer implements LayerImplementation {
-  name: string = 'blur';
+export class BlurLayer implements LayerEngine {
+  type: string = 'blur';
   version: string = '1.0.0';
-  properties: any = { value: 0 };
+  order: number = 400;
+  defaultProperties: any = { value: 0 };
 
-  render(documentRuntime: DocumentRuntime, src: ImageData, parameters: any): ImageData {
+  render(variantRuntime: VariantRuntime, src: ImageData, parameters: any): ImageData {
     console.log(`[BlurLayer] render(): ${JSON.stringify(parameters)}`);
-    return stackblur(documentRuntime, src, parameters.value);
+    return stackblur(variantRuntime, src, parameters.value);
   }
 }
 
-export function stackblur(_documentRuntime: DocumentRuntime, src: ImageData, slider: number): ImageData {
+export function stackblur(_variantRuntime: VariantRuntime, src: ImageData, slider: number): ImageData {
   if (slider === 0) {
     return new ImageData(new Uint8ClampedArray(src.data), src.width, src.height);
   }
