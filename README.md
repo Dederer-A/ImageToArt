@@ -88,28 +88,3 @@ npx cap open ios
 ## License
 
 This project is licensed under the Apache License 2.0. See the [LICENSE](LICENSE) file for details.
-
-```Text
-WorkspaceStore (Pinia)
-│
-├── document              // сериализуемая модель
-│   ├── sourceImage
-│   ├── variants[]
-│   └── metadata
-│
-├── runtime               // кэши и вычисленные данные
-│   └── variantRuntimes
-│
-├── activeVariantId       // UI-состояние
-│
-└── actions / getters
-    ├── currentVariant
-    ├── currentRuntime
-    ├── currentImageData
-    ├── undo()
-    ├── redo()
-    ├── createVariant()
-    ├── duplicateVariant()
-    ├── deleteVariant()
-    └── selectVariant()
-```
