@@ -80,8 +80,10 @@ function handleImageLoad() {
 }
 
 const originalOpacity = ref(0);
-const HOLD_DELAY = 1000;
+const HOLD_DELAY = 250;
 const OPACITY_DRAG_DISTANCE = 200;
+let moved = false;
+const CLICK_MOVE_THRESHOLD = 5;
 
 let holdTimer: number | undefined;
 let previewMode = false;
@@ -90,9 +92,13 @@ let startY = 0;
 
 function onPointerDown(e: PointerEvent) {
   const target = e.currentTarget as HTMLElement;
+
   target.setPointerCapture(e.pointerId);
+
   startY = e.clientY;
   previewMode = false;
+  moved = false;
+
   holdTimer = window.setTimeout(() => {
     previewMode = true;
     originalOpacity.value = 1;
@@ -100,29 +106,43 @@ function onPointerDown(e: PointerEvent) {
 }
 
 function onPointerMove(e: PointerEvent) {
+  const dy = e.clientY - startY;
+
+  if (Math.abs(dy) > CLICK_MOVE_THRESHOLD) {
+    moved = true;
+  }
+
   if (!previewMode) return;
-  const dy = Math.max(0, e.clientY - startY);
-  originalOpacity.value = Math.max(0, 1 - dy / OPACITY_DRAG_DISTANCE);
+
+  originalOpacity.value = Math.max(0, 1 - Math.max(0, dy) / OPACITY_DRAG_DISTANCE);
 }
 
-function onPointerUp(e: PointerEvent) {  
+function onPointerUp(e: PointerEvent) {
   const target = e.currentTarget as HTMLElement;
+
   if (target.hasPointerCapture(e.pointerId)) {
     target.releasePointerCapture(e.pointerId);
   }
+
   if (holdTimer) {
     clearTimeout(holdTimer);
     holdTimer = undefined;
   }
+
+  const wasPreview = previewMode;
+
   previewMode = false;
   originalOpacity.value = 0;
+
+  if (!wasPreview && !moved) {
+    emit('click');
+  }
 }
 </script>
 
 <template>
   <main
     class="absolute inset-0 overflow-hidden bg-background select-none touch-manipulation"
-    @click="emit('click')"
     @pointerdown="onPointerDown"
     @pointermove="onPointerMove"
     @pointerup="onPointerUp"
