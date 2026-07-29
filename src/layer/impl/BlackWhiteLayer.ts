@@ -8,7 +8,6 @@ export class BlackWhiteLayer implements LayerEngine {
   defaultProperties: any = { value: 50 };
 
   render(variantRuntime: VariantRuntime, src: ImageData, parameters: any): ImageData {
-    console.log(`[BlackWhiteLayer] render(): ${JSON.stringify(parameters)}`);
     return blackAndWhite(variantRuntime, src, parameters.value);
   }
 }

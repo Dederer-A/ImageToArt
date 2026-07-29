@@ -2,10 +2,10 @@ import { debounce } from 'lodash-es';
 
 import { useWorkplaceStore } from '@/workplace/index';
 
-const MAX_SIDE_SIZE = 2000;
+const MAX_SIDE_SIZE = 1500;
 
 const debouncedDraw = debounce((documentRuntime: any) => {
-  console.log('[ImageEngine] processImageData [debounced]');
+  console.time('ImageEngine');
   const workspaceStore = useWorkplaceStore();
   const layers = Object.values(workspaceStore.currentVariant.layers);
   const srcImageData = workspaceStore.currentSourceImageData;
@@ -15,9 +15,12 @@ const debouncedDraw = debounce((documentRuntime: any) => {
     const layerEngine = workspaceStore.layerRegistry.get(layer.type);
     // TODO change if logic. If something goes wrong stop processing
     if (layer.enabled && layerEngine != null) {
+      console.time(layer.type);
       currentImageData = layerEngine.render(documentRuntime, currentImageData, layer.properties);
+      console.timeEnd(layer.type);
     }
   }
+  console.timeEnd('ImageEngine');
   workspaceStore.updateCurrentVariantImageData(currentImageData);
 }, 5);
 

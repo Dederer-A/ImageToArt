@@ -7,7 +7,6 @@ export class GoldenRatioLayer implements LayerEngine {
   defaultProperties: any = {};
 
   render(variantRuntime: VariantRuntime, src: ImageData, parameters: any): ImageData {
-    console.log(`[GoldenRatio] render(): ${JSON.stringify(parameters)}`);
     return goldenRatio(variantRuntime, src, parameters.value);
   }
 }

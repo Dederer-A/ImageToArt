@@ -8,7 +8,6 @@ export class ContrastLayer implements LayerEngine {
   defaultProperties: any = { value: 50 };
 
   render(variantRuntime: VariantRuntime, src: ImageData, parameters: any): ImageData {
-    console.log(`[Contrast] render(): ${JSON.stringify(parameters)}`);
     return contrast(variantRuntime, src, parameters.value);
   }
 }

@@ -8,7 +8,6 @@ export class RuleOfThirdsLayer implements LayerEngine {
   defaultProperties: any = {};
 
   render(variantRuntime: VariantRuntime, src: ImageData, parameters: any): ImageData {
-    console.log(`[ruleOfThirds] render(): ${JSON.stringify(parameters)}`);
     return ruleOfThirds(variantRuntime, src, parameters.value);
   }
 }

@@ -9,7 +9,6 @@ export class BlurLayer implements LayerEngine {
   defaultProperties: any = { value: 0 };
 
   render(variantRuntime: VariantRuntime, src: ImageData, parameters: any): ImageData {
-    console.log(`[BlurLayer] render(): ${JSON.stringify(parameters)}`);
     return stackblur(variantRuntime, src, parameters.value);
   }
 }

@@ -8,7 +8,6 @@ export class SaturationLayer implements LayerEngine {
   defaultProperties: any = { value: 0 };
 
   render(variantRuntime: VariantRuntime, src: ImageData, parameters: any): ImageData {
-    console.log(`[Saturation] render(): ${JSON.stringify(parameters)}`);
     return saturation(variantRuntime, src, parameters.value);
   }
 }

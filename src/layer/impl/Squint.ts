@@ -11,7 +11,6 @@ export class SquintLayer implements LayerEngine {
   defaultProperties: any = { value: 0 };
 
   render(variantRuntime: VariantRuntime, src: ImageData, parameters: any): ImageData {
-    console.log(`[Squint] render(): ${JSON.stringify(parameters)}`);
     return squint(variantRuntime, src, parameters.value);
   }
 }

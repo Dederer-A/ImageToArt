@@ -8,7 +8,6 @@ export class GridLayer implements LayerEngine {
   defaultProperties: any = { value: 4 };
 
   render(variantRuntime: VariantRuntime, src: ImageData, parameters: any): ImageData {
-    console.log(`[GridLayer] render(): ${JSON.stringify(parameters)}`);
     return grid(variantRuntime, src, parameters.value);
   }
 }

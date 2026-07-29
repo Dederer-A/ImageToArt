@@ -1,5 +1,5 @@
 import type { VariantRuntime } from '@/workplace/runtime';
-import { stackblur } from './Blur';
+// import { stackblur } from './Blur';
 import type { LayerEngine } from '@/workplace/layerEngine';
 
 export class EdgeLayer implements LayerEngine {
@@ -9,19 +9,18 @@ export class EdgeLayer implements LayerEngine {
   defaultProperties: any = { value: 0 };
 
   render(variantRuntime: VariantRuntime, src: ImageData, parameters: any): ImageData {
-    console.log(`[edge] render(): ${JSON.stringify(parameters)}`);
     return edge(variantRuntime, src, parameters.value);
   }
 }
 
-export function edge(variantRuntime: VariantRuntime, src: ImageData, slider: number): ImageData {
+export function edge(_variantRuntime: VariantRuntime, src: ImageData, slider: number): ImageData {
   slider = Math.max(0, Math.min(100, slider));
 
   // ------------------------------------------------------------
   // Configuration
   // ------------------------------------------------------------
 
-  const MAX_BLUR = 12;
+  // const MAX_BLUR = 12;
 
   const MIN_THRESHOLD = 0.0;
   const MAX_THRESHOLD = 0.55;
@@ -32,7 +31,8 @@ export function edge(variantRuntime: VariantRuntime, src: ImageData, slider: num
 
   // ------------------------------------------------------------
 
-  const blurred = stackblur(variantRuntime, src, Math.floor((slider * MAX_BLUR) / 100));
+  // const blurred = stackblur(variantRuntime, src, Math.floor((slider * MAX_BLUR) / 100));
+  const blurred = new ImageData(new Uint8ClampedArray(src.data), src.width, src.height);
 
   const width = blurred.width;
   const height = blurred.height;
