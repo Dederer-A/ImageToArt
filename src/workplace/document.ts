@@ -1,16 +1,16 @@
 import type { LayerEngine } from './layerEngine';
 
-import { BlackWhiteLayer } from '@/layer/impl/BlackWhiteLayer.ts';
-import { PosterizeLayer } from '@/layer/impl/Posterize.ts';
-import { BlurLayer } from '@/layer/impl/Blur.ts';
-import { GridLayer } from '@/layer/impl/Grid.ts';
-import { ContrastLayer } from '@/layer/impl/Contrast.ts';
-import { SaturationLayer } from '@/layer/impl/Saturation.ts';
-import { SquintLayer } from '@/layer/impl/Squint.ts';
-import { GammaLayer } from '@/layer/impl/Gamma.ts';
-import { GoldenRatioLayer } from '@/layer/impl/GoldenRatio.ts';
-import { RuleOfThirdsLayer } from '@/layer/impl/RuleOfThirds.ts';
-import { EdgeLayer } from '@/layer/impl/Edge.ts';
+import { BlackWhiteLayer } from '@/Image/layers/BlackWhiteLayer';
+import { PosterizeLayer } from '@/Image/layers/Posterize';
+import { BlurLayer } from '@/Image/layers/Blur';
+import { GridLayer } from '@/Image/layers/Grid';
+import { ContrastLayer } from '@/Image/layers/Contrast';
+import { SaturationLayer } from '@/Image/layers/Saturation';
+import { SquintLayer } from '@/Image/layers/Squint';
+import { GammaLayer } from '@/Image/layers/Gamma';
+import { GoldenRatioLayer } from '@/Image/layers/GoldenRatio';
+import { RuleOfThirdsLayer } from '@/Image/layers/RuleOfThirds';
+import { EdgeLayer } from '@/Image/layers/Edge';
 
 export interface Document {
   id: string;
