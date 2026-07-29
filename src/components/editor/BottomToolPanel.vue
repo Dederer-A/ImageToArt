@@ -24,7 +24,7 @@ withDefaults(
     leave-to-class="translate-y-full opacity-0"
   >
     <aside
-      v-if="visible"
+      v-show="visible"
       :style="{ height: `${height}dvh` }"
       class="absolute inset-x-0 bottom-0 z-20 flex flex-col rounded-t-3xl border-t border-border bg-background/80 backdrop-blur-xl shadow-lg"
     >
