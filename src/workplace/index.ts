@@ -33,7 +33,7 @@ export const useWorkplaceStore = defineStore('workplace', () => {
   });
 
   const currentVariantImageData = computed(() => {
-    return currentVariantRuntime.value?.imageData;
+    return currentVariantRuntime.value?.renderedImageData;
   });
 
   // Functions
@@ -114,7 +114,7 @@ export const useWorkplaceStore = defineStore('workplace', () => {
 
   function updateCurrentVariantImageData(imageData: ImageData) {
     if (!document.value || !currentVariant.value || !currentVariantRuntime.value) return;
-    currentVariantRuntime.value.imageData = ImageEngine.cloneImageData(imageData);
+    currentVariantRuntime.value.renderedImageData = ImageEngine.cloneImageData(imageData);
   }
 
   function initialize() {
