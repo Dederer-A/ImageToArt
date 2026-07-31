@@ -10,6 +10,7 @@ import EditorToolbar from '@/components/editor/EditorToolbar.vue';
 import SliderToolControl from '@/components/tools/SliderToolControl.vue';
 import ToolList from '@/components/editor/ToolList.vue';
 import ToolRow from '@/components/editor/ToolRow.vue';
+import SliderRangeToolControl from '../tools/SliderRangeToolControl.vue';
 
 // const cropPresets = [['Portrait', 'Landscape'], ['Free', 'Original', '3:2', '16:9', '4:3', '1:1'], ['Instagram']];
 
@@ -51,7 +52,9 @@ function manageMeasurements() {
 function updateLayerProperty(layerType: string, propertyName: string, event: any) {
   workplace.updateLayerProperty(layerType, propertyName, event);
 }
-
+function updateLayerPropertyMinMax(layerType: string, event: any) {
+  console.log(`[EditorScreen] updateLayerPropertyMinMax: ${layerType}: ${event}`);
+}
 function updateLayerEnable(layerType: string, event: boolean | undefined) {
   workplace.updateLayerEnable(layerType, event ? event : false);
 }
@@ -77,7 +80,24 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
         <p class="text-lg pb-5"><strong>Original Image</strong></p>
         <p>Swipe to the right to start working with variants</p>
       </div>
+
       <ToolList v-else class="divide-y divide-border">
+        <ToolRow
+          :model-value="workplace.currentVariant.layers['levels'].enabled"
+          @update:model-value="updateLayerEnable('levels', $event)"
+          title="Levels"
+        >
+          <SliderRangeToolControl
+            :model-value="{
+              minValue: workplace.currentVariant.layers['contrast'].properties.minValue,
+              maxValue: workplace.currentVariant.layers['contrast'].properties.maxValue,
+            }"
+            :min="0"
+            :max="255"
+            @update:model-value="updateLayerPropertyMinMax('levels', $event)"
+          />
+        </ToolRow>
+
         <!-- <ToolRow v-model="toolState.crop.enabled" title="Crop">
           <CropToolControl v-model="toolState.crop.preset" :presets="cropPresets" />
         </ToolRow> -->
