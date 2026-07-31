@@ -15,6 +15,7 @@ const debouncedDraw = debounce((documentRuntime: any) => {
     const layerEngine = workspaceStore.layerRegistry.get(layer.type);
     // TODO change if logic. If something goes wrong stop processing
     if (layer.enabled && layerEngine != null) {
+      // console.log(`[ImageEngine] render: ${layer.type} | ${JSON.stringify(layer.properties)}`);
       console.time(layer.type);
       currentImageData = layerEngine.render(documentRuntime, currentImageData, layer.properties);
       console.timeEnd(layer.type);

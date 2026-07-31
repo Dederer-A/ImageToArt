@@ -1,16 +1,13 @@
 <script setup lang="ts">
-// import { computed } from 'vue';
+import { Slider } from '@/components/ui/slider';
 
-import { SliderRange, SliderRoot, SliderThumb, SliderTrack } from 'reka-ui';
-
-const props = withDefaults(
+withDefaults(
   defineProps<{
-    modelValue: any;
+    modelValue: number[];
 
     min?: number;
     max?: number;
     step?: number;
-
     disabled?: boolean;
   }>(),
   {
@@ -20,31 +17,20 @@ const props = withDefaults(
     disabled: false,
   }
 );
-/*
-const emit = defineEmits<{
-  (e: 'update:modelValue', value: any): void;
-}>();
 
-const sliderValue = computed({
-  get: () => [props.modelValue],
-  set: ([value]: number[]) => emit('update:modelValue', value),
-});
-*/
+const emit = defineEmits<{
+  (e: 'update:modelValue', value: number[] | undefined): void;
+}>();
 </script>
 
 <template>
-  <SliderRoot
-    :default-value="[modelValue.minValue, modelValue.maxValue]"
+  <Slider
+    :model-value="modelValue"
+    @update:model-value="emit('update:modelValue', $event)"
     :min="min"
     :max="max"
     :step="step"
     :disabled="disabled"
     class="w-full min-h-5"
-  >
-    <SliderTrack>
-      <SliderRange />
-    </SliderTrack>
-    <SliderThumb />
-    <SliderThumb />
-  </SliderRoot>
+  />
 </template>

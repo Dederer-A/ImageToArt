@@ -5,10 +5,10 @@ export class LevelsLayer implements LayerEngine {
   type: string = 'levels';
   version: string = '1.0.0';
   order: number = 50;
-  defaultProperties: any = { minValue: 0, maxValue: 255 };
+  defaultProperties: any = { value: [0, 255] };
 
   render(variantRuntime: VariantRuntime, src: ImageData, parameters: any): ImageData {
-    return levels(variantRuntime, src, parameters.minValue, parameters.maxValue);
+    return levels(variantRuntime, src, parameters.value[0], parameters.value[1]);
   }
 }
 
