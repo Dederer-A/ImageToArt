@@ -33,15 +33,17 @@ export const useWorkplaceStore = defineStore('workplace', () => {
   });
 
   const currentVariantImageData = computed(() => {
-    return currentVariantRuntime.value?.imageData;
+    return currentVariantRuntime.value?.renderedImageData;
   });
 
   // Functions
   // Local function to get or create a VariantRuntime for a given variantId
   function getVariantRuntime(variantId: string): VariantRuntime {
+    if (!document.value) throw new Error('[WorkplaceStore] getVariantRuntime(): document is null or undefined');
     let runtime = variantRuntimes.value[variantId];
     if (!runtime) {
       runtime = new VariantRuntime(variantId);
+      runtime.renderedImageData = ImageEngine.cloneImageData(document.value.imageData);
       variantRuntimes.value[variantId] = runtime;
     }
     return runtime;
@@ -61,11 +63,31 @@ export const useWorkplaceStore = defineStore('workplace', () => {
     imageProcess();
   }
 
+  function nextVariant() {
+    if (!document.value || !currentVariantId.value) return;
+    const variantIndex = findVariantIndex(document.value.variants, currentVariantId.value);
+    if (variantIndex == -1 || variantIndex == document.value.variants.length - 1) return;
+    currentVariantId.value = document.value.variants[variantIndex + 1].id;
+    console.log(`[Workplace] nextVariant: currentVariantId: ${currentVariantId.value}`);
+  }
+
+  function previousVariant() {
+    if (!document.value || !currentVariantId.value) return;
+    const variantIndex = findVariantIndex(document.value.variants, currentVariantId.value);
+    if (variantIndex <= 0) return;
+    currentVariantId.value = document.value.variants[variantIndex - 1].id;
+    console.log(`[Workplace] previousVariant: currentVariantId: ${currentVariantId.value}`);
+  }
+
+  function findVariantIndex(variants: Variant[], variantId: string): number {
+    return variants.findIndex((variant) => variant.id === variantId);
+  }
+
   function createVariant() {
     if (!document.value) return;
     const newVariant: Variant = {
       id: crypto.randomUUID(),
-      readOnly: document.value.variants.length === 0, // The first variant is read-only
+      isOriginal: document.value.variants.length === 0, // The first variant is read-only
       layers: {},
     };
     layerRegistry.list().forEach((layerEngine) => {
@@ -78,7 +100,7 @@ export const useWorkplaceStore = defineStore('workplace', () => {
     // console.log(`[WorkplaceStore] createVariant[${document.value.variants.length}]: ${JSON.stringify(newVariant)}`);
     document.value.variants.push(newVariant);
 
-    if (newVariant.readOnly) {
+    if (newVariant.isOriginal) {
       createVariant();
     } else {
       currentVariantId.value = newVariant.id;
@@ -114,7 +136,7 @@ export const useWorkplaceStore = defineStore('workplace', () => {
 
   function updateCurrentVariantImageData(imageData: ImageData) {
     if (!document.value || !currentVariant.value || !currentVariantRuntime.value) return;
-    currentVariantRuntime.value.imageData = ImageEngine.cloneImageData(imageData);
+    currentVariantRuntime.value.renderedImageData = ImageEngine.cloneImageData(imageData);
   }
 
   function initialize() {
@@ -155,6 +177,8 @@ export const useWorkplaceStore = defineStore('workplace', () => {
     createVariant,
     duplicateCurrentVariant,
     deleteCurrentVariant,
+    nextVariant,
+    previousVariant,
 
     updateLayerProperty,
     updateLayerEnable,

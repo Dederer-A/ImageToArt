@@ -8,6 +8,53 @@ import { useWorkplaceStore } from '@/workplace/index';
 
 const workplace = useWorkplaceStore();
 
+enum GestureState {
+  Idle,
+  PendingHold,
+  Preview,
+  HorizontalSwipe,
+}
+
+const gestureState = ref(GestureState.Idle);
+
+interface GestureContext {
+  pointerId: number;
+  startX: number;
+  startY: number;
+  moved: boolean;
+  holdTimer?: number;
+}
+
+const gesture: GestureContext = {
+  pointerId: -1,
+  startX: 0,
+  startY: 0,
+  moved: false,
+};
+
+function dispatchHoldTimeout() {
+  if (gestureState.value !== GestureState.PendingHold) {
+    return;
+  }
+  gestureState.value = GestureState.Preview;
+  originalOpacity.value = 1;
+}
+
+function resetGesture(target?: HTMLElement) {
+  if (gesture.holdTimer) {
+    clearTimeout(gesture.holdTimer);
+    gesture.holdTimer = undefined;
+  }
+  if (target && target.hasPointerCapture(gesture.pointerId)) {
+    target.releasePointerCapture(gesture.pointerId);
+  }
+  originalOpacity.value = 0;
+  gestureState.value = GestureState.Idle;
+  swipeOffset.value = 0;
+}
+
+// =========
+
 const originalImageRef = useTemplateRef<HTMLCanvasElement>('originalImageRef');
 const displayImageRef = useTemplateRef<HTMLCanvasElement>('displayImageRef');
 
@@ -77,61 +124,86 @@ const { transform } = useViewport(); // viewport,
 const originalOpacity = ref(0);
 const HOLD_DELAY = 250;
 const OPACITY_DRAG_DISTANCE = 200;
-let moved = false;
 const CLICK_MOVE_THRESHOLD = 5;
+const DIRECTION_LOCK_DISTANCE = 15;
+const SWIPE_DISTANCE = 80;
 
-let holdTimer: number | undefined;
-let previewMode = false;
-
-let startY = 0;
+const swipeOffset = ref(0);
 
 function onPointerDown(e: PointerEvent) {
   const target = e.currentTarget as HTMLElement;
-
   target.setPointerCapture(e.pointerId);
+  gesture.pointerId = e.pointerId;
+  gesture.startX = e.clientX;
+  gesture.startY = e.clientY;
+  gesture.moved = false;
+  gestureState.value = GestureState.PendingHold;
+  gesture.holdTimer = window.setTimeout(dispatchHoldTimeout, HOLD_DELAY);
+}
 
-  startY = e.clientY;
-  previewMode = false;
-  moved = false;
+function handlePendingHold(e: PointerEvent) {
+  const dx = e.clientX - gesture.startX;
+  const dy = e.clientY - gesture.startY;
+  if (!gesture.moved && (Math.abs(dx) > CLICK_MOVE_THRESHOLD || Math.abs(dy) > CLICK_MOVE_THRESHOLD)) {
+    gesture.moved = true;
+  }
+  if (Math.abs(dx) < DIRECTION_LOCK_DISTANCE && Math.abs(dy) < DIRECTION_LOCK_DISTANCE) {
+    return;
+  }
+  if (Math.abs(dx) > Math.abs(dy)) {
+    if (gesture.holdTimer) {
+      clearTimeout(gesture.holdTimer);
+      gesture.holdTimer = undefined;
+    }
+    gestureState.value = GestureState.HorizontalSwipe;
+    swipeOffset.value = dx;
+  }
+  // vertical gesture do nothing in purpose. awaiting Hold event
+}
 
-  holdTimer = window.setTimeout(() => {
-    previewMode = true;
-    originalOpacity.value = 1;
-  }, HOLD_DELAY);
+function handleHorizontalSwipe(e: PointerEvent) {
+  swipeOffset.value = e.clientX - gesture.startX;
+}
+
+function handlePreview(e: PointerEvent) {
+  const dy = e.clientY - gesture.startY;
+  originalOpacity.value = Math.max(0, 1 - Math.max(0, dy) / OPACITY_DRAG_DISTANCE);
 }
 
 function onPointerMove(e: PointerEvent) {
-  const dy = e.clientY - startY;
-
-  if (Math.abs(dy) > CLICK_MOVE_THRESHOLD) {
-    moved = true;
+  switch (gestureState.value) {
+    case GestureState.PendingHold:
+      handlePendingHold(e);
+      break;
+    case GestureState.Preview:
+      handlePreview(e);
+      break;
+    case GestureState.HorizontalSwipe:
+      handleHorizontalSwipe(e);
+      break;
   }
-
-  if (!previewMode) return;
-
-  originalOpacity.value = Math.max(0, 1 - Math.max(0, dy) / OPACITY_DRAG_DISTANCE);
 }
 
 function onPointerUp(e: PointerEvent) {
   const target = e.currentTarget as HTMLElement;
-
-  if (target.hasPointerCapture(e.pointerId)) {
-    target.releasePointerCapture(e.pointerId);
+  const state = gestureState.value;
+  const moved = gesture.moved;
+  if (state === GestureState.HorizontalSwipe) {
+    if (swipeOffset.value < -SWIPE_DISTANCE) {
+      workplace.nextVariant();
+    }
+    if (swipeOffset.value > SWIPE_DISTANCE) {
+      workplace.previousVariant();
+    }
   }
-
-  if (holdTimer) {
-    clearTimeout(holdTimer);
-    holdTimer = undefined;
-  }
-
-  const wasPreview = previewMode;
-
-  previewMode = false;
-  originalOpacity.value = 0;
-
-  if (!wasPreview && !moved) {
+  resetGesture(target);
+  if (state === GestureState.PendingHold && !moved) {
     emit('click');
   }
+}
+
+function onPointerCancel(e: PointerEvent) {
+  resetGesture(e.currentTarget as HTMLElement);
 }
 </script>
 
@@ -141,7 +213,7 @@ function onPointerUp(e: PointerEvent) {
     @pointerdown="onPointerDown"
     @pointermove="onPointerMove"
     @pointerup="onPointerUp"
-    @pointercancel="onPointerUp"
+    @pointercancel="onPointerCancel"
   >
     <div
       ref="viewport"

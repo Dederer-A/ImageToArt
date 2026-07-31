@@ -20,10 +20,10 @@ export function saturation(variantRuntime: VariantRuntime, src: ImageData, slide
   }
 
   const cacheName = 'saturation';
-  let dst = variantRuntime.cache.get(cacheName);
+  let dst = variantRuntime.layerCache.get(cacheName);
   if (dst === undefined) {
     dst = new ImageData(src.width, src.height);
-    variantRuntime.cache.set(cacheName, dst);
+    variantRuntime.layerCache.set(cacheName, dst);
     console.log('[SaturationLayer] saturation(): cache miss, creating new ImageData');
   }
 

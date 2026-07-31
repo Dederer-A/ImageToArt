@@ -14,10 +14,10 @@ export class BlackWhiteLayer implements LayerEngine {
 
 function blackAndWhite(variantRuntime: VariantRuntime, src: ImageData, value: number): ImageData {
   const cacheName = 'blackAndWhite';
-  let dst = variantRuntime.cache.get(cacheName);
+  let dst = variantRuntime.layerCache.get(cacheName);
   if (dst === undefined) {
     dst = new ImageData(src.width, src.height);
-    variantRuntime.cache.set(cacheName, dst);
+    variantRuntime.layerCache.set(cacheName, dst);
     console.log('[BlackWhiteLayer] blackAndWhite(): cache miss, creating new ImageData');
   }
 

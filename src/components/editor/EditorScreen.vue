@@ -73,7 +73,11 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
     <EditorToolbar :visible="uiVisible" @back="goBack" @export="downloadImage" />
 
     <BottomToolPanel :visible="uiVisible" :height="30">
-      <ToolList class="divide-y divide-border">
+      <div v-if="workplace.currentVariant.isOriginal" class="p-6">
+        <p class="text-lg pb-5"><strong>Original Image</strong></p>
+        <p>Swipe to the right to start working with variants</p>
+      </div>
+      <ToolList v-else class="divide-y divide-border">
         <!-- <ToolRow v-model="toolState.crop.enabled" title="Crop">
           <CropToolControl v-model="toolState.crop.preset" :presets="cropPresets" />
         </ToolRow> -->

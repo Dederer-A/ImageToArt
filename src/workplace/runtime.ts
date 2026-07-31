@@ -1,11 +1,14 @@
 export class VariantRuntime {
-  variantId: string;
-  imageData: ImageData | null;
-  cache: Map<string, ImageData>;
+  readonly variantId: string;
+  renderedImageData: ImageData | null = null;
+  layerCache: Map<string, ImageData> = new Map();
 
   constructor(variantId: string) {
     this.variantId = variantId;
-    this.imageData = null;
-    this.cache = new Map();
+  }
+
+  public invalidate() {
+    this.layerCache.clear();
+    this.renderedImageData = null;
   }
 }
