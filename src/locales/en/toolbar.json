@@ -1,1 +1,15 @@
-{}
+{
+  "Original_Image_title": "Original Image",
+  "Original_Image_description": "Swipe to the right to start working with variants",
+  "Shadow_Highlight": "Shadow & Highlight",
+  "Contrast": "Contrast",
+  "Gamma": "Gamma",
+  "Black_White": "Black & White",
+  "Posterize": "Posterize",
+  "Squint": "Squint",
+  "Edge": "Edge",
+  "Blur": "Blur",
+  "Grid": "Grid",
+  "Golden_Ratio": "Golden Ratio",
+  "Rule_of_Thirds": "Rule of Thirds"
+}

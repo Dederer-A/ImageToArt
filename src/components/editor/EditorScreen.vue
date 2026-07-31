@@ -10,6 +10,7 @@ import EditorToolbar from '@/components/editor/EditorToolbar.vue';
 import SliderToolControl from '@/components/tools/SliderToolControl.vue';
 import ToolList from '@/components/editor/ToolList.vue';
 import ToolRow from '@/components/editor/ToolRow.vue';
+import SliderRangeToolControl from '../tools/SliderRangeToolControl.vue';
 
 // const cropPresets = [['Portrait', 'Landscape'], ['Free', 'Original', '3:2', '16:9', '4:3', '1:1'], ['Instagram']];
 
@@ -34,24 +35,10 @@ function goBack() {
 function downloadImage() {
   // TODO
 }
-/*
-function managePerspectiveGrid() {
-  // TODO
-}
-
-function manageRulers() {
-  // TODO
-}
-
-function manageMeasurements() {
-  // TODO
-}
-*/
 
 function updateLayerProperty(layerType: string, propertyName: string, event: any) {
   workplace.updateLayerProperty(layerType, propertyName, event);
 }
-
 function updateLayerEnable(layerType: string, event: boolean | undefined) {
   workplace.updateLayerEnable(layerType, event ? event : false);
 }
@@ -74,10 +61,26 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
 
     <BottomToolPanel :visible="uiVisible" :height="30">
       <div v-if="workplace.currentVariant.isOriginal" class="p-6">
-        <p class="text-lg pb-5"><strong>Original Image</strong></p>
-        <p>Swipe to the right to start working with variants</p>
+        <p class="text-lg pb-5">
+          <strong>{{ $t('toolbar.Original_Image_title') }}</strong>
+        </p>
+        <p>{{ $t('toolbar.Original_Image_description') }}</p>
       </div>
+
       <ToolList v-else class="divide-y divide-border">
+        <ToolRow
+          :model-value="workplace.currentVariant.layers['levels'].enabled"
+          @update:model-value="updateLayerEnable('levels', $event)"
+          title="toolbar.Shadow_Highlight"
+        >
+          <SliderRangeToolControl
+            :model-value="workplace.currentVariant.layers['levels'].properties.value"
+            :min="0"
+            :max="255"
+            @update:model-value="updateLayerProperty('levels', 'value', $event)"
+          />
+        </ToolRow>
+
         <!-- <ToolRow v-model="toolState.crop.enabled" title="Crop">
           <CropToolControl v-model="toolState.crop.preset" :presets="cropPresets" />
         </ToolRow> -->
@@ -89,7 +92,7 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
         <ToolRow
           :model-value="workplace.currentVariant.layers['contrast'].enabled"
           @update:model-value="updateLayerEnable('contrast', $event)"
-          title="Contrast"
+          title="toolbar.Contrast"
         >
           <SliderToolControl
             :model-value="workplace.currentVariant.layers['contrast'].properties.value"
@@ -100,7 +103,7 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
         <ToolRow
           :model-value="workplace.currentVariant.layers['gamma'].enabled"
           @update:model-value="updateLayerEnable('gamma', $event)"
-          title="Gamma"
+          title="toolbar.Gamma"
         >
           <SliderToolControl
             :model-value="workplace.currentVariant.layers['gamma'].properties.value"
@@ -111,7 +114,7 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
         <ToolRow
           :model-value="workplace.currentVariant.layers['blackAndWhite'].enabled"
           @update:model-value="updateLayerEnable('blackAndWhite', $event)"
-          title="Black & White"
+          title="toolbar.Black_White"
         >
           <SliderToolControl
             :model-value="workplace.currentVariant.layers['blackAndWhite'].properties.value"
@@ -122,7 +125,7 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
         <ToolRow
           :model-value="workplace.currentVariant.layers['posterize'].enabled"
           @update:model-value="updateLayerEnable('posterize', $event)"
-          title="Posterize"
+          title="toolbar.Posterize"
         >
           <SliderToolControl
             :model-value="workplace.currentVariant.layers['posterize'].properties.value"
@@ -133,7 +136,7 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
         <ToolRow
           :model-value="workplace.currentVariant.layers['squint'].enabled"
           @update:model-value="updateLayerEnable('squint', $event)"
-          title="Squint"
+          title="toolbar.Squint"
         >
           <SliderToolControl
             :model-value="workplace.currentVariant.layers['squint'].properties.value"
@@ -144,7 +147,7 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
         <ToolRow
           :model-value="workplace.currentVariant.layers['edge'].enabled"
           @update:model-value="updateLayerEnable('edge', $event)"
-          title="Edge"
+          title="toolbar.Edge"
         >
           <SliderToolControl
             :model-value="workplace.currentVariant.layers['edge'].properties.value"
@@ -155,7 +158,7 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
         <ToolRow
           :model-value="workplace.currentVariant.layers['blur'].enabled"
           @update:model-value="updateLayerEnable('blur', $event)"
-          title="Blur"
+          title="toolbar.Blur"
         >
           <SliderToolControl
             :model-value="workplace.currentVariant.layers['blur'].properties.value"
@@ -166,7 +169,7 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
         <ToolRow
           :model-value="workplace.currentVariant.layers['grid'].enabled"
           @update:model-value="updateLayerEnable('grid', $event)"
-          title="Grid"
+          title="toolbar.Grid"
         >
           <SliderToolControl
             :model-value="workplace.currentVariant.layers['grid'].properties.value"
@@ -179,14 +182,14 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
         <ToolRow
           :model-value="workplace.currentVariant.layers['goldenRatio'].enabled"
           @update:model-value="updateLayerEnable('goldenRatio', $event)"
-          title="Golden Ratio"
+          title="toolbar.Golden_Ratio"
         >
         </ToolRow>
 
         <ToolRow
           :model-value="workplace.currentVariant.layers['ruleOfThirds'].enabled"
           @update:model-value="updateLayerEnable('ruleOfThirds', $event)"
-          title="Rule of Thirds"
+          title="toolbar.Rule_of_Thirds"
         >
         </ToolRow>
 

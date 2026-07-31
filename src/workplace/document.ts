@@ -11,6 +11,7 @@ import { GammaLayer } from '@/Image/layers/Gamma';
 import { GoldenRatioLayer } from '@/Image/layers/GoldenRatio';
 import { RuleOfThirdsLayer } from '@/Image/layers/RuleOfThirds';
 import { EdgeLayer } from '@/Image/layers/Edge';
+import { LevelsLayer } from '@/Image/layers/Levels';
 
 export interface Document {
   id: string;
@@ -51,6 +52,7 @@ export class LayerRegistry {
     this.register(new GoldenRatioLayer());
     this.register(new RuleOfThirdsLayer());
     this.register(new EdgeLayer());
+    this.register(new LevelsLayer());
   }
 
   private register(layerEngine: LayerEngine): void {
