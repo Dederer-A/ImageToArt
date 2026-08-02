@@ -10,7 +10,9 @@ const debouncedDraw = debounce((documentRuntime: any) => {
   const layers = Object.values(workspaceStore.currentVariant.layers);
   const srcImageData = workspaceStore.currentSourceImageData;
   if (!srcImageData) return;
-  let currentImageData: ImageData = srcImageData; // ImageEngine.cloneImageData(srcImageData); // TODO optimization required here
+  const cloned = ImageEngine.cloneImageData(srcImageData);
+  if (cloned == null) return;
+  let currentImageData: ImageData = cloned; // TODO optimization required here
   for (const layer of layers) {
     const layerEngine = workspaceStore.layerRegistry.get(layer.type);
     // TODO change if logic. If something goes wrong stop processing

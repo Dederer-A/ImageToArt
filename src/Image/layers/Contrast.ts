@@ -12,16 +12,17 @@ export class ContrastLayer implements LayerEngine {
   }
 }
 
-export function contrast(variantRuntime: VariantRuntime, src: ImageData, slider: number): ImageData {
+export function contrast(_variantRuntime: VariantRuntime, src: ImageData, slider: number): ImageData {
   slider = Math.max(0, Math.min(100, slider));
 
-  const cacheName = 'contrast';
-  let dst = variantRuntime.layerCache.get(cacheName);
-  if (dst === undefined) {
-    dst = new ImageData(src.width, src.height);
-    variantRuntime.layerCache.set(cacheName, dst);
-    console.log('[ContrastLayer] contrast(): cache miss, creating new ImageData');
-  }
+  const dst = src;
+  // const cacheName = 'contrast';
+  // let dst = variantRuntime.layerCache.get(cacheName);
+  // if (dst === undefined) {
+  //   dst = new ImageData(src.width, src.height);
+  //   variantRuntime.layerCache.set(cacheName, dst);
+  //   console.log('[ContrastLayer] contrast(): cache miss, creating new ImageData');
+  // }
 
   const srcPixels = src.data;
   const dstPixels = dst.data;

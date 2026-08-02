@@ -31,6 +31,11 @@ const canDelete = computed(() => {
   const store = useWorkplaceStore();
   return store.allVariants.length > 1 && !store.currentVariant.isOriginal;
 });
+
+const canDuplicate = computed(() => {
+  const store = useWorkplaceStore();
+  return store.allVariants.length < 5;
+});
 </script>
 
 <template>
@@ -55,18 +60,14 @@ const canDelete = computed(() => {
       <div class="flex items-center gap-2">
         <span class="pr-5">{{ variantsLabel }}</span>
 
-        <AlertDialog @action="emit('delete')">
-          <Button variant="ghost" size="icon" @click="emit('reset')">
+        <AlertDialog @action="emit('reset')">
+          <Button variant="ghost" size="icon">
             <RotateCcw class="size-5" />
           </Button>
         </AlertDialog>
 
-        <Button variant="ghost" size="icon" @click="emit('duplicate')">
+        <Button variant="ghost" size="icon" @click="emit('duplicate')" :disabled="!canDuplicate">
           <CopyPlus class="size-5" />
-        </Button>
-
-        <Button variant="ghost" size="icon" @click="emit('export')">
-          <Share class="size-5" />
         </Button>
 
         <AlertDialog @action="emit('delete')">
@@ -75,6 +76,10 @@ const canDelete = computed(() => {
           </Button>
         </AlertDialog>
       </div>
+
+      <Button variant="ghost" size="icon" @click="emit('export')">
+        <Share class="size-5" />
+      </Button>
     </header>
   </Transition>
 </template>

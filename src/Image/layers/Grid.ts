@@ -19,7 +19,8 @@ function grid(_variantRuntime: VariantRuntime, src: ImageData, slider: number): 
     return new ImageData(new Uint8ClampedArray(src.data), src.width, src.height);
   }
 
-  let dst = new ImageData(new Uint8ClampedArray(src.data), src.width, src.height);
+  const dst = src;
+  // let dst = new ImageData(new Uint8ClampedArray(src.data), src.width, src.height);
 
   const pixels = dst.data;
 

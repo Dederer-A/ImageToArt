@@ -12,14 +12,15 @@ export class BlackWhiteLayer implements LayerEngine {
   }
 }
 
-function blackAndWhite(variantRuntime: VariantRuntime, src: ImageData, value: number): ImageData {
-  const cacheName = 'blackAndWhite';
-  let dst = variantRuntime.layerCache.get(cacheName);
-  if (dst === undefined) {
-    dst = new ImageData(src.width, src.height);
-    variantRuntime.layerCache.set(cacheName, dst);
-    console.log('[BlackWhiteLayer] blackAndWhite(): cache miss, creating new ImageData');
-  }
+function blackAndWhite(_variantRuntime: VariantRuntime, src: ImageData, value: number): ImageData {
+  const dst = src;
+  // const cacheName = 'blackAndWhite';
+  // let dst = variantRuntime.layerCache.get(cacheName);
+  // if (dst === undefined) {
+  //   dst = new ImageData(src.width, src.height);
+  //   variantRuntime.layerCache.set(cacheName, dst);
+  //   console.log('[BlackWhiteLayer] blackAndWhite(): cache miss, creating new ImageData');
+  // }
 
   const t = Math.max(0, Math.min(100, value)) / 100;
 

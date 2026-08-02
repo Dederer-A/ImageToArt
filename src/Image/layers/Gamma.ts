@@ -18,7 +18,7 @@ export class GammaLayer implements LayerEngine {
   }
 }
 
-export function gamma(variantRuntime: VariantRuntime, src: ImageData, slider: number): ImageData {
+export function gamma(_variantRuntime: VariantRuntime, src: ImageData, slider: number): ImageData {
   slider = Math.max(0, Math.min(100, slider));
 
   // Identity transform
@@ -28,14 +28,15 @@ export function gamma(variantRuntime: VariantRuntime, src: ImageData, slider: nu
 
   const lut = getGammaLut(slider);
 
+  const dst = src;
   // const dst = new ImageData(src.width, src.height);
-  const cacheName = 'gamma';
-  let dst = variantRuntime.layerCache.get(cacheName);
-  if (dst === undefined) {
-    dst = new ImageData(src.width, src.height);
-    variantRuntime.layerCache.set(cacheName, dst);
-    console.log('[GammaLayer] gamma(): cache miss, creating new ImageData');
-  }
+  // const cacheName = 'gamma';
+  // let dst = variantRuntime.layerCache.get(cacheName);
+  // if (dst === undefined) {
+  //   dst = new ImageData(src.width, src.height);
+  //   variantRuntime.layerCache.set(cacheName, dst);
+  //   console.log('[GammaLayer] gamma(): cache miss, creating new ImageData');
+  // }
 
   const srcPixels = src.data;
   const dstPixels = dst.data;
