@@ -13,6 +13,35 @@ export const useWorkplaceStore = defineStore('workplace', () => {
   const variantRuntimes = ref<Record<string, VariantRuntime>>({}); // Where key is the variantId and value is the VariantRuntime instance
 
   // Computed properties
+  const allVariants = computed(() => {
+    if (!document.value) return [];
+    return document.value.variants;
+  });
+
+  const currentVariantIndex = computed(() => {
+    if (!document.value || !currentVariantId.value) return -1;
+    return findVariantIndex(document.value.variants, currentVariantId.value);
+  });
+
+  const variantRuntimeByIndex = computed(() => {
+    if (!document.value || currentVariantIndex.value === -1) return undefined;
+    return getVariantRuntime(document.value.variants[currentVariantIndex.value].id);
+  });
+
+  function variantImageDataByIndex(index: number): ImageData {
+    if (!document.value)
+      throw new Error('[WorkplaceStore] variantImageDataByIndex: document or currentVariantIndex is null');
+    const variantId = document.value.variants[index].id;
+    const runtime = getVariantRuntime(variantId);
+    if (!runtime.renderedImageData) throw new Error('[WorkplaceStore] variantImageDataByIndex: runtime is null');
+    return runtime.renderedImageData;
+  }
+
+  const sourceImageData = computed(() => {
+    if (!document.value) return undefined;
+    return document.value.imageData;
+  });
+
   const currentVariant = computed(() => {
     if (!document.value || !currentVariantId.value)
       throw new Error('[WorkplaceStore] currentVariant: document or currentVariantId is null');
@@ -20,6 +49,12 @@ export const useWorkplaceStore = defineStore('workplace', () => {
     if (!variant) throw new Error('[WorkplaceStore] currentVariant: variant not found');
     return variant;
   });
+
+  function setCurrentVariantIndex(index: number) {
+    if (!document.value) return;
+    if (index < 0 || index >= document.value.variants.length) return;
+    currentVariantId.value = document.value.variants[index].id;
+  }
 
   const currentVariantRuntime = computed(() => {
     if (!currentVariantId.value) return undefined;
@@ -64,18 +99,12 @@ export const useWorkplaceStore = defineStore('workplace', () => {
   }
 
   function nextVariant() {
-    if (!document.value || !currentVariantId.value) return;
-    const variantIndex = findVariantIndex(document.value.variants, currentVariantId.value);
-    if (variantIndex == -1 || variantIndex == document.value.variants.length - 1) return;
-    currentVariantId.value = document.value.variants[variantIndex + 1].id;
+    setCurrentVariantIndex(currentVariantIndex.value + 1);
     console.log(`[Workplace] nextVariant: currentVariantId: ${currentVariantId.value}`);
   }
 
   function previousVariant() {
-    if (!document.value || !currentVariantId.value) return;
-    const variantIndex = findVariantIndex(document.value.variants, currentVariantId.value);
-    if (variantIndex <= 0) return;
-    currentVariantId.value = document.value.variants[variantIndex - 1].id;
+    setCurrentVariantIndex(currentVariantIndex.value - 1);
     console.log(`[Workplace] previousVariant: currentVariantId: ${currentVariantId.value}`);
   }
 
@@ -165,10 +194,14 @@ export const useWorkplaceStore = defineStore('workplace', () => {
     layerRegistry,
 
     // Computed properties
+    sourceImageData,
+    allVariants,
+    currentVariantIndex,
     currentVariant,
     currentVariantRuntime,
     currentSourceImageData,
     currentVariantImageData,
+    variantRuntimeByIndex,
 
     // Functions
     initialize,
@@ -179,6 +212,9 @@ export const useWorkplaceStore = defineStore('workplace', () => {
     deleteCurrentVariant,
     nextVariant,
     previousVariant,
+
+    variantImageDataByIndex,
+    setCurrentVariantIndex,
 
     updateLayerProperty,
     updateLayerEnable,
