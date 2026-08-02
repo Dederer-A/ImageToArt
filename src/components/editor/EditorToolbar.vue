@@ -1,7 +1,10 @@
 <script setup lang="ts">
-import { ArrowLeft, Download } from '@lucide/vue';
+import { ArrowLeft, CopyPlus, RotateCcw, Trash2, Share } from '@lucide/vue';
 
 import { Button } from '@/components/ui/button';
+import { useWorkplaceStore } from '@/workplace/';
+import { computed } from 'vue';
+import AlertDialog from '@/components/AlertDialog.vue';
 
 withDefaults(
   defineProps<{
@@ -14,8 +17,20 @@ withDefaults(
 
 const emit = defineEmits<{
   (e: 'back'): void;
+  (e: 'duplicate'): void;
+  (e: 'delete'): void;
   (e: 'export'): void;
+  (e: 'reset'): void;
 }>();
+
+const variantsLabel = computed(() => {
+  return useWorkplaceStore().currentVariantIndex + 1 + ' / ' + useWorkplaceStore().allVariants.length;
+});
+
+const canDelete = computed(() => {
+  const store = useWorkplaceStore();
+  return store.allVariants.length > 1 && !store.currentVariant.isOriginal;
+});
 </script>
 
 <template>
@@ -27,17 +42,39 @@ const emit = defineEmits<{
     leave-from-class="opacity-100"
     leave-to-class="opacity-0"
   >
-        <header
+    <header
       v-if="visible"
       class="safe-top absolute inset-x-0 top-0 z-20 flex items-center justify-between border-b border-border bg-background/80 backdrop-blur-xl px-4 py-2"
     >
+      <!-- Left group -->
       <Button variant="ghost" size="icon" @click="emit('back')">
         <ArrowLeft class="size-5" />
       </Button>
 
-      <Button variant="ghost" size="icon" @click="emit('export')">
-        <Download class="size-5" />
-      </Button>
+      <!-- Right group -->
+      <div class="flex items-center gap-2">
+        <span class="pr-5">{{ variantsLabel }}</span>
+
+        <AlertDialog @action="emit('delete')">
+          <Button variant="ghost" size="icon" @click="emit('reset')">
+            <RotateCcw class="size-5" />
+          </Button>
+        </AlertDialog>
+
+        <Button variant="ghost" size="icon" @click="emit('duplicate')">
+          <CopyPlus class="size-5" />
+        </Button>
+
+        <Button variant="ghost" size="icon" @click="emit('export')">
+          <Share class="size-5" />
+        </Button>
+
+        <AlertDialog @action="emit('delete')">
+          <Button variant="ghost" size="icon" :disabled="!canDelete">
+            <Trash2 class="size-5" />
+          </Button>
+        </AlertDialog>
+      </div>
     </header>
   </Transition>
 </template>

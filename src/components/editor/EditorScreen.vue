@@ -38,23 +38,21 @@ function goBack() {
   emit('go-back');
 }
 
+function reset() {
+  workplace.resetCurrentVariant();
+}
+
 async function downloadImage() {
   await ShareService.shareImage(workplace.currentVariantImageData!);
 }
 
-/*
-function managePerspectiveGrid() {
-  // TODO
+function deleteVariant() {
+  workplace.deleteCurrentVariant();
 }
 
-function manageRulers() {
-  // TODO
+function duplicateVariant() {
+  workplace.duplicateCurrentVariant();
 }
-
-function manageMeasurements() {
-  // TODO
-}
-*/
 
 function updateLayerProperty(layerType: string, propertyName: string, event: any) {
   workplace.updateLayerProperty(layerType, propertyName, event);
@@ -78,7 +76,14 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
       </template>
     </EditorCanvas>
 
-    <EditorToolbar :visible="uiVisible" @back="goBack" @export="downloadImage" />
+    <EditorToolbar
+      :visible="uiVisible"
+      @back="goBack"
+      @reset="reset"
+      @export="downloadImage"
+      @delete="deleteVariant"
+      @duplicate="duplicateVariant"
+    />
 
     <BottomToolPanel :visible="uiVisible" :height="30">
       <div v-if="workplace.currentVariant.isOriginal" class="p-6">
