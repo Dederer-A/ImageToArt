@@ -196,7 +196,7 @@ onBeforeUnmount(() => {
       <canvas
         ref="originalCanvasRef"
         class="pointer-events-none absolute left-1/2 top-1/2 block max-h-full max-w-full"
-        style="transform: translate(-50%, -50%)"
+        style="transform: translate(-50%, -50%); opacity: 0"
       />
 
       <slot name="viewport-overlay" />

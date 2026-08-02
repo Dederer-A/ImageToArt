@@ -8,6 +8,8 @@ import EditorCanvas from '@/components/EditorCanvas/EditorCanvas.vue';
 import EditorToolbar from '@/components/editor/EditorToolbar.vue';
 // import RotateToolControl from '@/components/tools/RotateToolControl.vue';
 import SliderToolControl from '@/components/tools/SliderToolControl.vue';
+import SliderRangeToolControl from '@/components/tools/SliderRangeToolControl.vue';
+
 import ToolList from '@/components/editor/ToolList.vue';
 import ToolRow from '@/components/editor/ToolRow.vue';
 
@@ -78,6 +80,20 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
         <p>Swipe to the right to start working with variants</p>
       </div>
       <ToolList v-else class="divide-y divide-border">
+        <ToolRow
+          :model-value="workplace.currentVariant.layers['levels'].enabled"
+          @update:model-value="updateLayerEnable('levels', $event)"
+          title="Levels"
+        >
+          <SliderRangeToolControl
+            :model-value="workplace.currentVariant.layers['levels'].properties.value"
+            :min="0"
+            :max="255"
+            :step="1"
+            @update:model-value="updateLayerProperty('levels', 'value', $event)"
+          />
+        </ToolRow>
+
         <!-- <ToolRow v-model="toolState.crop.enabled" title="Crop">
           <CropToolControl v-model="toolState.crop.preset" :presets="cropPresets" />
         </ToolRow> -->

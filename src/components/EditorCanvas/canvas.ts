@@ -10,9 +10,6 @@ export function drawImageData(canvas: HTMLCanvasElement, imageData: ImageData | 
   if (!ctx) {
     return;
   }
-  console.log(canvas.width, canvas.height);
-  console.log(canvas.clientWidth, canvas.clientHeight);
-
   ctx.putImageData(imageData, 0, 0);
 }
 
