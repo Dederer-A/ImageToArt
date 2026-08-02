@@ -193,6 +193,7 @@ export function createGestures(options: GestureOptions): GestureController {
       if (state === GestureState.HorizontalDrag) {
         const currentIndex = options.getCurrentIndex();
 
+        // const progress = -(currentX - startX) / options.getViewportWidth();
         const progress = options.animator.getPosition() - currentIndex;
 
         let targetIndex = currentIndex;

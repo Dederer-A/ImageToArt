@@ -39,12 +39,12 @@ function registerVariantCanvas(index: number, element: unknown) {
 // Layout
 // -----------------------------------------------------------------------------
 
-let viewportWidth = 0;
-let viewportHeight = 0;
+let viewportWidth = ref(0);
+let viewportHeight = ref(0);
 
 function updateViewportSize() {
-  viewportWidth = window.innerWidth;
-  viewportHeight = window.innerHeight;
+  viewportWidth.value = window.innerWidth;
+  viewportHeight.value = window.innerHeight;
 }
 
 // -----------------------------------------------------------------------------
@@ -55,7 +55,7 @@ const animator = createCarouselAnimator({
   onPosition(position) {
     if (!trackRef.value) return;
 
-    trackRef.value.style.transform = `translate3d(${-position * viewportWidth}px, 0, 0)`;
+    trackRef.value.style.transform = `translate3d(${-position * viewportWidth.value}px, 0, 0)`;
   },
 });
 
@@ -66,7 +66,7 @@ const gestures = createGestures({
 
   getVariantCount: () => workplace.allVariants.length,
 
-  getViewportWidth: () => viewportWidth,
+  getViewportWidth: () => viewportWidth.value,
 
   setCurrentIndex: workplace.setCurrentVariantIndex,
 
