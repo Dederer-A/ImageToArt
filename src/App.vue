@@ -67,12 +67,14 @@ async function onFileSelected(event: Event) {
 </script>
 
 <template>
-  <HomeScreen v-if="!image" @upload="selectImage" />
+  <main class="absolute inset-0 pt-safe-top pb-safe-bottom">
+    <HomeScreen v-if="!image" @upload="selectImage" />
 
-  <EditorScreen v-else :image="image" />
+    <EditorScreen v-else :image="image" />
 
-  <input ref="fileInput" type="file" accept="image/*" class="hidden" @change="onFileSelected" />
-
+    <input ref="fileInput" type="file" accept="image/*" class="hidden" @change="onFileSelected" />
+  </main>
+  <!--
   <div class="share-container">
     <h2>Полученные изображения:</h2>
 
@@ -85,7 +87,7 @@ async function onFileSelected(event: Event) {
       </div>
     </div>
   </div>
-</template>
+--></template>
 
 <style scoped>
 .grid {

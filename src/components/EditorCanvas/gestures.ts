@@ -1,11 +1,12 @@
 import type { CarouselAnimator } from './animator';
 
-const HOLD_DELAY = 250;
+const HOLD_DELAY = 300;
 
-const CLICK_MOVE_THRESHOLD = 5;
-const DIRECTION_LOCK_DISTANCE = 15;
+const CLICK_MOVE_THRESHOLD = 10;
+const DIRECTION_LOCK_DISTANCE = 20;
 
 const PREVIEW_FADE_DISTANCE = 200;
+const FLICK_VELOCITY = 0.6; // px/ms
 
 enum GestureState {
   Idle,
@@ -32,11 +33,8 @@ export interface GestureOptions {
 
 export interface GestureController {
   pointerDown(e: PointerEvent): void;
-
   pointerMove(e: PointerEvent): void;
-
   pointerUp(e: PointerEvent): void;
-
   pointerCancel(e: PointerEvent): void;
 }
 
@@ -48,17 +46,38 @@ export function createGestures(options: GestureOptions): GestureController {
   let startX = 0;
   let startY = 0;
 
+  let currentX = 0;
+  let currentY = 0;
+
+  let previewStartY = 0;
+
   let dragStartPosition = 0;
 
   let moved = false;
 
   let holdTimer: number | undefined;
 
+  let lastX = 0;
+  let lastTime = 0;
+  let velocity = 0;
+
   function clearHoldTimer() {
     if (holdTimer !== undefined) {
       clearTimeout(holdTimer);
       holdTimer = undefined;
     }
+  }
+
+  function beginPreview() {
+    if (state !== GestureState.PendingHold) {
+      return;
+    }
+
+    state = GestureState.Preview;
+
+    previewStartY = currentY;
+
+    options.setOriginalOpacity(1);
   }
 
   function reset(target?: HTMLElement) {
@@ -74,17 +93,9 @@ export function createGestures(options: GestureOptions): GestureController {
 
     moved = false;
 
+    velocity = 0;
+
     options.setOriginalOpacity(0);
-  }
-
-  function beginPreview() {
-    if (state !== GestureState.PendingHold) {
-      return;
-    }
-
-    state = GestureState.Preview;
-
-    options.setOriginalOpacity(1);
   }
 
   return {
@@ -95,8 +106,12 @@ export function createGestures(options: GestureOptions): GestureController {
 
       pointerId = e.pointerId;
 
-      startX = e.clientX;
-      startY = e.clientY;
+      startX = currentX = e.clientX;
+      startY = currentY = e.clientY;
+
+      lastX = currentX;
+      lastTime = performance.now();
+      velocity = 0;
 
       moved = false;
 
@@ -110,8 +125,21 @@ export function createGestures(options: GestureOptions): GestureController {
         return;
       }
 
-      const dx = e.clientX - startX;
-      const dy = e.clientY - startY;
+      currentX = e.clientX;
+      currentY = e.clientY;
+
+      const dx = currentX - startX;
+      const dy = currentY - startY;
+
+      const now = performance.now();
+      const dt = now - lastTime;
+
+      if (dt > 0) {
+        velocity = (currentX - lastX) / dt;
+      }
+
+      lastX = currentX;
+      lastTime = now;
 
       if (!moved && (Math.abs(dx) > CLICK_MOVE_THRESHOLD || Math.abs(dy) > CLICK_MOVE_THRESHOLD)) {
         moved = true;
@@ -123,22 +151,17 @@ export function createGestures(options: GestureOptions): GestureController {
             return;
           }
 
-          if (Math.abs(dx) > Math.abs(dy)) {
+          if (Math.abs(dx) > Math.abs(dy) * 1.5) {
             clearHoldTimer();
 
             state = GestureState.HorizontalDrag;
 
-            dragStartPosition = options.getCurrentIndex();
+            dragStartPosition = options.animator.getPosition();
 
             options.animator.beginDrag();
-
             options.animator.drag(dragStartPosition);
-
-            return;
           }
 
-          // Вертикальное движение ничего не делает.
-          // Ждем HOLD.
           return;
         }
 
@@ -161,7 +184,7 @@ export function createGestures(options: GestureOptions): GestureController {
         }
 
         case GestureState.Preview: {
-          const opacity = Math.max(0, Math.min(1, 1 - Math.max(0, dy) / PREVIEW_FADE_DISTANCE));
+          const opacity = Math.max(0, Math.min(1, 1 - Math.max(0, currentY - previewStartY) / PREVIEW_FADE_DISTANCE));
 
           options.setOriginalOpacity(opacity);
 
@@ -174,9 +197,13 @@ export function createGestures(options: GestureOptions): GestureController {
       const target = e.currentTarget as HTMLElement;
 
       if (state === GestureState.HorizontalDrag) {
-        const position = options.animator.getPosition();
+        let targetIndex = Math.round(options.animator.getPosition());
 
-        const targetIndex = Math.round(position);
+        if (Math.abs(velocity) > FLICK_VELOCITY) {
+          targetIndex += velocity < 0 ? 1 : -1;
+        }
+
+        targetIndex = Math.max(0, Math.min(options.getVariantCount() - 1, targetIndex));
 
         options.animator.endDrag(targetIndex);
 

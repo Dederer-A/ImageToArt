@@ -27,7 +27,7 @@ const emit = defineEmits<{
     leave-from-class="opacity-100"
     leave-to-class="opacity-0"
   >
-    <header
+        <header
       v-if="visible"
       class="safe-top absolute inset-x-0 top-0 z-20 flex items-center justify-between border-b border-border bg-background/80 backdrop-blur-xl px-4 py-2"
     >

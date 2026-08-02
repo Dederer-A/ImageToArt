@@ -8,6 +8,9 @@ const config: CapacitorConfig = {
     CapacitorShareTarget: {
       iosAppGroup: 'group.com.imagetoart.app',
     },
+    StatusBar: {
+      overlaysWebView: false,
+    },
   },
 };
 
