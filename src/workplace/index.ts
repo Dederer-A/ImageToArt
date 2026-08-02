@@ -141,24 +141,46 @@ export const useWorkplaceStore = defineStore('workplace', () => {
     }
   }
 
+  function resetCurrentVariant() {
+    if (!document.value || !currentVariantId.value || !currentVariantRuntime.value) return;
+    const variant = currentVariant.value;
+    if (!variant) return;
+    variant.layers = {};
+    layerRegistry.list().forEach((layerEngine) => {
+      variant.layers[layerEngine.type] = {
+        enabled: false,
+        type: layerEngine.type,
+        properties: { ...layerEngine.defaultProperties },
+      };
+    });
+    currentVariantRuntime.value.renderedImageData = ImageEngine.cloneImageData(document.value.imageData);
+  }
+
   function duplicateCurrentVariant() {
-    if (!document.value || !currentVariantId.value) return;
+    if (!document.value || !currentVariantId.value || !currentVariantRuntime.value) return;
     const newVariant = JSON.parse(JSON.stringify(currentVariant.value));
     newVariant.id = crypto.randomUUID();
+    const newVariantRuntime = currentVariantRuntime.value.clone(newVariant.id);
+    variantRuntimes.value[newVariantRuntime.variantId] = newVariantRuntime;
     document.value.variants.push(newVariant);
     currentVariantId.value = newVariant.id;
   }
 
   function deleteCurrentVariant() {
     if (!document.value || !currentVariantId.value) return;
-    const index = document.value.variants.findIndex((v) => v.id === currentVariantId.value);
+    const index = findVariantIndex(document.value.variants, currentVariantId.value);
     if (index !== -1) {
+      // console.log('!!! ' + index + ' ' + document.value.variants.length + ' / ' + document.value.variants[index].id);
       document.value.variants.splice(index, 1);
       if (document.value.variants[index]) {
         currentVariantId.value = document.value.variants[index].id;
       } else {
         currentVariantId.value = document.value.variants[0]?.id;
       }
+    }
+    // console.log(`[WorkplaceStore] deleteCurrentVariant: variants: ${document.value.variants.length}`);
+    if (document.value.variants.length === 1) {
+      createVariant();
     }
   }
 
@@ -214,6 +236,7 @@ export const useWorkplaceStore = defineStore('workplace', () => {
     initializeDocument,
 
     createVariant,
+    resetCurrentVariant,
     duplicateCurrentVariant,
     deleteCurrentVariant,
     nextVariant,

@@ -156,8 +156,7 @@ export function createGestures(options: GestureOptions): GestureController {
 
             state = GestureState.HorizontalDrag;
 
-            dragStartPosition = options.animator.getPosition();
-
+            dragStartPosition = options.getCurrentIndex();
             options.animator.beginDrag();
             options.animator.drag(dragStartPosition);
           }
@@ -167,27 +166,22 @@ export function createGestures(options: GestureOptions): GestureController {
 
         case GestureState.HorizontalDrag: {
           const viewportWidth = options.getViewportWidth();
-
           if (viewportWidth <= 0) {
             return;
           }
-
           const maxIndex = Math.max(0, options.getVariantCount() - 1);
-
+          const currentIndex = options.getCurrentIndex();
+          const minPosition = Math.max(0, currentIndex - 1);
+          const maxPosition = Math.min(maxIndex, currentIndex + 1);
           let position = dragStartPosition - dx / viewportWidth;
-
-          position = Math.max(0, Math.min(maxIndex, position));
-
+          position = Math.max(minPosition, Math.min(maxPosition, position));
           options.animator.drag(position);
-
           return;
         }
 
         case GestureState.Preview: {
           const opacity = Math.max(0, Math.min(1, 1 - Math.max(0, currentY - previewStartY) / PREVIEW_FADE_DISTANCE));
-
           options.setOriginalOpacity(opacity);
-
           return;
         }
       }
@@ -197,17 +191,25 @@ export function createGestures(options: GestureOptions): GestureController {
       const target = e.currentTarget as HTMLElement;
 
       if (state === GestureState.HorizontalDrag) {
-        let targetIndex = Math.round(options.animator.getPosition());
+        const currentIndex = options.getCurrentIndex();
+
+        const progress = options.animator.getPosition() - currentIndex;
+
+        let targetIndex = currentIndex;
 
         if (Math.abs(velocity) > FLICK_VELOCITY) {
           targetIndex += velocity < 0 ? 1 : -1;
+        } else if (progress > 0.5) {
+          targetIndex++;
+        } else if (progress < -0.5) {
+          targetIndex--;
         }
 
         targetIndex = Math.max(0, Math.min(options.getVariantCount() - 1, targetIndex));
 
         options.animator.endDrag(targetIndex);
 
-        if (targetIndex !== options.getCurrentIndex()) {
+        if (targetIndex !== currentIndex) {
           options.setCurrentIndex(targetIndex);
         }
       } else if (state === GestureState.PendingHold && !moved) {
