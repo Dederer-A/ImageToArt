@@ -70,7 +70,7 @@ async function onFileSelected(event: Event) {
   <main class="absolute inset-0 pt-safe-top pb-safe-bottom">
     <HomeScreen v-if="!image" @upload="selectImage" />
 
-    <EditorScreen v-else :image="image" />
+    <EditorScreen v-else :image="image" @go-back="image = ''" />
 
     <input ref="fileInput" type="file" accept="image/*" class="hidden" @change="onFileSelected" />
   </main>

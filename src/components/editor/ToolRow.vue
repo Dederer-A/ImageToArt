@@ -18,7 +18,7 @@ const hasControl = computed(() => !!slots.default);
   <div class="flex items-start gap-3 py-3" :class="{ 'opacity-50': false }">
     <Switch v-model="isEnabled" class="min-h-5 shrink-0" />
 
-    <div class="w-34 shrink-0 truncate text-sm font-medium">
+    <div class="w-35 shrink-0 truncate text-sm font-medium">
       <div class="text-sm font-medium">{{ $t(title) }}</div>
     </div>
 
