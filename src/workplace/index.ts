@@ -42,6 +42,11 @@ export const useWorkplaceStore = defineStore('workplace', () => {
     return document.value.imageData;
   });
 
+  const currentDocument = computed(() => {
+    if (!document.value) throw new Error('[WorkplaceStore] currentDocument: document is null');
+    return document.value;
+  });
+
   const currentVariant = computed(() => {
     if (!document.value || !currentVariantId.value)
       throw new Error('[WorkplaceStore] currentVariant: document or currentVariantId is null');
@@ -196,6 +201,7 @@ export const useWorkplaceStore = defineStore('workplace', () => {
     // Computed properties
     sourceImageData,
     allVariants,
+    currentDocument,
     currentVariantIndex,
     currentVariant,
     currentVariantRuntime,
