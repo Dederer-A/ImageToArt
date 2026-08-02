@@ -175,7 +175,7 @@ export const useWorkplaceStore = defineStore('workplace', () => {
       if (document.value.variants[index]) {
         currentVariantId.value = document.value.variants[index].id;
       } else {
-        currentVariantId.value = document.value.variants[0]?.id;
+        currentVariantId.value = document.value.variants[document.value.variants.length - 1]?.id;
       }
     }
     // console.log(`[WorkplaceStore] deleteCurrentVariant: variants: ${document.value.variants.length}`);

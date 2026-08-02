@@ -12,7 +12,7 @@ export class SaturationLayer implements LayerEngine {
   }
 }
 
-export function saturation(variantRuntime: VariantRuntime, src: ImageData, slider: number): ImageData {
+export function saturation(_variantRuntime: VariantRuntime, src: ImageData, slider: number): ImageData {
   slider = Math.max(0, Math.min(100, slider));
 
   if (slider === 0) {
