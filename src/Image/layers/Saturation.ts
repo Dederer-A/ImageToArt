@@ -19,13 +19,14 @@ export function saturation(variantRuntime: VariantRuntime, src: ImageData, slide
     return new ImageData(new Uint8ClampedArray(src.data), src.width, src.height);
   }
 
-  const cacheName = 'saturation';
-  let dst = variantRuntime.layerCache.get(cacheName);
-  if (dst === undefined) {
-    dst = new ImageData(src.width, src.height);
-    variantRuntime.layerCache.set(cacheName, dst);
-    console.log('[SaturationLayer] saturation(): cache miss, creating new ImageData');
-  }
+  const dst = src;
+  // const cacheName = 'saturation';
+  // let dst = variantRuntime.layerCache.get(cacheName);
+  // if (dst === undefined) {
+  //   dst = new ImageData(src.width, src.height);
+  //   variantRuntime.layerCache.set(cacheName, dst);
+  //   console.log('[SaturationLayer] saturation(): cache miss, creating new ImageData');
+  // }
 
   const srcPixels = src.data;
   const dstPixels = dst.data;

@@ -19,7 +19,8 @@ export function squint(variantRuntime: VariantRuntime, src: ImageData, slider: n
   slider = Math.max(0, Math.min(100, slider));
 
   if (slider === 0) {
-    return new ImageData(new Uint8ClampedArray(src.data), src.width, src.height);
+    return src;
+    // return new ImageData(new Uint8ClampedArray(src.data), src.width, src.height);
   }
 
   let image = src;

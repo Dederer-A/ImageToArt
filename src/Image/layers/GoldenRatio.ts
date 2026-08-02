@@ -12,7 +12,8 @@ export class GoldenRatioLayer implements LayerEngine {
 }
 
 export function goldenRatio(_variantRuntime: VariantRuntime, src: ImageData, _value: number): ImageData {
-  let dst = new ImageData(new Uint8ClampedArray(src.data), src.width, src.height);
+  const dst = src;
+  // let dst = new ImageData(new Uint8ClampedArray(src.data), src.width, src.height);
 
   const pixels = dst.data;
 

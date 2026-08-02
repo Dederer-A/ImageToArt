@@ -12,20 +12,21 @@ export class PosterizeLayer implements LayerEngine {
   }
 }
 
-export function posterize(variantRuntime: VariantRuntime, src: ImageData, slider: number): ImageData {
+export function posterize(_variantRuntime: VariantRuntime, src: ImageData, slider: number): ImageData {
   slider = Math.max(0, Math.min(100, slider));
 
   //   if (slider === 0) {
   //     return new ImageData(new Uint8ClampedArray(src.data), src.width, src.height);
   //   }
 
-  const cacheName = 'posterize';
-  let dst = variantRuntime.layerCache.get(cacheName);
-  if (dst === undefined) {
-    dst = new ImageData(src.width, src.height);
-    variantRuntime.layerCache.set(cacheName, dst);
-    console.log('[PosterizeLayer] posterize(): cache miss, creating new ImageData');
-  }
+  const dst = src;
+  // const cacheName = 'posterize';
+  // let dst = variantRuntime.layerCache.get(cacheName);
+  // if (dst === undefined) {
+  //   dst = new ImageData(src.width, src.height);
+  //   variantRuntime.layerCache.set(cacheName, dst);
+  //   console.log('[PosterizeLayer] posterize(): cache miss, creating new ImageData');
+  // }
 
   const srcPixels = src.data;
   const dstPixels = dst.data;

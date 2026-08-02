@@ -53,7 +53,8 @@ export function levels(_variantRuntime: VariantRuntime, src: ImageData, minValue
   }
 
   // Apply LUT
-  const dst = new ImageData(src.width, src.height);
+  const dst = src;
+  // const dst = new ImageData(src.width, src.height);
 
   const srcData = src.data;
   const dstData = dst.data;
