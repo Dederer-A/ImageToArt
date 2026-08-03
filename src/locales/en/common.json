@@ -1,5 +1,9 @@
 {
-  "welcome": {
-    "title": "Let's get started"
-  }
+  "Version": "Version",
+  "Upload_Image": "Upload Image",
+  "Transform_photos_into_art": "Transform photos into art",
+  "About": "About",
+  "Disclaimer": "Disclaimer",
+  "OpenSource": "OpenSource",
+  "Privacy": "Privacy"
 }

@@ -36,6 +36,11 @@ const canDuplicate = computed(() => {
   const store = useWorkplaceStore();
   return store.allVariants.length < 10;
 });
+
+const canReset = computed(() => {
+  const store = useWorkplaceStore();
+  return !store.currentVariant.isOriginal;
+});
 </script>
 
 <template>
@@ -61,7 +66,7 @@ const canDuplicate = computed(() => {
         <span class="pr-5">{{ variantsLabel }}</span>
 
         <AlertDialog @action="emit('reset')">
-          <Button variant="ghost" size="icon">
+          <Button variant="ghost" size="icon" :disabled="!canReset">
             <RotateCcw class="size-5" />
           </Button>
         </AlertDialog>

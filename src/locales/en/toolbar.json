@@ -1,6 +1,7 @@
 {
   "Original_Image_title": "Original Image",
-  "Original_Image_description": "Swipe to the right to start working with variants",
+  "Original_Image_description_1": "Swipe to start working with variants.",
+  "Original_Image_description_2": "Press and drag down/up to see the original image overlay.",
   "Shadow_Highlight": "Shadow & Highlight",
   "Contrast": "Contrast",
   "Gamma": "Gamma",

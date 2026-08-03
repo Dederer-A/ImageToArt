@@ -20,12 +20,12 @@ const props = defineProps<{
 <template>
   <Dialog>
     <DialogTrigger as-child>
-      <a href="#">{{ title }}</a>
+      <a href="#">{{ $t('common.' + title) }}</a>
       <!-- <Button variant="outline"> Open Dialog </Button> -->
     </DialogTrigger>
     <DialogContent class="sm:max-w-[425px]">
       <DialogHeader>
-        <DialogTitle>{{ title }}</DialogTitle>
+        <DialogTitle>{{ $t('common.' + title) }}</DialogTitle>
         <DialogDescription></DialogDescription>
       </DialogHeader>
       <div class="grid gap-4">
