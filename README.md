@@ -60,6 +60,18 @@ npx cap open ios
 
 ---
 
+## Generate OPEN_SOURCE_LICENSES.md
+
+```bash
+pnpm license-checker-rseidelsohn \
+  --production \
+  --files \
+  --markdown \
+  > OPEN_SOURCE_LICENSES.md
+```
+
+---
+
 ## Tech Stack
 
 - Vue 3
