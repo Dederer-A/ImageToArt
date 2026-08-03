@@ -186,6 +186,11 @@ onBeforeUnmount(() => {
           }"
         >
           <canvas
+            v-if="
+              index === workplace.currentVariantIndex ||
+              index === workplace.currentVariantIndex - 1 ||
+              index === workplace.currentVariantIndex + 1
+            "
             :ref="(el) => registerVariantCanvas(index, el)"
             class="absolute left-1/2 top-1/2 block max-h-full max-w-full"
             style="transform: translate(-50%, -50%)"
