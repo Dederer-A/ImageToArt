@@ -18,6 +18,8 @@ export interface Document {
   filename?: string;
   imageData: ImageData;
   variants: Variant[];
+  currentVariantId?: string;
+  version: string;
 }
 
 export interface Variant {

@@ -86,11 +86,12 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
     />
 
     <BottomToolPanel :visible="uiVisible" :height="30">
-      <div v-if="workplace.currentVariant.isOriginal" class="p-6">
-        <p class="text-lg pb-5">
+      <div v-if="workplace.currentVariant.isOriginal" class="p-4">
+        <p class="text-lg pb-1">
           <strong>{{ $t('toolbar.Original_Image_title') }}</strong>
         </p>
-        <p>{{ $t('toolbar.Original_Image_description') }}</p>
+        <p>{{ $t('toolbar.Original_Image_description_1') }}</p>
+        <p>{{ $t('toolbar.Original_Image_description_2') }}</p>
       </div>
       <ToolList v-else class="divide-y divide-border">
         <ToolRow

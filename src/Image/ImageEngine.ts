@@ -4,32 +4,58 @@ import { useWorkplaceStore } from '@/workplace/index';
 
 const MAX_SIDE_SIZE = 1500;
 
-const debouncedDraw = debounce((documentRuntime: any) => {
+const debouncedDraw = debounce((srcImageData: ImageData, documentRuntime: any) => {
+  render(srcImageData, documentRuntime);
+}, 5);
+
+function render(srcImageData: ImageData, documentRuntime: any) {
   console.time('ImageEngine');
   const workspaceStore = useWorkplaceStore();
-  const layers = Object.values(workspaceStore.currentVariant.layers);
-  const srcImageData = workspaceStore.currentSourceImageData;
+  const variant = workspaceStore.variantByVariantId(documentRuntime.variantId);
+  if (!variant) {
+    console.error(`[ImageEngine] render(): Variant with id ${documentRuntime.variantId} not found`);
+    return;
+  }
+  const layers = Object.values(variant.layers);
+  // console.log(`[ImageEngine] render: ${layers.length} layers to process`);
+  // console.log(`[ImageEngine] render: srcImageData=${srcImageData ? 'exists' : 'null'}`);
   if (!srcImageData) return;
+
+  // console.log(`[ImageEngine] render: starting with srcImageData of size ${srcImageData.width}x${srcImageData.height}`);
+
   const cloned = ImageEngine.cloneImageData(srcImageData);
+  // console.log(`[ImageEngine] render: cloned=${cloned ? 'exists' : 'null'}`);
   if (cloned == null) return;
+
   let currentImageData: ImageData = cloned; // TODO optimization required here
+  // console.log(
+  //   `[ImageEngine] render: starting with imageData of size ${currentImageData.width}x${currentImageData.height}`
+  // );
   for (const layer of layers) {
     const layerEngine = workspaceStore.layerRegistry.get(layer.type);
     // TODO change if logic. If something goes wrong stop processing
     if (layer.enabled && layerEngine != null) {
-      // console.log(`[ImageEngine] render: ${layer.type} | ${JSON.stringify(layer.properties)}`);
       // console.time(layer.type);
+      // console.log(
+      //   `[ImageEngine] render: processing layer ${layer.type} with properties ${JSON.stringify(layer.properties)}`
+      // );
       currentImageData = layerEngine.render(documentRuntime, currentImageData, layer.properties);
       // console.timeEnd(layer.type);
     }
   }
   console.timeEnd('ImageEngine');
-  workspaceStore.updateCurrentVariantImageData(currentImageData);
-}, 5);
+  workspaceStore.updateVariantImageData(documentRuntime.variantId, currentImageData);
+}
 
 export class ImageEngine {
-  public static processImageData(documentRuntime: any) {
-    debouncedDraw(documentRuntime);
+  public static processImageData(srcImageData: ImageData, documentRuntime: any) {
+    // render(srcImageData, documentRuntime);
+    debouncedDraw(srcImageData, documentRuntime);
+  }
+
+  public static render(srcImageData: ImageData, documentRuntime: any) {
+    render(srcImageData, documentRuntime);
+    // debouncedDraw(srcImageData, documentRuntime);
   }
 
   static cloneImageData(image: ImageData | null): ImageData | null {

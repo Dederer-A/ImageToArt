@@ -18,21 +18,15 @@ const emit = defineEmits<{
     <div class="space-y-3">
       <h1 class="text-4xl font-bold">Image to Art</h1>
 
-      <p class="text-muted-foreground">Transform photos into art</p>
+      <p class="text-muted-foreground">{{ $t('common.Transform_photos_into_art') }}</p>
     </div>
 
     <div class="mt-10 w-full space-y-3">
       <Button class="w-full" size="lg" @click="emit('upload')">
         <ImagePlus class="mr-2 size-5" />
 
-        Upload Image
+        {{ $t('common.Upload_Image') }}
       </Button>
-
-      <!-- <Button class="w-full" size="lg" variant="secondary" disabled @click="emit('camera')">
-        <Camera class="mr-2 size-5" />
-
-        Camera (Coming Soon)
-      </Button> -->
     </div>
 
     <div class="mt-10 space-y-2 text-sm">
@@ -41,7 +35,7 @@ const emit = defineEmits<{
         <OpenSourceModal />
       </div>
 
-      <div class="text-muted-foreground pt-20">Version 1.0</div>
+      <div class="text-muted-foreground pt-20">{{ $t('common.Version') }} 1.0</div>
 
       <div class="text-muted-foreground">© 2026. Aleksandr Dederer</div>
     </div>

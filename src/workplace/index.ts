@@ -1,14 +1,16 @@
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 
+import { useDebounceFn } from '@vueuse/core';
+
 import { LayerRegistry, type Document, type Variant } from './document';
 import { VariantRuntime } from './runtime';
 import { ImageEngine } from '@/Image/ImageEngine';
+import { Persistence } from './persistence';
 
 export const useWorkplaceStore = defineStore('workplace', () => {
   // Properties
   const document = ref<Document>();
-  const currentVariantId = ref<string>();
   const layerRegistry = new LayerRegistry();
   const variantRuntimes = ref<Record<string, VariantRuntime>>({}); // Where key is the variantId and value is the VariantRuntime instance
 
@@ -19,9 +21,14 @@ export const useWorkplaceStore = defineStore('workplace', () => {
   });
 
   const currentVariantIndex = computed(() => {
-    if (!document.value || !currentVariantId.value) return -1;
-    return findVariantIndex(document.value.variants, currentVariantId.value);
+    if (!document.value || !document.value.currentVariantId) return -1;
+    return findVariantIndex(document.value.variants, document.value.currentVariantId);
   });
+
+  function variantByVariantId(variantId: string): Variant | undefined {
+    if (!document.value) return undefined;
+    return document.value.variants.find((v) => v.id === variantId);
+  }
 
   const variantRuntimeByIndex = computed(() => {
     if (!document.value || currentVariantIndex.value === -1) return undefined;
@@ -48,9 +55,9 @@ export const useWorkplaceStore = defineStore('workplace', () => {
   });
 
   const currentVariant = computed(() => {
-    if (!document.value || !currentVariantId.value)
+    if (!document.value || !document.value.currentVariantId)
       throw new Error('[WorkplaceStore] currentVariant: document or currentVariantId is null');
-    const variant = document.value.variants.find((v) => v.id === currentVariantId.value);
+    const variant = document.value.variants.find((v) => v.id === document.value!.currentVariantId);
     if (!variant) throw new Error('[WorkplaceStore] currentVariant: variant not found');
     return variant;
   });
@@ -58,12 +65,14 @@ export const useWorkplaceStore = defineStore('workplace', () => {
   function setCurrentVariantIndex(index: number) {
     if (!document.value) return;
     if (index < 0 || index >= document.value.variants.length) return;
-    currentVariantId.value = document.value.variants[index].id;
+    document.value.currentVariantId = document.value.variants[index].id;
+
+    saveDocumentDebounced();
   }
 
   const currentVariantRuntime = computed(() => {
-    if (!currentVariantId.value) return undefined;
-    return getVariantRuntime(currentVariantId.value);
+    if (!document.value?.currentVariantId) return undefined;
+    return getVariantRuntime(document.value.currentVariantId);
   });
 
   const currentSourceImageData = computed(() => {
@@ -76,12 +85,46 @@ export const useWorkplaceStore = defineStore('workplace', () => {
     return currentVariantRuntime.value?.renderedImageData;
   });
 
+  const saveDocumentDebounced = useDebounceFn(async () => {
+    await saveDocument();
+  }, 1000);
+
+  async function saveDocument() {
+    console.log('[WorkplaceStore] saveDocument()');
+    if (!document.value) return;
+    await Persistence.save(document.value);
+  }
+
+  async function loadDocument() {
+    console.log('[WorkplaceStore] loadDocument()');
+    const doc = await Persistence.load();
+    console.log(`[WorkplaceStore] loadDocument(): doc=${doc ? 'loaded' : 'null'}`);
+    console.log(`[WorkplaceStore] loadDocument(): doc.imageData=${doc?.imageData ? 'exists' : 'null'}`);
+    if (doc) {
+      document.value = doc;
+      // Create VariantRuntime instances for each variant in the loaded document
+      doc.variants.forEach((variant) => {
+        const runtime = new VariantRuntime(variant.id);
+        variantRuntimes.value[variant.id] = runtime;
+        ImageEngine.render(doc.imageData, runtime);
+        console.log(`[WorkplaceStore] loadDocument(): created VariantRuntime for variantId=${variant.id}`);
+        console.log(
+          `[WorkplaceStore] loadDocument(): created VariantRuntime for renderedImageData=${runtime.renderedImageData ? 'exists' : 'null'}`
+        );
+      });
+    }
+  }
+
+  async function clearDocument() {
+    await Persistence.clear();
+  }
+
   // Functions
   // Local function to get or create a VariantRuntime for a given variantId
   function getVariantRuntime(variantId: string): VariantRuntime {
-    if (!document.value) throw new Error('[WorkplaceStore] getVariantRuntime(): document is null or undefined');
     let runtime = variantRuntimes.value[variantId];
     if (!runtime) {
+      if (!document.value) throw new Error('[WorkplaceStore] getVariantRuntime(): document is null or undefined');
       runtime = new VariantRuntime(variantId);
       runtime.renderedImageData = ImageEngine.cloneImageData(document.value.imageData);
       variantRuntimes.value[variantId] = runtime;
@@ -98,19 +141,10 @@ export const useWorkplaceStore = defineStore('workplace', () => {
       filename,
       imageData,
       variants: [],
+      version: '1.0.0',
     };
     createVariant();
     imageProcess();
-  }
-
-  function nextVariant() {
-    setCurrentVariantIndex(currentVariantIndex.value + 1);
-    console.log(`[Workplace] nextVariant: currentVariantId: ${currentVariantId.value}`);
-  }
-
-  function previousVariant() {
-    setCurrentVariantIndex(currentVariantIndex.value - 1);
-    console.log(`[Workplace] previousVariant: currentVariantId: ${currentVariantId.value}`);
   }
 
   function findVariantIndex(variants: Variant[], variantId: string): number {
@@ -137,12 +171,14 @@ export const useWorkplaceStore = defineStore('workplace', () => {
     if (newVariant.isOriginal) {
       createVariant();
     } else {
-      currentVariantId.value = newVariant.id;
+      document.value.currentVariantId = newVariant.id;
     }
+
+    saveDocumentDebounced();
   }
 
   function resetCurrentVariant() {
-    if (!document.value || !currentVariantId.value || !currentVariantRuntime.value) return;
+    if (!document.value || !document.value.currentVariantId || !currentVariantRuntime.value) return;
     const variant = currentVariant.value;
     if (!variant) return;
     variant.layers = {};
@@ -154,49 +190,57 @@ export const useWorkplaceStore = defineStore('workplace', () => {
       };
     });
     currentVariantRuntime.value.renderedImageData = ImageEngine.cloneImageData(document.value.imageData);
+
+    saveDocumentDebounced();
   }
 
   function duplicateCurrentVariant() {
-    if (!document.value || !currentVariantId.value || !currentVariantRuntime.value) return;
+    if (!document.value || !document.value.currentVariantId || !currentVariantRuntime.value) return;
     const newVariant = JSON.parse(JSON.stringify(currentVariant.value));
     newVariant.id = crypto.randomUUID();
+    newVariant.isOriginal = false;
     const newVariantRuntime = currentVariantRuntime.value.clone(newVariant.id);
     variantRuntimes.value[newVariantRuntime.variantId] = newVariantRuntime;
     document.value.variants.push(newVariant);
-    currentVariantId.value = newVariant.id;
+    document.value.currentVariantId = newVariant.id;
+
+    saveDocumentDebounced();
   }
 
   function deleteCurrentVariant() {
-    if (!document.value || !currentVariantId.value) return;
-    const index = findVariantIndex(document.value.variants, currentVariantId.value);
+    if (!document.value || !document.value.currentVariantId) return;
+    const index = findVariantIndex(document.value.variants, document.value.currentVariantId);
     if (index !== -1) {
       // console.log('!!! ' + index + ' ' + document.value.variants.length + ' / ' + document.value.variants[index].id);
       document.value.variants.splice(index, 1);
       if (document.value.variants[index]) {
-        currentVariantId.value = document.value.variants[index].id;
+        document.value.currentVariantId = document.value.variants[index].id;
       } else {
-        currentVariantId.value = document.value.variants[document.value.variants.length - 1]?.id;
+        document.value.currentVariantId = document.value.variants[document.value.variants.length - 1]?.id;
       }
     }
     // console.log(`[WorkplaceStore] deleteCurrentVariant: variants: ${document.value.variants.length}`);
     if (document.value.variants.length === 1) {
       createVariant();
     }
+
+    saveDocumentDebounced();
   }
 
   function imageProcess() {
     if (!document.value || !currentVariant.value || !currentVariantRuntime.value) return;
     // TODO in case of the first Variant do need to render, just copy the source image data to the variant image data
-    ImageEngine.processImageData(currentVariantRuntime.value);
+    ImageEngine.processImageData(document.value.imageData, currentVariantRuntime.value);
   }
 
-  function updateCurrentVariantImageData(imageData: ImageData) {
-    if (!document.value || !currentVariant.value || !currentVariantRuntime.value) return;
-    currentVariantRuntime.value.renderedImageData = ImageEngine.cloneImageData(imageData);
+  function updateVariantImageData(variantId: string, imageData: ImageData) {
+    getVariantRuntime(variantId).renderedImageData = imageData;
   }
 
-  function initialize() {
+  async function initialize() {
+    console.log('[WorkplaceStore] initialize()');
     layerRegistry.initialize();
+    await loadDocument();
   }
 
   function updateLayerProperty(layerType: string, property: string, value: any) {
@@ -206,6 +250,8 @@ export const useWorkplaceStore = defineStore('workplace', () => {
     layer.enabled = true; // Right now it's not possible to change value without making layer enabled
     layer.properties[property] = value;
     imageProcess();
+
+    saveDocumentDebounced();
   }
 
   function updateLayerEnable(layerType: string, value: boolean) {
@@ -214,6 +260,8 @@ export const useWorkplaceStore = defineStore('workplace', () => {
     if (!layer) return;
     layer.enabled = value;
     imageProcess();
+
+    saveDocumentDebounced();
   }
 
   return {
@@ -229,6 +277,7 @@ export const useWorkplaceStore = defineStore('workplace', () => {
     currentVariantRuntime,
     currentSourceImageData,
     currentVariantImageData,
+    variantByVariantId,
     variantRuntimeByIndex,
 
     // Functions
@@ -239,14 +288,14 @@ export const useWorkplaceStore = defineStore('workplace', () => {
     resetCurrentVariant,
     duplicateCurrentVariant,
     deleteCurrentVariant,
-    nextVariant,
-    previousVariant,
 
     variantImageDataByIndex,
     setCurrentVariantIndex,
 
     updateLayerProperty,
     updateLayerEnable,
-    updateCurrentVariantImageData, // Should be used only in ImageEngine
+    updateVariantImageData, // Should be used only in ImageEngine
+
+    clearDocument,
   };
 });
