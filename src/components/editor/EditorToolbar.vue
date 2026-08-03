@@ -34,7 +34,7 @@ const canDelete = computed(() => {
 
 const canDuplicate = computed(() => {
   const store = useWorkplaceStore();
-  return store.allVariants.length < 5;
+  return store.allVariants.length < 10;
 });
 </script>
 
