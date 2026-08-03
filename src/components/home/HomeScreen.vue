@@ -27,12 +27,6 @@ const emit = defineEmits<{
 
         {{ $t('common.Upload_Image') }}
       </Button>
-
-      <!-- <Button class="w-full" size="lg" variant="secondary" disabled @click="emit('camera')">
-        <Camera class="mr-2 size-5" />
-
-        Camera (Coming Soon)
-      </Button> -->
     </div>
 
     <div class="mt-10 space-y-2 text-sm">
