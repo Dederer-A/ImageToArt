@@ -5,22 +5,24 @@ import { useWorkplaceStore } from '@/workplace/index';
 
 import EditorScreen from '@/components/editor/EditorScreen.vue';
 import HomeScreen from '@/components/home/HomeScreen.vue';
+import GalleryScreen from '@/components/gallery/GalleryScreen.vue';
 import { ImageEngine } from '@/Image/ImageEngine';
-const fileInput = ref<HTMLInputElement>();
-const image = ref('');
+import type { PersistedDocumentInfo } from '@/workplace';
 
+const fileInput = ref<HTMLInputElement>();
 const workplace = useWorkplaceStore();
 
-onMounted(async () => {
-  await workplace.initialize(); // Initialize the workplace store after the app is mounted
+const currentDocumentId = ref<string | null>(null);
+const imagesList = ref<PersistedDocumentInfo[]>([]);
 
-  try {
-    if (workplace.currentDocument) {
-      image.value = 'loaded';
-    }
-  } catch (error) {
-    console.error('Error loading document:', error);
-  }
+async function refreshWorkplaceState() {
+  currentDocumentId.value = await workplace.getCurrentDocumentId();
+  imagesList.value = await workplace.listImages();
+}
+
+onMounted(async () => {
+  workplace.initialize();
+  await refreshWorkplaceState();
 });
 
 function selectImage() {
@@ -29,30 +31,40 @@ function selectImage() {
 
 async function onFileSelected(event: Event) {
   const input = event.target as HTMLInputElement;
-
   const file = input.files?.[0];
   if (!file) {
     return;
   }
   const imageBase64 = await ImageEngine.resizeFileToImageData(file);
   workplace.initializeDocument(file.name, imageBase64);
-  image.value = 'loaded';
+  await refreshWorkplaceState();
 
-  // Allow selecting the same file again.
   input.value = '';
 }
 
+async function onSelectImage(id: string) {
+  await workplace.loadDocument(id);
+  await refreshWorkplaceState();
+}
+
 async function goBack() {
-  image.value = '';
-  await workplace.clearDocument();
+  workplace.clearCurrentDocument();
+  await refreshWorkplaceState();
 }
 </script>
 
 <template>
   <main class="absolute inset-0 pt-safe-top pb-safe-bottom">
-    <HomeScreen v-if="!image" @upload="selectImage" />
+    <EditorScreen v-if="currentDocumentId" :image="currentDocumentId" @go-back="goBack" />
 
-    <EditorScreen v-else :image="image" @go-back="goBack" />
+    <GalleryScreen
+      v-else-if="imagesList.length > 0"
+      :images="imagesList"
+      @upload="selectImage"
+      @select="onSelectImage"
+    />
+
+    <HomeScreen v-else @upload="selectImage" />
 
     <input ref="fileInput" type="file" accept="image/*" class="hidden" @change="onFileSelected" />
   </main>

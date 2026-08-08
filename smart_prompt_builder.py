@@ -1,15 +1,66 @@
 import os
 import re
-import pyperclip
+import subprocess
+import shlex
 
 # Default mandatory files and directories (from the Core Documents section of your index)
 CORE_FILES = [
     "AGENTS.md",
     "ai/AI_PHILOSOPHY.md",
+    "ai/AI_INDEX.md",
     "ai/AI_RULES.md",
     "ai/CODING_STANDARDS.md",
     "ai/GIT_WORKFLOW.md"
 ]
+
+def clean_path(path_str):
+    """Cleans up paths dragged from Finder or VSCode, removing surrounding 
+       quotes, trailing escape spaces, and resolving relative paths."""
+    path_str = path_str.strip('\'"')
+    path_str = path_str.strip()
+    
+    if os.path.isabs(path_str):
+        try:
+            path_str = os.path.relpath(path_str, os.getcwd())
+        except ValueError:
+            pass
+            
+    return path_str
+
+def parse_user_entries(raw_input):
+    """Parses user input securely, correctly handling dragged-in paths 
+       wrapped in single or double quotes, and space/comma separation."""
+    if not raw_input.strip():
+        return []
+        
+    try:
+        normalized_input = raw_input.replace(',', ' ')
+        tokens = shlex.split(normalized_input)
+    except ValueError:
+        tokens = re.split(r'[,;\s]+', raw_input)
+        
+    cleaned_entries = [clean_path(token) for token in tokens if token.strip()]
+    return cleaned_entries
+
+def copy_to_clipboard(text):
+    """Copies text to clipboard using pyperclip if available, 
+       otherwise falls back to native OS commands (like pbcopy on macOS)."""
+    try:
+        import pyperclip
+        pyperclip.copy(text)
+        return True
+    except ImportError:
+        pass
+
+    if os.name == 'posix' and os.uname().sysname == 'Darwin':
+        try:
+            process = subprocess.Popen('pbcopy', env={'LANG': 'en_US.UTF-8'}, stdin=subprocess.PIPE)
+            process.communicate(text.encode('utf-8'))
+            return True
+        except Exception as e:
+            print(f"[Warning] Failed to use pbcopy fallback: {e}")
+    
+    return False
 
 def resolve_path_to_files(path_entry):
     """If the entry is a directory, recursively collect all files inside it. 
@@ -17,7 +68,6 @@ def resolve_path_to_files(path_entry):
        Supports wildcards like docs/30-decisions/* as well."""
     collected_files = set()
     
-    # Handle wildcard paths (e.g., docs/30-decisions/*)
     if '*' in path_entry:
         base_dir = path_entry.split('*')[0]
         if os.path.exists(base_dir):
@@ -33,7 +83,7 @@ def resolve_path_to_files(path_entry):
         
     return list(collected_files)
 
-def parse_ai_index(index_path="AI_INDEX.md"):
+def parse_ai_index(index_path="ai/AI_INDEX.md"):
     """Parses AI_INDEX.md and extracts conditional workflow blocks."""
     if not os.path.exists(index_path):
         print(f"Warning: {index_path} not found.")
@@ -74,34 +124,20 @@ def select_dynamic_files(task_description, rules):
 
     return list(selected_files), matched_conditions
 
-def generate_targeted_prompt(task_description, manual_entries):
+def generate_targeted_prompt(task_description, dynamic_files, matched_conditions, manual_entries):
     output = []
     
     output.append(f"# Task Context\n**Task:** {task_description}\n\n---\n")
     
-    # 1. Compile final file list (Core + Auto-matched + Manual)
+    # Compile final file list (Core + Auto-matched + Manual)
     files_to_load = set()
     
-    # Process CORE_FILES (expanding directories if specified)
     for core_entry in CORE_FILES:
         files_to_load.update(resolve_path_to_files(core_entry))
     
-    rules = parse_ai_index()
-    dynamic_files, matched_conditions = select_dynamic_files(task_description, rules)
     files_to_load.update(dynamic_files)
     
-    # Report matching status
-    print("\n[AI_INDEX Analysis]")
-    if matched_conditions:
-        print("  Found matching workflow sections:")
-        for cond in matched_conditions:
-            print(f"    - If you {cond}")
-    else:
-        print("  No matching conditional workflows found in AI_INDEX.md for this task.")
-    
-    # Add manually specified files or directories
     for entry in manual_entries:
-        entry = entry.strip()
         if entry:
             files_to_load.update(resolve_path_to_files(entry))
     
@@ -110,12 +146,21 @@ def generate_targeted_prompt(task_description, manual_entries):
         print(f"  - {f}")
     print("-" * 40)
 
-    # 2. Append file contents
+    # Append file contents
     for file_path in sorted(files_to_load):
         if os.path.exists(file_path) and os.path.isfile(file_path):
             output.append(f"## File: `{file_path}`\n")
             ext = os.path.splitext(file_path)[1].lstrip('.')
-            lang_map = {'py': 'python', 'md': 'markdown', 'json': 'json', 'ts': 'typescript', 'js': 'javascript'}
+            lang_map = {
+                'py': 'python', 
+                'md': 'markdown', 
+                'json': 'json', 
+                'ts': 'typescript', 
+                'js': 'javascript',
+                'vue': 'vue',
+                'html': 'html',
+                'css': 'css'
+            }
             lang = lang_map.get(ext, '')
             
             output.append(f"```{lang}")
@@ -138,19 +183,37 @@ if __name__ == "__main__":
         print("Task description cannot be empty.")
         exit()
 
-    additional_input = input("Additional files or directories separated by comma or space (leave empty if none): ")
-    manual_entries = re.split(r'[,;\s]+', additional_input) if additional_input.strip() else []
+    # Step 1: Parse and analyze AI_INDEX immediately after task entry
+    rules = parse_ai_index("ai/AI_INDEX.md")
+    dynamic_files, matched_conditions = select_dynamic_files(user_task, rules)
 
-    prompt_text = generate_targeted_prompt(user_task, manual_entries)
+    print("\n[AI_INDEX Analysis]")
+    if matched_conditions:
+        print("  Found matching workflow sections:")
+        for cond in matched_conditions:
+            print(f"    - If you {cond}")
+    else:
+        print("  No matching conditional workflows found in ai/AI_INDEX.md for this task.")
+
+    # Step 2: Ask for additional files or directories
+    additional_input = input("\nAdditional files or directories separated by comma or space (leave empty if none): ")
+    manual_entries = parse_user_entries(additional_input)
+
+    # Step 3: Generate prompt and copy
+    prompt_text = generate_targeted_prompt(user_task, dynamic_files, matched_conditions, manual_entries)
     
     # Calculate statistics
     prompt_bytes = prompt_text.encode('utf-8')
     size_kb = len(prompt_bytes) / 1024
-    approx_tokens = len(prompt_text) // 4  # Standard rough heuristic: ~4 characters per token
+    approx_tokens = len(prompt_text) // 4
 
-    pyperclip.copy(prompt_text)
+    success = copy_to_clipboard(prompt_text)
     
     print("\n[Prompt Statistics]")
     print(f"  - Size: {size_kb:.2f} KB")
     print(f"  - Estimated tokens: ~{approx_tokens}")
-    print("\n[Done] The tailored minimum context has been copied to your clipboard.")
+    
+    if success:
+        print("\n[Done] The tailored minimum context has been copied to your clipboard.")
+    else:
+        print("\n[Error] Could not copy to clipboard. Neither pyperclip nor pbcopy was successful.")

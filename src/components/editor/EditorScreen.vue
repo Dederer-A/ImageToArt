@@ -85,7 +85,7 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
       @duplicate="duplicateVariant"
     />
 
-    <BottomToolPanel :visible="uiVisible" :height="30">
+    <BottomToolPanel v-if="workplace.currentVariant" :visible="uiVisible" :height="30">
       <div v-if="workplace.currentVariant.isOriginal" class="p-4">
         <p class="text-lg pb-1">
           <strong>{{ $t('toolbar.Original_Image_title') }}</strong>

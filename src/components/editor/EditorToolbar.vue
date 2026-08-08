@@ -29,7 +29,7 @@ const variantsLabel = computed(() => {
 
 const canDelete = computed(() => {
   const store = useWorkplaceStore();
-  return store.allVariants.length > 1 && !store.currentVariant.isOriginal;
+  return store.allVariants.length > 1 && !store.currentVariant?.isOriginal;
 });
 
 const canDuplicate = computed(() => {
@@ -39,7 +39,7 @@ const canDuplicate = computed(() => {
 
 const canReset = computed(() => {
   const store = useWorkplaceStore();
-  return !store.currentVariant.isOriginal;
+  return !store.currentVariant?.isOriginal;
 });
 </script>
 
