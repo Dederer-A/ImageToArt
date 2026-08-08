@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
+import { Grid2x2 } from '@lucide/vue';
+
+import { Toggle } from '@/components/ui/toggle';
+
 // import ActionToolControl from '@/components/tools/ActionToolControl.vue';
 import BottomToolPanel from '@/components/editor/BottomToolPanel.vue';
 // import CropToolControl from '@/components/tools/CropToolControl.vue';
@@ -204,12 +208,33 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
           @update:model-value="updateLayerEnable('grid', $event)"
           title="toolbar.Grid"
         >
-          <SliderToolControl
-            :model-value="workplace.currentVariant.layers['grid'].properties.value"
-            @update:model-value="updateLayerProperty('grid', 'value', $event)"
-            :min="1"
-            :max="8"
-          />
+          <div class="flex w-full items-center gap-3">
+            <SliderToolControl
+              class="flex-1"
+              :model-value="workplace.currentVariant.layers['grid'].properties.value"
+              @update:model-value="updateLayerProperty('grid', 'value', $event)"
+              :min="1"
+              :max="8"
+            />
+            <Toggle
+              variant="outline"
+              size="sm"
+              class="shrink-0"
+              :class="{
+                'bg-accent text-accent-foreground': workplace.currentVariant.layers['grid'].properties.proportional,
+              }"
+              @click="
+                updateLayerProperty(
+                  'grid',
+                  'proportional',
+                  !workplace.currentVariant.layers['grid'].properties.proportional
+                )
+              "
+              aria-label="Toggle Proportional Grid"
+            >
+              <Grid2x2 class="h-4 w-4" />
+            </Toggle>
+          </div>
         </ToolRow>
 
         <ToolRow
