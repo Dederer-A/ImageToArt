@@ -5,5 +5,9 @@
   "About": "About",
   "Disclaimer": "Disclaimer",
   "OpenSource": "OpenSource",
-  "Privacy": "Privacy"
+  "Privacy": "Privacy",
+  "gallery": {
+    "Title": "Image to Art",
+    "Description": "Select an image to continue editing"
+  }
 }

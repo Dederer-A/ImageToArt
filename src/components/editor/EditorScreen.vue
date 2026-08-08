@@ -46,8 +46,14 @@ async function downloadImage() {
   await ShareService.shareImage(workplace.currentVariantImageData!);
 }
 
-function deleteVariant() {
-  workplace.deleteCurrentVariant();
+function deleteEvent(type: 'variant' | 'document') {
+  console.log('[EditorScreen] deleteEvent', type);
+  if (type === 'variant') {
+    workplace.deleteCurrentVariant();
+  } else {
+    workplace.deleteDocument(workplace.currentDocument.id);
+    emit('go-back');
+  }
 }
 
 function duplicateVariant() {
@@ -81,7 +87,7 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
       @back="goBack"
       @reset="reset"
       @export="downloadImage"
-      @delete="deleteVariant"
+      @delete="deleteEvent"
       @duplicate="duplicateVariant"
     />
 

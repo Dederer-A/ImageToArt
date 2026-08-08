@@ -17,8 +17,8 @@ const emit = defineEmits<{
 <template>
   <div class="h-dvh flex flex-col justify-between px-6 py-8">
     <div class="space-y-2 text-center">
-      <h1 class="text-3xl font-bold">My Images</h1>
-      <p class="text-muted-foreground">Select an image to continue editing</p>
+      <h1 class="text-3xl font-bold">{{ $t('common.gallery.Title') }}</h1>
+      <p class="text-muted-foreground">{{ $t('common.gallery.Description') }}</p>
     </div>
 
     <div class="flex-1 my-6 overflow-y-auto grid grid-cols-3 gap-3 content-start">

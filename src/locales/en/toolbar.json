@@ -12,5 +12,7 @@
   "Blur": "Blur",
   "Grid": "Grid",
   "Golden_Ratio": "Golden Ratio",
-  "Rule_of_Thirds": "Rule of Thirds"
+  "Rule_of_Thirds": "Rule of Thirds",
+  "delete_variant": "Delete Variant",
+  "delete_image": "Delete Image"
 }

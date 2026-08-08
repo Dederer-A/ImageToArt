@@ -238,7 +238,11 @@ export const useWorkplaceStore = defineStore('workplace', () => {
   }
 
   async function deleteDocument(documentId: string): Promise<void> {
+    if (document.value && document.value.id === documentId) {
+      document.value = undefined;
+    }
     await Persistence.delete(documentId);
+    await Persistence.clearCurrentDocument();
   }
 
   async function setCurrentDocument(id: string): Promise<void> {
