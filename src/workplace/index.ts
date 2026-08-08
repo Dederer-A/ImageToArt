@@ -6,7 +6,9 @@ import { useDebounceFn } from '@vueuse/core';
 import { LayerRegistry, type Document, type Variant } from './document';
 import { VariantRuntime } from './runtime';
 import { ImageEngine } from '@/Image/ImageEngine';
-import { Persistence } from './persistence';
+import { Persistence, type PersistedDocumentInfo } from './persistence';
+
+export { type PersistedDocumentInfo } from './persistence';
 
 export const useWorkplaceStore = defineStore('workplace', () => {
   // Properties
@@ -55,10 +57,11 @@ export const useWorkplaceStore = defineStore('workplace', () => {
   });
 
   const currentVariant = computed(() => {
-    if (!document.value || !document.value.currentVariantId)
-      throw new Error('[WorkplaceStore] currentVariant: document or currentVariantId is null');
+    if (!document.value || !document.value.currentVariantId) return undefined;
+    // throw new Error('[WorkplaceStore] currentVariant: document or currentVariantId is null');
     const variant = document.value.variants.find((v) => v.id === document.value!.currentVariantId);
-    if (!variant) throw new Error('[WorkplaceStore] currentVariant: variant not found');
+    if (!variant) return undefined;
+    // throw new Error('[WorkplaceStore] currentVariant: variant not found');
     return variant;
   });
 
@@ -84,40 +87,6 @@ export const useWorkplaceStore = defineStore('workplace', () => {
   const currentVariantImageData = computed(() => {
     return currentVariantRuntime.value?.renderedImageData;
   });
-
-  const saveDocumentDebounced = useDebounceFn(async () => {
-    await saveDocument();
-  }, 1000);
-
-  async function saveDocument() {
-    console.log('[WorkplaceStore] saveDocument()');
-    if (!document.value) return;
-    await Persistence.save(document.value);
-  }
-
-  async function loadDocument() {
-    console.log('[WorkplaceStore] loadDocument()');
-    const doc = await Persistence.load();
-    console.log(`[WorkplaceStore] loadDocument(): doc=${doc ? 'loaded' : 'null'}`);
-    console.log(`[WorkplaceStore] loadDocument(): doc.imageData=${doc?.imageData ? 'exists' : 'null'}`);
-    if (doc) {
-      document.value = doc;
-      // Create VariantRuntime instances for each variant in the loaded document
-      doc.variants.forEach((variant) => {
-        const runtime = new VariantRuntime(variant.id);
-        variantRuntimes.value[variant.id] = runtime;
-        ImageEngine.render(doc.imageData, runtime);
-        console.log(`[WorkplaceStore] loadDocument(): created VariantRuntime for variantId=${variant.id}`);
-        console.log(
-          `[WorkplaceStore] loadDocument(): created VariantRuntime for renderedImageData=${runtime.renderedImageData ? 'exists' : 'null'}`
-        );
-      });
-    }
-  }
-
-  async function clearDocument() {
-    await Persistence.clear();
-  }
 
   // Functions
   // Local function to get or create a VariantRuntime for a given variantId
@@ -237,10 +206,9 @@ export const useWorkplaceStore = defineStore('workplace', () => {
     getVariantRuntime(variantId).renderedImageData = imageData;
   }
 
-  async function initialize() {
+  function initialize() {
     console.log('[WorkplaceStore] initialize()');
     layerRegistry.initialize();
-    await loadDocument();
   }
 
   function updateLayerProperty(layerType: string, property: string, value: any) {
@@ -263,6 +231,69 @@ export const useWorkplaceStore = defineStore('workplace', () => {
 
     saveDocumentDebounced();
   }
+
+  // Persistence functions
+  async function listImages(): Promise<PersistedDocumentInfo[]> {
+    return await Persistence.list();
+  }
+
+  async function deleteDocument(documentId: string): Promise<void> {
+    if (document.value && document.value.id === documentId) {
+      document.value = undefined;
+    }
+    await Persistence.delete(documentId);
+    await Persistence.clearCurrentDocument();
+  }
+
+  async function setCurrentDocument(id: string): Promise<void> {
+    await Persistence.setCurrentDocument(id);
+  }
+
+  async function getCurrentDocumentId(): Promise<string | null> {
+    if (document.value) return document.value.id; // (property) Document.id: string
+    return Persistence.getCurrentDocumentId();
+  }
+
+  async function clearCurrentDocument(): Promise<void> {
+    document.value = undefined;
+    await Persistence.clearCurrentDocument();
+  }
+
+  const saveDocumentDebounced = useDebounceFn(async () => {
+    await saveDocument();
+  }, 100);
+
+  async function saveDocument() {
+    console.log('[WorkplaceStore] saveDocument()');
+    if (!document.value) return;
+    await Persistence.save(document.value);
+  }
+
+  async function loadDocument(documentId: string) {
+    console.log('[WorkplaceStore] loadDocument()');
+    const doc = await Persistence.load(documentId);
+    console.log(`[WorkplaceStore] loadDocument(): doc=${doc ? 'loaded' : 'null'}`);
+    console.log(`[WorkplaceStore] loadDocument(): doc.imageData=${doc?.imageData ? 'exists' : 'null'}`);
+    if (doc) {
+      document.value = doc;
+      // Create VariantRuntime instances for each variant in the loaded document
+      doc.variants.forEach((variant) => {
+        const runtime = new VariantRuntime(variant.id);
+        variantRuntimes.value[variant.id] = runtime;
+        ImageEngine.render(doc.imageData, runtime);
+        console.log(`[WorkplaceStore] loadDocument(): created VariantRuntime for variantId=${variant.id}`);
+        console.log(
+          `[WorkplaceStore] loadDocument(): created VariantRuntime for renderedImageData=${runtime.renderedImageData ? 'exists' : 'null'}`
+        );
+      });
+    }
+  }
+
+  async function clearDocument() {
+    await Persistence.clear();
+  }
+
+  // ===================================
 
   return {
     // Properties
@@ -297,5 +328,14 @@ export const useWorkplaceStore = defineStore('workplace', () => {
     updateVariantImageData, // Should be used only in ImageEngine
 
     clearDocument,
+
+    // From persistence
+    saveDocument,
+    listImages,
+    loadDocument,
+    deleteDocument,
+    setCurrentDocument,
+    getCurrentDocumentId,
+    clearCurrentDocument,
   };
 });

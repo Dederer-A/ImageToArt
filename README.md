@@ -60,6 +60,14 @@ npx cap open ios
 
 ---
 
+To run ```smart_prompt_builder.py``` install the following library (work wich clipboard):
+
+```bash
+pip install pyperclip
+```
+
+---
+
 ## Generate OPEN_SOURCE_LICENSES.md
 
 ```bash

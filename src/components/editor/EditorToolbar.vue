@@ -1,7 +1,13 @@
 <script setup lang="ts">
-import { ArrowLeft, CopyPlus, RotateCcw, Trash2, Share } from '@lucide/vue';
+import { ArrowLeft, CopyPlus, RotateCcw, Trash2, Trash, FileX, Share } from '@lucide/vue';
 
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { useWorkplaceStore } from '@/workplace/';
 import { computed } from 'vue';
 import AlertDialog from '@/components/AlertDialog.vue';
@@ -18,7 +24,7 @@ withDefaults(
 const emit = defineEmits<{
   (e: 'back'): void;
   (e: 'duplicate'): void;
-  (e: 'delete'): void;
+  (e: 'delete', type: 'variant' | 'document'): void;
   (e: 'export'): void;
   (e: 'reset'): void;
 }>();
@@ -29,7 +35,7 @@ const variantsLabel = computed(() => {
 
 const canDelete = computed(() => {
   const store = useWorkplaceStore();
-  return store.allVariants.length > 1 && !store.currentVariant.isOriginal;
+  return store.allVariants.length > 1 && !store.currentVariant?.isOriginal;
 });
 
 const canDuplicate = computed(() => {
@@ -39,7 +45,7 @@ const canDuplicate = computed(() => {
 
 const canReset = computed(() => {
   const store = useWorkplaceStore();
-  return !store.currentVariant.isOriginal;
+  return !store.currentVariant?.isOriginal;
 });
 </script>
 
@@ -75,11 +81,23 @@ const canReset = computed(() => {
           <CopyPlus class="size-5" />
         </Button>
 
-        <AlertDialog @action="emit('delete')">
-          <Button variant="ghost" size="icon" :disabled="!canDelete">
-            <Trash2 class="size-5" />
-          </Button>
-        </AlertDialog>
+        <DropdownMenu>
+          <DropdownMenuTrigger as-child>
+            <Button variant="ghost" size="icon">
+              <Trash2 class="size-5" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem @click="emit('delete', 'variant')" :disabled="!canDelete">
+              <Trash class="mr-2 size-4" />
+              {{ $t('toolbar.delete_variant') }}
+            </DropdownMenuItem>
+            <DropdownMenuItem @click="emit('delete', 'document')">
+              <FileX class="mr-2 size-4" />
+              {{ $t('toolbar.delete_image') }}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       <Button variant="ghost" size="icon" @click="emit('export')">

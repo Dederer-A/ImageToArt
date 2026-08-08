@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
+import { Grid2x2 } from '@lucide/vue';
+
+import { Toggle } from '@/components/ui/toggle';
+
 // import ActionToolControl from '@/components/tools/ActionToolControl.vue';
 import BottomToolPanel from '@/components/editor/BottomToolPanel.vue';
 // import CropToolControl from '@/components/tools/CropToolControl.vue';
@@ -46,8 +50,14 @@ async function downloadImage() {
   await ShareService.shareImage(workplace.currentVariantImageData!);
 }
 
-function deleteVariant() {
-  workplace.deleteCurrentVariant();
+function deleteEvent(type: 'variant' | 'document') {
+  console.log('[EditorScreen] deleteEvent', type);
+  if (type === 'variant') {
+    workplace.deleteCurrentVariant();
+  } else {
+    workplace.deleteDocument(workplace.currentDocument.id);
+    emit('go-back');
+  }
 }
 
 function duplicateVariant() {
@@ -81,11 +91,11 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
       @back="goBack"
       @reset="reset"
       @export="downloadImage"
-      @delete="deleteVariant"
+      @delete="deleteEvent"
       @duplicate="duplicateVariant"
     />
 
-    <BottomToolPanel :visible="uiVisible" :height="30">
+    <BottomToolPanel v-if="workplace.currentVariant" :visible="uiVisible" :height="30">
       <div v-if="workplace.currentVariant.isOriginal" class="p-4">
         <p class="text-lg pb-1">
           <strong>{{ $t('toolbar.Original_Image_title') }}</strong>
@@ -198,12 +208,30 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
           @update:model-value="updateLayerEnable('grid', $event)"
           title="toolbar.Grid"
         >
-          <SliderToolControl
-            :model-value="workplace.currentVariant.layers['grid'].properties.value"
-            @update:model-value="updateLayerProperty('grid', 'value', $event)"
-            :min="1"
-            :max="8"
-          />
+          <div class="flex w-full items-center gap-3">
+            <SliderToolControl
+              class="flex-1"
+              :model-value="workplace.currentVariant.layers['grid'].properties.value"
+              @update:model-value="updateLayerProperty('grid', 'value', $event)"
+              :min="1"
+              :max="8"
+            />
+            <Toggle
+              variant="outline"
+              size="sm"
+              class="data-[state=on]:bg-black data-[state=on]:text-white shrink-0"
+              @click="
+                updateLayerProperty(
+                  'grid',
+                  'proportional',
+                  !workplace.currentVariant.layers['grid'].properties.proportional
+                )
+              "
+              aria-label="Toggle Proportional Grid"
+            >
+              <Grid2x2 class="h-4 w-4" />
+            </Toggle>
+          </div>
         </ToolRow>
 
         <ToolRow
