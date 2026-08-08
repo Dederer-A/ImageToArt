@@ -219,10 +219,7 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
             <Toggle
               variant="outline"
               size="sm"
-              class="shrink-0"
-              :class="{
-                'bg-accent text-accent-foreground': workplace.currentVariant.layers['grid'].properties.proportional,
-              }"
+              class="data-[state=on]:bg-black data-[state=on]:text-white shrink-0"
               @click="
                 updateLayerProperty(
                   'grid',
