@@ -15,14 +15,14 @@ const hasControl = computed(() => !!slots.default);
 </script>
 
 <template>
-  <div class="flex items-start gap-3 py-3" :class="{ 'opacity-50': false }">
-    <Switch v-model="isEnabled" class="min-h-5 shrink-0" />
+  <div class="flex items-center gap-3 py-3" :class="{ 'opacity-50': false }">
+    <Switch v-model="isEnabled" class="shrink-0 my-auto" />
 
     <div class="w-35 shrink-0 truncate text-sm font-medium">
-      <div class="text-sm font-medium">{{ $t(title) }}</div>
+      <div class="text-sm font-medium leading-none">{{ $t(title) }}</div>
     </div>
 
-    <div v-if="hasControl" class="flex min-w-0 flex-1">
+    <div v-if="hasControl" class="flex min-w-0 flex-1 items-center">
       <slot />
     </div>
   </div>
