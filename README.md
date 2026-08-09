@@ -60,7 +60,7 @@ npx cap open ios
 
 ---
 
-To run ```smart_prompt_builder.py``` install the following library (work wich clipboard):
+To run `smart_prompt_builder.py` install the following library (work wich clipboard):
 
 ```bash
 pip install pyperclip
@@ -91,7 +91,6 @@ pnpm license-checker-rseidelsohn \
 - shadcn-vue
 - VueUse
 - Lucide Icons
-- VeeValidate + Zod
 
 ---
 

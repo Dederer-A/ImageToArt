@@ -5,12 +5,9 @@ import { Grid2x2 } from '@lucide/vue';
 
 import { Toggle } from '@/components/ui/toggle';
 
-// import ActionToolControl from '@/components/tools/ActionToolControl.vue';
 import BottomToolPanel from '@/components/editor/BottomToolPanel.vue';
-// import CropToolControl from '@/components/tools/CropToolControl.vue';
 import EditorCanvas from '@/components/EditorCanvas/EditorCanvas.vue';
 import EditorToolbar from '@/components/editor/EditorToolbar.vue';
-// import RotateToolControl from '@/components/tools/RotateToolControl.vue';
 import SliderToolControl from '@/components/tools/SliderToolControl.vue';
 import SliderRangeToolControl from '@/components/tools/SliderRangeToolControl.vue';
 
@@ -117,14 +114,6 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
             @update:model-value="updateLayerProperty('levels', 'value', $event)"
           />
         </ToolRow>
-
-        <!-- <ToolRow v-model="toolState.crop.enabled" title="Crop">
-          <CropToolControl v-model="toolState.crop.preset" :presets="cropPresets" />
-        </ToolRow> -->
-
-        <!-- <ToolRow v-model="toolState.rotate.enabled" title="Rotate">
-          <RotateToolControl v-model="toolState.rotate" />
-        </ToolRow> -->
 
         <ToolRow
           :model-value="workplace.currentVariant.layers['contrast'].enabled"
@@ -247,38 +236,6 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
           title="toolbar.Rule_of_Thirds"
         >
         </ToolRow>
-
-        <!-- <ToolRow v-model="toolState.gridPresets.enabled" title="Grid Presets"> -->
-        <!-- <div class="flex gap-2 pb-1">
-            <ButtonGroup>
-              <Button size="sm" variant="outline">Grid</Button>
-              <DropdownMenu>
-                <DropdownMenuTrigger as-child>
-                  <Button variant="outline" size="icon" aria-label="More Options">
-                    <MoreHorizontalIcon />
-                  </Button>
-                  <DropdownMenuContent align="end" class="w-52">
-                    <DropdownMenuItem> 2 </DropdownMenuItem>
-                    <DropdownMenuItem> 3 </DropdownMenuItem>
-                    <DropdownMenuItem> 4 </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenuTrigger>
-              </DropdownMenu>
-            </ButtonGroup>
-          </div> -->
-        <!-- </ToolRow> -->
-
-        <!-- <ToolRow v-model="toolState.perspectiveGrid.enabled" title="Perspective Grid">
-          <ActionToolControl @click="managePerspectiveGrid" />
-        </ToolRow> -->
-
-        <!-- <ToolRow v-model="toolState.rulers.enabled" title="Rulers">
-          <ActionToolControl @click="manageRulers" />
-        </ToolRow> -->
-
-        <!-- <ToolRow v-model="toolState.measurements.enabled" title="Measurements">
-          <ActionToolControl @click="manageMeasurements" />
-        </ToolRow> -->
       </ToolList>
     </BottomToolPanel>
   </div>

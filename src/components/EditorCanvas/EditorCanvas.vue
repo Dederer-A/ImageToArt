@@ -18,6 +18,7 @@ const emit = defineEmits<{
 
 const trackRef = ref<HTMLDivElement>();
 const originalCanvasRef = ref<HTMLCanvasElement>();
+// const rulersSvgRef = ref<SVGSVGElement>();
 
 const variantCanvasMap = new Map<number, HTMLCanvasElement>();
 
@@ -203,7 +204,20 @@ onBeforeUnmount(() => {
         class="pointer-events-none absolute left-1/2 top-1/2 block max-h-full max-w-full"
         style="transform: translate(-50%, -50%); opacity: 0"
       />
-
+      <!--
+      <svg
+        ref="rulersSvgRef"
+        class="pointer-events-none absolute left-1/2 top-1/2 block max-h-full max-w-full overflow-visible"
+        style="transform: translate(-50%, -50%); width: 100%; height: 100%"
+      >
+        <g stroke="#3b82f6" stroke-width="2">
+          <line x1="100" y1="100" x2="300" y2="100" />
+          <circle cx="100" cy="100" r="4" fill="#3b82f6" />
+          <circle cx="300" cy="100" r="4" fill="#3b82f6" />
+        </g>
+        <text x="200" y="90" fill="#3b82f6" font-size="12" text-anchor="middle">1.0x (Ref)</text>
+      </svg>
+    -->
       <slot name="viewport-overlay" />
     </div>
 

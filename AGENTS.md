@@ -56,29 +56,28 @@ Neither the user nor the AI should bypass the documented workflow.
 
 # Repository Structure
 
-```
-ai/
-```
+```text
 
-AI operating rules and workflows.
-
-```
-docs/
-```
-
-Project documentation.
-
-```
 src/
+├── App.vue                     -- Vue entry point for Screen
+├── Image/
+│   ├── ImageEngine.ts          -- Image Engine, responsible for processing Image Variants
+│   ├── ShareService.ts         -- iOS Share Service
+│   └── layers/                 -- Layer Engine implementations
+├── assets/                     -- Static Assets
+├── components
+│   ├── AlertDialog.vue         -- Alert Dialog Component
+│   ├── EditorCanvas/           -- Editor Canvas Component
+│   ├── editor/                 -- Editor Screen Component
+│   ├── gallery/                -- Gallery Screen Component
+│   ├── home/                   -- Home Screen Component
+│   └── tools/                  -- Component to create Tools bar
+├── composables/                -- Composables
+├── lib/
+│   └── utils.ts                -- Collection of utils
+├── locales/                    -- Internationalization support (locales)
+└── workplace/                  -- Pinia based Workplace, document, runtime & persistence
 ```
-
-Application source code.
-
-```
-tests/
-```
-
-Automated tests.
 
 ---
 
