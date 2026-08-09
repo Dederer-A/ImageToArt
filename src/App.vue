@@ -6,8 +6,8 @@ import { useWorkplaceStore } from '@/workplace/index';
 import EditorScreen from '@/components/editor/EditorScreen.vue';
 import HomeScreen from '@/components/home/HomeScreen.vue';
 import GalleryScreen from '@/components/gallery/GalleryScreen.vue';
-import { ImageEngine } from '@/Image/ImageEngine';
 import type { PersistedDocumentInfo } from '@/workplace';
+import { resizeFileToImageData } from './lib/utils';
 
 const fileInput = ref<HTMLInputElement>();
 const workplace = useWorkplaceStore();
@@ -35,7 +35,7 @@ async function onFileSelected(event: Event) {
   if (!file) {
     return;
   }
-  const imageBase64 = await ImageEngine.resizeFileToImageData(file);
+  const imageBase64 = await resizeFileToImageData(file);
   workplace.initializeDocument(file.name, imageBase64);
   await refreshWorkplaceState();
 
