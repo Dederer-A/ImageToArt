@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import ModalPage from './ModalPage.vue';
+
+const open = defineModel<boolean>('open', {
+  default: false,
+});
 </script>
 
 <template>
-  <ModalPage title="Privacy">
+  <ModalPage v-model:open="open" title="Privacy">
     <section>
       <h2>Privacy</h2>
       <p>Your privacy is important.</p>

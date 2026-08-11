@@ -60,6 +60,30 @@ npx cap open ios
 
 ---
 
+## Android
+
+Before the first Android build:
+
+```bash
+pnpm add @capacitor/android
+npx cap add android
+```
+
+After each web build, synchronize the native project:
+
+```bash
+pnpm build
+npx cap sync android
+```
+
+Open the project in Android Studio:
+
+```bash
+npx cap open android
+```
+
+---
+
 To run `smart_prompt_builder.py` install the following library (work wich clipboard):
 
 ```bash
