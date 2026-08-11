@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import ModalPage from './ModalPage.vue';
+
+const open = defineModel<boolean>('open', {
+  default: false,
+});
 </script>
 
 <template>
-  <ModalPage title="Disclaimer">
+  <ModalPage v-model:open="open" title="Disclaimer">
     <section>
       <h2>General Disclaimer</h2>
 

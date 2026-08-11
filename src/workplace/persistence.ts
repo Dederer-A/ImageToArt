@@ -19,7 +19,7 @@ export interface PersistedDocumentInfo {
   id: string;
   thumbnailUrl: string;
 }
-  
+
 interface CurrentDocument {
   id: string;
 }
@@ -62,10 +62,41 @@ export class Persistence {
     const id = document.id;
 
     try {
-      const originalBlob = await imageDataToJpegBlob(document.imageData, ORIGINAL_JPEG_QUALITY);
+      const originalPath = this.getOriginalPath(id);
+      const thumbnailPath = this.getThumbnailPath(id);
+      const jsonPath = this.getJsonPath(id);
 
-      const thumbnailBlob = await imageDataToJpegBlob(document.imageData, THUMBNAIL_JPEG_QUALITY, THUMBNAIL_SIZE);
+      /*
+       * Original image is immutable, so create it only once.
+       */
+      if (!(await fileExists(originalPath))) {
+        const originalBlob = await imageDataToJpegBlob(document.imageData, ORIGINAL_JPEG_QUALITY);
 
+        await Filesystem.writeFile({
+          directory: Directory.Data,
+          path: originalPath,
+          data: await blobToBase64(originalBlob),
+          recursive: true,
+        });
+      }
+
+      /*
+       * Thumbnail is also immutable, so create it only once.
+       */
+      if (!(await fileExists(thumbnailPath))) {
+        const thumbnailBlob = await imageDataToJpegBlob(document.imageData, THUMBNAIL_JPEG_QUALITY, THUMBNAIL_SIZE);
+
+        await Filesystem.writeFile({
+          directory: Directory.Data,
+          path: thumbnailPath,
+          data: await blobToBase64(thumbnailBlob),
+          recursive: true,
+        });
+      }
+
+      /*
+       * Document state is mutable, so JSON is always rewritten.
+       */
       const serializedDocument: SerializedDocument = {
         ...document,
       };
@@ -75,21 +106,7 @@ export class Persistence {
 
       await Filesystem.writeFile({
         directory: Directory.Data,
-        path: this.getOriginalPath(id),
-        data: await blobToBase64(originalBlob),
-        recursive: true,
-      });
-
-      await Filesystem.writeFile({
-        directory: Directory.Data,
-        path: this.getThumbnailPath(id),
-        data: await blobToBase64(thumbnailBlob),
-        recursive: true,
-      });
-
-      await Filesystem.writeFile({
-        directory: Directory.Data,
-        path: this.getJsonPath(id),
+        path: jsonPath,
         data: JSON.stringify(serializedDocument),
         encoding: Encoding.UTF8,
         recursive: true,
@@ -599,5 +616,18 @@ async function blobToImageData(blob: Blob): Promise<ImageData> {
     return context.getImageData(0, 0, bitmap.width, bitmap.height);
   } finally {
     bitmap.close();
+  }
+}
+
+async function fileExists(path: string): Promise<boolean> {
+  try {
+    await Filesystem.stat({
+      directory: Directory.Data,
+      path,
+    });
+
+    return true;
+  } catch {
+    return false;
   }
 }

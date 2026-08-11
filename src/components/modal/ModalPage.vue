@@ -8,21 +8,20 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 const props = defineProps<{
   title: string;
 }>();
+
+const open = defineModel<boolean>('open', {
+  default: false,
+});
 </script>
 
 <template>
-  <Dialog>
-    <DialogTrigger as-child>
-      <a href="#">{{ $t('common.' + title) }}</a>
-      <!-- <Button variant="outline"> Open Dialog </Button> -->
-    </DialogTrigger>
+  <Dialog v-model:open="open">
     <DialogContent class="sm:max-w-[425px]">
       <DialogHeader>
         <DialogTitle>{{ $t('common.' + title) }}</DialogTitle>

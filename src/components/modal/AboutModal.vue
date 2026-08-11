@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import ModalPage from './ModalPage.vue';
+
+const open = defineModel<boolean>('open', {
+  default: false,
+});
 </script>
 
 <template>
-  <ModalPage title="About">
+  <ModalPage v-model:open="open" title="About">
     <section>
       <h2>About ImageToArt</h2>
 
