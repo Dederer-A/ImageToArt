@@ -87,7 +87,10 @@ const canReset = computed(() => {
               <Trash2 class="size-5" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
+          <DropdownMenuContent
+            align="end"
+            class="[--radius:1rem] border border-border/50 bg-background/80 shadow-xl backdrop-blur-xl"
+          >
             <DropdownMenuItem @click="emit('delete', 'variant')" :disabled="!canDelete">
               <Trash class="mr-2 size-4" />
               {{ $t('toolbar.delete_variant') }}

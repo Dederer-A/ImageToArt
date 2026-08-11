@@ -41,14 +41,17 @@ const openSourceOpen = ref(false);
       <p class="text-muted-foreground">{{ $t('common.gallery.Description') }}</p>
     </div>
 
-    <div class="flex-1 my-6 overflow-y-auto grid grid-cols-3 gap-3 content-start">
-      <div
-        v-for="img in images"
-        :key="img.id"
-        class="aspect-square relative cursor-pointer overflow-hidden rounded-lg bg-muted border border-border hover:opacity-90 transition"
-        @click="emit('select', img.id)"
-      >
-        <img :src="img.thumbnailUrl" alt="Thumbnail" class="absolute inset-0 size-full object-cover" />
+    <!-- Scrollable gallery -->
+    <div class="flex-1 min-h-0 my-6 overflow-y-auto">
+      <div class="grid grid-cols-3 gap-3 content-start">
+        <div
+          v-for="img in images"
+          :key="img.id"
+          class="relative aspect-square cursor-pointer overflow-hidden rounded-lg border border-border bg-muted transition hover:opacity-90"
+          @click="emit('select', img.id)"
+        >
+          <img :src="img.thumbnailUrl" alt="Thumbnail" class="absolute inset-0 size-full object-cover" />
+        </div>
       </div>
     </div>
 
@@ -65,7 +68,14 @@ const openSourceOpen = ref(false);
           </Button>
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent align="end" class="[--radius:1rem]">
+        <DropdownMenuContent
+          align="end"
+          class="[--radius:1rem] border border-border/50 bg-background/80 shadow-xl backdrop-blur-xl"
+        >
+          <!--
+          class="rounded-2xl border border-border/50 bg-background/80 shadow-xl backdrop-blur-xl"
+          class="[--radius:1rem]"
+          -->
           <DropdownMenuItem @select="aboutOpen = true">
             <Info class="mr-2 size-4" /> {{ $t('common.About') }}
           </DropdownMenuItem>
