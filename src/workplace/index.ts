@@ -261,7 +261,7 @@ export const useWorkplaceStore = defineStore('workplace', () => {
 
   const saveDocumentDebounced = useDebounceFn(async () => {
     await saveDocument();
-  }, 100);
+  }, 500);
 
   async function saveDocument() {
     console.log('[WorkplaceStore] saveDocument()');
