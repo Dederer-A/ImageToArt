@@ -173,7 +173,7 @@ onBeforeUnmount(() => {
     @pointermove="gestures.pointerMove"
     @pointerup="gestures.pointerUp"
     @pointercancel="gestures.pointerCancel"
-    class="absolute inset-0 overflow-hidden bg-background select-none touch-manipulation"
+    class="absolute inset-0 overflow-hidden bg-background select-none touch-none"
   >
     <div class="absolute inset-0 overflow-hidden">
       <div ref="trackRef" class="absolute inset-0 flex will-change-transform">
