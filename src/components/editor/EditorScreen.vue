@@ -23,6 +23,8 @@ const workplace = useWorkplaceStore();
 
 const uiVisible = ref(true);
 
+const isDragging = ref(false);
+
 // -----------------------------------------------------------------------------
 // Events
 // -----------------------------------------------------------------------------
@@ -93,6 +95,13 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
     />
 
     <BottomToolPanel v-if="workplace.currentVariant" :visible="uiVisible" :height="30">
+      <!--
+      :class="
+        isDragging
+          ? 'bg-background/10 border-border/20 backdrop-blur-sm'
+          : 'bg-background/90 border-border backdrop-blur-md'
+      "
+  -->
       <div v-if="workplace.currentVariant.isOriginal" class="p-4">
         <p class="text-lg pb-1">
           <strong>{{ $t('toolbar.Original_Image_title') }}</strong>
@@ -112,6 +121,9 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
             :max="255"
             :step="1"
             @update:model-value="updateLayerProperty('levels', 'value', $event)"
+            @pointerdown="isDragging = true"
+            @pointerup="isDragging = false"
+            @value-commit="isDragging = false"
           />
         </ToolRow>
 
@@ -125,7 +137,7 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
             @update:model-value="updateLayerProperty('contrast', 'value', $event)"
           />
         </ToolRow>
-
+        <!--
         <ToolRow
           :model-value="workplace.currentVariant.layers['gamma'].enabled"
           @update:model-value="updateLayerEnable('gamma', $event)"
@@ -136,7 +148,7 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
             @update:model-value="updateLayerProperty('gamma', 'value', $event)"
           />
         </ToolRow>
-
+        -->
         <ToolRow
           :model-value="workplace.currentVariant.layers['blackAndWhite'].enabled"
           @update:model-value="updateLayerEnable('blackAndWhite', $event)"
@@ -145,6 +157,19 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
           <SliderToolControl
             :model-value="workplace.currentVariant.layers['blackAndWhite'].properties.value"
             @update:model-value="updateLayerProperty('blackAndWhite', 'value', $event)"
+          />
+        </ToolRow>
+
+        <ToolRow
+          :model-value="workplace.currentVariant.layers['threshold'].enabled"
+          @update:model-value="updateLayerEnable('threshold', $event)"
+          title="toolbar.Threshold"
+        >
+          <SliderToolControl
+            :model-value="workplace.currentVariant.layers['threshold'].properties.value"
+            @update:model-value="updateLayerProperty('threshold', 'value', $event)"
+            :min="0"
+            :max="255"
           />
         </ToolRow>
 
@@ -234,6 +259,12 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
           :model-value="workplace.currentVariant.layers['ruleOfThirds'].enabled"
           @update:model-value="updateLayerEnable('ruleOfThirds', $event)"
           title="toolbar.Rule_of_Thirds"
+        >
+        </ToolRow>
+        <ToolRow
+          :model-value="workplace.currentVariant.layers['falseColor'].enabled"
+          @update:model-value="updateLayerEnable('falseColor', $event)"
+          title="toolbar.FalseColor"
         >
         </ToolRow>
       </ToolList>

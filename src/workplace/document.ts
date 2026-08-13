@@ -12,6 +12,8 @@ import { GoldenRatioLayer } from '@/Image/layers/GoldenRatio';
 import { RuleOfThirdsLayer } from '@/Image/layers/RuleOfThirds';
 import { EdgeLayer } from '@/Image/layers/Edge';
 import { LevelsLayer } from '@/Image/layers/Levels';
+import { ThresholdLayer } from '@/Image/layers/Threshold';
+import { FalseColorLayer } from '@/Image/layers/FalseColor';
 
 export interface Document {
   id: string;
@@ -55,6 +57,8 @@ export class LayerRegistry {
     this.register(new RuleOfThirdsLayer());
     this.register(new EdgeLayer());
     this.register(new LevelsLayer());
+    this.register(new ThresholdLayer());
+    this.register(new FalseColorLayer());
   }
 
   private register(layerEngine: LayerEngine): void {

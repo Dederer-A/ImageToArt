@@ -6,6 +6,7 @@
   "Contrast": "Contrast",
   "Gamma": "Gamma",
   "Black_White": "Black & White",
+  "Threshold": "Threshold",
   "Posterize": "Posterize",
   "Squint": "Squint",
   "Edge": "Edge",
@@ -14,5 +15,6 @@
   "Golden_Ratio": "Golden Ratio",
   "Rule_of_Thirds": "Rule of Thirds",
   "delete_variant": "Delete Variant",
-  "delete_image": "Delete Image"
+  "delete_image": "Delete Image",
+  "FalseColor": "False Color"
 }
