@@ -59,10 +59,13 @@ export class LayerRegistry {
     this.register(new LevelsLayer());
     this.register(new ThresholdLayer());
     this.register(new FalseColorLayer());
+
+    this.list().forEach((layer: LayerEngine) => {
+      console.log(`[LayerRegistry] ${layer.order} : ${layer.type}`);
+    });
   }
 
   private register(layerEngine: LayerEngine): void {
-    console.log(`[LayerRegistry] register: ${layerEngine.type}`);
     this.registry.set(layerEngine.type, layerEngine);
     this.sortedLayerEngines = [...this.registry.values()].sort((a, b) => a.order - b.order);
   }

@@ -23,8 +23,6 @@ const workplace = useWorkplaceStore();
 
 const uiVisible = ref(true);
 
-const isDragging = ref(false);
-
 // -----------------------------------------------------------------------------
 // Events
 // -----------------------------------------------------------------------------
@@ -35,6 +33,11 @@ const emit = defineEmits<{
 
 function toggleUi() {
   uiVisible.value = !uiVisible.value;
+}
+
+function toggleGrig() {
+  if (!workplace || !workplace.currentVariant) return;
+  workplace.updateLayerEnable('grid', !workplace.currentVariant.layers['grid'].enabled);
 }
 
 function goBack() {
@@ -74,7 +77,7 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
 
 <template>
   <div class="relative h-dvh w-full overflow-hidden bg-background">
-    <EditorCanvas @click="toggleUi">
+    <EditorCanvas @click="toggleUi" @double-click="toggleGrig">
       <template #viewport-overlay>
         <!-- Perspective Grid -->
         <!-- Crop Overlay -->
@@ -95,13 +98,6 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
     />
 
     <BottomToolPanel v-if="workplace.currentVariant" :visible="uiVisible" :height="30">
-      <!--
-      :class="
-        isDragging
-          ? 'bg-background/10 border-border/20 backdrop-blur-sm'
-          : 'bg-background/90 border-border backdrop-blur-md'
-      "
-  -->
       <div v-if="workplace.currentVariant.isOriginal" class="p-4">
         <p class="text-lg pb-1">
           <strong>{{ $t('toolbar.Original_Image_title') }}</strong>
@@ -110,6 +106,19 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
         <p>{{ $t('toolbar.Original_Image_description_2') }}</p>
       </div>
       <ToolList v-else class="divide-y divide-border">
+        <ToolRow
+          :model-value="workplace.currentVariant.layers['threshold'].enabled"
+          @update:model-value="updateLayerEnable('threshold', $event)"
+          title="toolbar.Threshold"
+        >
+          <SliderToolControl
+            :model-value="workplace.currentVariant.layers['threshold'].properties.value"
+            @update:model-value="updateLayerProperty('threshold', 'value', $event)"
+            :min="0"
+            :max="255"
+          />
+        </ToolRow>
+
         <ToolRow
           :model-value="workplace.currentVariant.layers['levels'].enabled"
           @update:model-value="updateLayerEnable('levels', $event)"
@@ -121,9 +130,6 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
             :max="255"
             :step="1"
             @update:model-value="updateLayerProperty('levels', 'value', $event)"
-            @pointerdown="isDragging = true"
-            @pointerup="isDragging = false"
-            @value-commit="isDragging = false"
           />
         </ToolRow>
 
@@ -157,19 +163,6 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
           <SliderToolControl
             :model-value="workplace.currentVariant.layers['blackAndWhite'].properties.value"
             @update:model-value="updateLayerProperty('blackAndWhite', 'value', $event)"
-          />
-        </ToolRow>
-
-        <ToolRow
-          :model-value="workplace.currentVariant.layers['threshold'].enabled"
-          @update:model-value="updateLayerEnable('threshold', $event)"
-          title="toolbar.Threshold"
-        >
-          <SliderToolControl
-            :model-value="workplace.currentVariant.layers['threshold'].properties.value"
-            @update:model-value="updateLayerProperty('threshold', 'value', $event)"
-            :min="0"
-            :max="255"
           />
         </ToolRow>
 
