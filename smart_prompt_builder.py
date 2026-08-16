@@ -190,44 +190,41 @@ def generate_directory_tree(start_dir="src"):
 def generate_targeted_prompt(
     task_description, dynamic_files, matched_conditions, manual_entries
 ):
+  """Generates a structured prompt optimized for LLM token prefix caching.
+
+  Static documentation goes first, dynamic task files and context go last.
+  """
   output = []
+  lang_map = {
+      "py": "python",
+      "md": "markdown",
+      "json": "json",
+      "ts": "typescript",
+      "js": "javascript",
+      "vue": "vue",
+      "html": "html",
+      "css": "css",
+  }
 
-  output.append(f"# Task Context\n**Task:** {task_description}\n\n---\n")
-
-  # Compile final file list (Core + Auto-matched + Manual)
-  files_to_load = set()
-
+  # --- 1. STATIC PREFIX (High Caching Efficiency) ---
+  # Core project files in a strict, deterministic order
+  core_files_resolved = []
   for core_entry in CORE_FILES:
-    files_to_load.update(resolve_path_to_files(core_entry))
+    resolved = resolve_path_to_files(core_entry)
+    core_files_resolved.extend(resolved)
 
-  files_to_load.update(dynamic_files)
+  # Deduplicate while preserving the original order of CORE_FILES
+  seen = set()
+  unique_core_files = [
+      f for f in core_files_resolved if not (f in seen or seen.add(f))
+  ]
 
-  for entry in manual_entries:
-    if entry:
-      files_to_load.update(resolve_path_to_files(entry))
-
-  print("\n[Final set of files included in the prompt]")
-  for f in sorted(files_to_load):
-    print(f"  - {f}")
-  print("-" * 40)
-
-  # Append file contents
-  for file_path in sorted(files_to_load):
+  output.append("# Core Project Documentation & Standards\n\n---\n")
+  for file_path in unique_core_files:
     if os.path.exists(file_path) and os.path.isfile(file_path):
       output.append(f"## File: `{file_path}`\n")
       ext = os.path.splitext(file_path)[1].lstrip(".")
-      lang_map = {
-          "py": "python",
-          "md": "markdown",
-          "json": "json",
-          "ts": "typescript",
-          "js": "javascript",
-          "vue": "vue",
-          "html": "html",
-          "css": "css",
-      }
       lang = lang_map.get(ext, "")
-
       output.append(f"```{lang}")
       try:
         with open(file_path, "r", encoding="utf-8") as f:
@@ -236,17 +233,51 @@ def generate_targeted_prompt(
         output.append(f"# Error reading file: {e}")
       output.append("```\n\n")
     else:
-      print(f"[Warning] Path not found or is a directory skipping: {file_path}")
+      print(f"[Warning] Core path not found or is a directory: {file_path}")
 
-  # Append project structure tree and instructions
+  # Project structure tree (static for the repository state)
   output.append("## Project Structure (`src/`)\n")
-  output.append(
-      "If you need any of the presented files for decision-making, analysis, or"
-      " implementation, request their content before starting work.\n\n"
-  )
   output.append("```text\n")
   output.append(generate_directory_tree("src"))
-  output.append("\n```\n")
+  output.append("\n```\n\n---\n")
+
+  # --- 2. DYNAMIC CONTEXT (Task-Specific Files) ---
+  task_files_to_load = set()
+  task_files_to_load.update(dynamic_files)
+  for entry in manual_entries:
+    if entry:
+      task_files_to_load.update(resolve_path_to_files(entry))
+
+  # Exclude core files from dynamic list to prevent duplication
+  task_files_to_load = task_files_to_load - set(unique_core_files)
+
+  print("\n[Final set of task-specific files included]")
+  for f in sorted(task_files_to_load):
+    print(f"  - {f}")
+  print("-" * 40)
+
+  if task_files_to_load:
+    output.append("# Task-Specific Context Files\n\n---\n")
+    for file_path in sorted(task_files_to_load):
+      if os.path.exists(file_path) and os.path.isfile(file_path):
+        output.append(f"## File: `{file_path}`\n")
+        ext = os.path.splitext(file_path)[1].lstrip(".")
+        lang = lang_map.get(ext, "")
+        output.append(f"```{lang}")
+        try:
+          with open(file_path, "r", encoding="utf-8") as f:
+            output.append(f.read())
+        except Exception as e:
+          output.append(f"# Error reading file: {e}")
+        output.append("```\n\n")
+      else:
+        print(f"[Warning] Path not found or is a directory skipping: {file_path}")
+
+  # --- 3. TASK CONTEXT & INSTRUCTIONS (At the very end) ---
+  output.append("# Task Context\n")
+  if matched_conditions:
+    output.append(f"**Matched Workflows:** {', '.join(matched_conditions)}\n")
+  output.append(f"**Task:** {task_description}\n")
 
   return "\n".join(output)
 
