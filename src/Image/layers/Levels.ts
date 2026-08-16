@@ -5,23 +5,46 @@ export class LevelsLayer implements LayerEngine {
   type: string = 'levels';
   version: string = '1.0.0';
   order: number = 50;
-  defaultProperties: any = { value: [0, 255] };
+  defaultProperties: any = { value: [0, 128, 255] };
 
   render(variantRuntime: VariantRuntime, src: ImageData, parameters: any): ImageData {
-    return levels(variantRuntime, src, parameters.value[0], parameters.value[1]);
+    return levels(variantRuntime, src, parameters.value[0], parameters.value[2], parameters.value[1]);
   }
 }
 
-export function levels(_variantRuntime: VariantRuntime, src: ImageData, minValue: number, maxValue: number): ImageData {
+export function levels(
+  _variantRuntime: VariantRuntime,
+  src: ImageData,
+  minValue: number,
+  maxValue: number,
+  midValue: number = 128 // 0 to 255 range, where 128 is neutral (does nothing)
+): ImageData {
   // ----- Parameters -----
 
   const inputBlack = Math.max(0, Math.min(255, minValue));
   const inputWhite = Math.max(inputBlack + 1, Math.min(255, maxValue));
 
-  // Future parameters
-  const gamma = 1.0;
+  // Clamp midValue to valid range (0-255), defaulting neutral to 128
+  const inputMid = Math.max(inputBlack, Math.min(inputWhite, midValue));
+
   const outputBlack = 0;
   const outputWhite = 255;
+
+  // Calculate standard Photoshop-style midtone/gamma from the 0-255 input range
+  // When inputMid is at the exact center between black and white, gamma is 1.0
+  let gamma = 1.0;
+  const range = inputWhite - inputBlack;
+
+  if (range > 0) {
+    // Normalized position of the mid point (0 to 1)
+    const normalizedMid = (inputMid - inputBlack) / range;
+
+    // Standard levels formula: gamma = log(0.5) / log(normalizedMid)
+    // We constrain normalizedMid to prevent division by zero or log of zero/negative numbers
+    if (normalizedMid > 0 && normalizedMid < 1 && normalizedMid !== 0.5) {
+      gamma = Math.log(0.5) / Math.log(normalizedMid);
+    }
+  }
 
   // ----------------------
 
@@ -54,8 +77,6 @@ export function levels(_variantRuntime: VariantRuntime, src: ImageData, minValue
 
   // Apply LUT
   const dst = src;
-  // const dst = new ImageData(src.width, src.height);
-
   const srcData = src.data;
   const dstData = dst.data;
 

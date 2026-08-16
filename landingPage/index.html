@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="luxury">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image To Art - Lightweight Image Reference Tool for Artists</title>
+    
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+
+    <!-- Tailwind CSS & DaisyUI -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Theme Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            bg: '#121212',
+                            surface: '#181818',
+                            surfaceAlt: '#1a1a1a',
+                            darker: '#151515',
+                            cardBg: '#202020',
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['Playfair Display', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS using @apply -->
+    <style type="text/tailwindcss">
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #121212;
+            color: oklch(var(--nc));
+        }
+
+        .hero-section {
+            @apply relative min-h-[70vh] flex items-center justify-center bg-brand-surfaceAlt border-b border-white/10 px-6 py-24 overflow-hidden;
+        }
+
+        .hero-title {
+            @apply text-5xl md:text-6xl font-serif font-bold text-white mb-6 relative z-10;
+        }
+
+        .hero-description {
+            @apply text-gray-400 font-light text-lg leading-relaxed mb-10 relative z-10;
+        }
+
+        .section-title {
+            @apply text-3xl font-serif font-bold text-center text-white;
+        }
+
+        .card-box {
+            @apply bg-[#1a1a1a] rounded-xl p-7 shadow-2xl border border-[#2a2a2a] transition-all duration-200;
+        }
+
+        .card-box:hover {
+            @apply border-zinc-700 -translate-y-0.5;
+        }
+
+        .card-title {
+            @apply text-lg mt-0 mb-5 text-slate-100 border-b border-[#2a2a2a] pb-3 font-semibold;
+        }
+
+        .card-text {
+            @apply text-gray-400 text-sm leading-relaxed;
+        }
+
+.screenshots-section {
+            @apply py-20 border-y border-white/5 overflow-hidden;
+        }
+
+        .screenshots-container {
+            @apply max-w-7xl mx-auto px-6 flex justify-start md:justify-center gap-6 overflow-x-auto pb-4;
+        }
+
+        .screen-mockup {
+            @apply flex-shrink-0 w-[240px] h-[480px] bg-brand-cardBg rounded-2xl overflow-hidden border border-white/10 shadow-2xl relative flex items-center justify-center;
+        }
+
+        .screen-mockup img {
+            @apply absolute inset-0 w-full h-full object-cover;
+        }
+
+        .modal-box-custom {
+            @apply bg-brand-surface border border-white/10;
+        }
+
+        .modal-box > h3 {
+            @apply font-serif font-bold text-lg text-white;
+        }
+
+        .modal-box > p {
+            @apply py-4 text-gray-400;
+        }
+
+        .features-section {
+            @apply py-20 px-5 bg-[#121212] text-slate-200 font-sans;
+        }
+
+        .features-section .container {
+            @apply max-w-[1100px] mx-auto;
+        }
+
+        .features-section .section-title {
+            @apply text-4xl font-bold mb-3 text-center text-white tracking-tight;
+        }
+
+        .features-section .section-subtitle {
+            @apply text-[1.1rem] text-slate-400 text-center mb-[50px] max-w-[600px] mx-auto;
+        }
+
+        .features-section .tools-grid {
+            @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
+        }
+
+        .features-section .tool-list {
+            @apply list-none p-0 m-0;
+        }
+
+        .features-section .tool-list li {
+            @apply mb-4 last:mb-0;
+        }
+
+        .features-section .tool-list strong {
+            @apply block text-[0.95rem] text-white mb-1 font-semibold;
+        }
+
+        .features-section .tool-list span {
+            @apply block text-[0.88rem] text-slate-400 leading-relaxed;
+        }
+    </style>
+</head>
+<body class="bg-brand-bg text-neutral-content">
+
+    <!-- Hero Section -->
+    <header class="hero-section">
+        <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div class="w-[500px] h-[350px] bg-gradient-to-tr from-purple-900/30 via-indigo-600/20 to-pink-600/15 rounded-full blur-3xl opacity-70"></div>
+        </div>
+
+        <div class="max-w-xl text-center relative z-10">
+            <h1 class="hero-title">Image To Art</h1>
+            <p class="hero-description">A lightweight image reference tool designed specifically for artists to process image variants, apply precise layers, and find composition assistance effortlessly.</p>
+            <div class="flex gap-4 justify-center items-center">
+                <a href="#" class="inline-block transition-opacity hover:opacity-80">
+                    <img src="./img/app_store.svg" alt="Download on the App Store" class="h-12">
+                </a>
+                <a href="#" class="inline-block transition-opacity hover:opacity-80">
+                    <img src="./img/google_play.svg" alt="Get it on Google Play" class="h-12">
+                </a>
+            </div>
+        </div>
+    </header>
+
+<!-- App Interface Section -->
+    <section class="screenshots-section">
+        <div class="screenshots-container">
+            <div class="screen-mockup">
+                <img src="./img/img_001_b.jpg" alt="App Interface Variant 1">
+            </div>
+            <div class="screen-mockup">
+                <img src="./img/img_001_a.jpg" alt="App Interface Variant 2">
+            </div>
+            <div class="screen-mockup">
+                <img src="./img/img_002_b.jpg" alt="App Interface Variant 3">
+            </div>
+            <div class="screen-mockup">
+                <img src="./img/img_002_a1.jpg" alt="App Interface Variant 4">
+            </div>
+            <div class="screen-mockup">
+                <img src="./img/img_002_a2.jpg" alt="App Interface Variant 5">
+            </div>
+        </div>
+    </section>
+    
+    <!-- Why Choose Section -->
+    <section class="py-20 container mx-auto px-6 bg-brand-darker">
+        <h2 class="section-title mb-16">Why Choose ImageToArt?</h2>
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="card-box">
+                <h3 class="card-title">Convenience</h3>
+                <p class="card-text">Simple and intuitive interface optimized for artists needing quick reference adjustments without complex overhead.</p>
+            </div>
+            <div class="card-box">
+                <h3 class="card-title">Performance</h3>
+                <p class="card-text">Fast image processing and variant generation utilizing a dedicated image engine built for smooth local execution.</p>
+            </div>
+            <div class="card-box">
+                <h3 class="card-title">Security</h3>
+                <p class="card-text">Your reference documents and local data are securely protected and processed right on your device.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tools & Filters Section -->
+    <section class="features-section" id="tools">
+      <div class="container">
+        <h2 class="section-title">Tools & Filters</h2>
+        <p class="section-subtitle">Each layer acts as a flexible, non-destructive filter designed to analyze and enhance your artwork.</p>
+
+        <div class="tools-grid">
+          
+          <!-- Category 1: Tonal Analysis -->
+          <div class="card-box">
+            <h3 class="card-title">🎨 &nbsp;Tonal Analysis & Light</h3>
+            <ul class="tool-list">
+              <li>
+                <strong>Black & White</strong>
+                <span>Instant grayscale conversion to check overall tonal values.</span>
+              </li>
+              <li>
+                <strong>Contrast & Levels</strong>
+                <span>Fine-tune contrast and tonal levels to spot details in shadows and highlights.</span>
+              </li>
+              <li>
+                <strong>Threshold & Posterize</strong>
+                <span>Simplify values and group shapes into defined tones.</span>
+              </li>
+              <li>
+                <strong>Squint</strong>
+                <span>Blurs the image to evaluate composition and mass without getting distracted by details.</span>
+              </li>
+              <li>
+                <strong>Gamma & Saturation</strong>
+                <span>Precise adjustments for image gamma and color vibrancy.</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Category 2: Composition -->
+          <div class="card-box">
+            <h3 class="card-title">📐 &nbsp;Composition & Layout</h3>
+            <ul class="tool-list">
+              <li>
+                <strong>Rule of Thirds</strong>
+                <span>Classic compositional grid for balanced element placement.</span>
+              </li>
+              <li>
+                <strong>Golden Ratio</strong>
+                <span>Advanced dynamic grid based on the golden spiral for harmonious framing.</span>
+              </li>
+              <li>
+                <strong>Grid</strong>
+                <span>Customizable grid overlay for accurate reference transfer and proportion checking.</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Category 3: Details & Effects -->
+          <div class="card-box">
+            <h3 class="card-title">🔍 &nbsp;Details & Styles</h3>
+            <ul class="tool-list">
+              <li>
+                <strong>Edge</strong>
+                <span>Extracts outlines and boundaries for precise line-art analysis.</span>
+              </li>
+              <li>
+                <strong>Blur</strong>
+                <span>Smooth blurring for soft-form and value assessment.</span>
+              </li>
+              <li>
+                <strong>False Color</strong>
+                <span>Maps luminance to false colors for clear lighting range breakdown.</span>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="py-20 container mx-auto px-6 max-w-4xl">
+        <h2 class="section-title mb-16">Frequently Asked Questions</h2>
+        <div class="space-y-4">
+            
+            <div class="card-box cursor-pointer select-none" onclick="this.querySelector('.faq-content').classList.toggle('hidden'); this.querySelector('.faq-icon').classList.toggle('rotate-180');">
+                <div class="flex justify-between items-center">
+                    <h3 class="card-title !mb-0 !border-0 !pb-0">Are my reference files stored or uploaded anywhere?</h3>
+                    <span class="faq-icon transition-transform duration-200 text-white">▼</span>
+                </div>
+                <p class="card-text faq-content hidden mt-4 pt-4 border-t border-[#2a2a2a]">No. All document processing and layer manipulations happen entirely and securely on your local device. Your files never leave your phone.</p>
+            </div>
+
+            <div class="card-box cursor-pointer select-none" onclick="this.querySelector('.faq-content').classList.toggle('hidden'); this.querySelector('.faq-icon').classList.toggle('rotate-180');">
+                <div class="flex justify-between items-center">
+                    <h3 class="card-title !mb-0 !border-0 !pb-0">Can I use the app offline?</h3>
+                    <span class="faq-icon transition-transform duration-200 text-white">▼</span>
+                </div>
+                <p class="card-text faq-content hidden mt-4 pt-4 border-t border-[#2a2a2a]">Yes, ImageToArt is fully functional offline, making it convenient to use anywhere inspiration strikes or in your studio.</p>
+            </div>
+
+            <div class="card-box cursor-pointer select-none" onclick="this.querySelector('.faq-content').classList.toggle('hidden'); this.querySelector('.faq-icon').classList.toggle('rotate-180');">
+                <div class="flex justify-between items-center">
+                    <h3 class="card-title !mb-0 !border-0 !pb-0">What devices are supported?</h3>
+                    <span class="faq-icon transition-transform duration-200 text-white">▼</span>
+                </div>
+                <p class="card-text faq-content hidden mt-4 pt-4 border-t border-[#2a2a2a]">ImageToArt is optimized for both iOS and Android smartphones and tablets for smooth mobile workflow.</p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Call to Action Section -->
+    <section class="py-20 bg-brand-surfaceAlt border-t border-white/10 text-center px-6">
+        <div class="max-w-xl mx-auto">
+            <h2 class="section-title mb-6">Ready to Improve Your Workflow?</h2>
+            <p class="hero-description mb-8">Download ImageToArt today and take your reference management and composition analysis to the next level.</p>
+            <div class="flex gap-4 justify-center items-center">
+                <a href="#" class="inline-block transition-opacity hover:opacity-80">
+                    <img src="./img/app_store.svg" alt="Download on the App Store" class="h-12">
+                </a>
+                <a href="#" class="inline-block transition-opacity hover:opacity-80">
+                    <img src="./img/google_play.svg" alt="Get it on Google Play" class="h-12">
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer footer-center p-10 text-gray-500 text-sm">
+        <nav class="grid grid-flow-col gap-6">
+            <button class="link link-hover" onclick="privacy_modal.showModal()">Privacy Policy</button>
+            <button class="link link-hover" onclick="terms_modal.showModal()">Terms of Use</button>
+            <a href="mailto:support@imagetoart.example.com" class="link link-hover">Support</a>
+        </nav>
+        <aside>
+            <p>Copyright © 2026 - All rights reserved</p>
+        </aside>
+    </footer>
+
+    <!-- Modals -->
+    <dialog id="privacy_modal" class="modal">
+        <div class="modal-box modal-box-custom">
+            <h3>Privacy Policy</h3>
+            <p>ImageToArt respects your privacy. All document processing and layer manipulations are performed locally on your device ensuring your reference files remain private and secure.</p>
+            <div class="modal-action">
+                <form method="dialog"><button class="btn btn-sm btn-ghost">Close</button></form>
+            </div>
+        </div>
+    </dialog>
+
+    <dialog id="terms_modal" class="modal">
+        <div class="modal-box modal-box-custom">
+            <h3>Terms of Use</h3>
+            <p>By using ImageToArt, you agree to use this lightweight reference tool for your artistic projects under the terms provided in our documentation.</p>
+            <div class="modal-action">
+                <form method="dialog"><button class="btn btn-sm btn-ghost">Close</button></form>
+            </div>
+        </div>
+    </dialog>
+
+</body>
+</html>

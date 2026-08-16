@@ -1,6 +1,7 @@
 import type { CarouselAnimator } from './animator';
 
 const HOLD_DELAY = 300;
+const DOUBLE_TAP_DELAY = 250; // Window to catch a second tap
 
 const CLICK_MOVE_THRESHOLD = 10;
 const DIRECTION_LOCK_DISTANCE = 20;
@@ -29,6 +30,8 @@ export interface GestureOptions {
   setOriginalOpacity(opacity: number): void;
 
   onTap(): void;
+
+  onDoubleTap?(): void; // Optional double-tap callback
 }
 
 export interface GestureController {
@@ -56,6 +59,7 @@ export function createGestures(options: GestureOptions): GestureController {
   let moved = false;
 
   let holdTimer: number | undefined;
+  let clickTimer: number | undefined; // Timer to defer single-click execution
 
   let lastX = 0;
   let lastTime = 0;
@@ -65,6 +69,13 @@ export function createGestures(options: GestureOptions): GestureController {
     if (holdTimer !== undefined) {
       clearTimeout(holdTimer);
       holdTimer = undefined;
+    }
+  }
+
+  function clearClickTimer() {
+    if (clickTimer !== undefined) {
+      clearTimeout(clickTimer);
+      clickTimer = undefined;
     }
   }
 
@@ -193,7 +204,6 @@ export function createGestures(options: GestureOptions): GestureController {
       if (state === GestureState.HorizontalDrag) {
         const currentIndex = options.getCurrentIndex();
 
-        // const progress = -(currentX - startX) / options.getViewportWidth();
         const progress = options.animator.getPosition() - currentIndex;
 
         let targetIndex = currentIndex;
@@ -214,13 +224,27 @@ export function createGestures(options: GestureOptions): GestureController {
           options.setCurrentIndex(targetIndex);
         }
       } else if (state === GestureState.PendingHold && !moved) {
-        options.onTap();
+        // Check if a single click was already waiting (meaning this pointerUp is the second tap)
+        if (clickTimer !== undefined) {
+          clearClickTimer();
+          // Second tap detected within the window -> Fire Double Tap
+          if (options.onDoubleTap) {
+            options.onDoubleTap();
+          }
+        } else {
+          // First tap -> Wait to see if a second one follows before executing single tap
+          clickTimer = window.setTimeout(() => {
+            clickTimer = undefined;
+            options.onTap();
+          }, DOUBLE_TAP_DELAY);
+        }
       }
 
       reset(target);
     },
 
     pointerCancel(e: PointerEvent) {
+      clearClickTimer();
       reset(e.currentTarget as HTMLElement);
     },
   };

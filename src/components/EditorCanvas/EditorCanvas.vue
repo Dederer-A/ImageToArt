@@ -10,6 +10,7 @@ const workplace = useWorkplaceStore();
 
 const emit = defineEmits<{
   (e: 'click'): void;
+  (e: 'double-click'): void;
 }>();
 
 // -----------------------------------------------------------------------------
@@ -79,6 +80,10 @@ const gestures = createGestures({
 
   onTap() {
     emit('click');
+  },
+
+  onDoubleTap() {
+    emit('double-click');
   },
 });
 

@@ -11,7 +11,6 @@ Before starting any task, review the documents relevant to the requested work.
 Read these documents before working on any task:
 
 - ai/AI_PHILOSOPHY.md
-- ai/AI_RULES.md
 - ai/CODING_STANDARDS.md
 - ai/GIT_WORKFLOW.md
 
@@ -95,4 +94,5 @@ If you introduce a new renderer layer (like blur, sepia, levels, etc.):
 If you modify UI:
 
     Read:
+        docs/10-architecture/70_PRESENTATION_ARCHITECTURE.md
         docs/10-architecture/70_PRESENTATION_ARCHITECTURE.md

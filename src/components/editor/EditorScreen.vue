@@ -35,6 +35,11 @@ function toggleUi() {
   uiVisible.value = !uiVisible.value;
 }
 
+function toggleGrig() {
+  if (!workplace || !workplace.currentVariant) return;
+  workplace.updateLayerEnable('grid', !workplace.currentVariant.layers['grid'].enabled);
+}
+
 function goBack() {
   emit('go-back');
 }
@@ -72,7 +77,7 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
 
 <template>
   <div class="relative h-dvh w-full overflow-hidden bg-background">
-    <EditorCanvas @click="toggleUi">
+    <EditorCanvas @click="toggleUi" @double-click="toggleGrig">
       <template #viewport-overlay>
         <!-- Perspective Grid -->
         <!-- Crop Overlay -->
@@ -102,6 +107,19 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
       </div>
       <ToolList v-else class="divide-y divide-border">
         <ToolRow
+          :model-value="workplace.currentVariant.layers['threshold'].enabled"
+          @update:model-value="updateLayerEnable('threshold', $event)"
+          title="toolbar.Threshold"
+        >
+          <SliderToolControl
+            :model-value="workplace.currentVariant.layers['threshold'].properties.value"
+            @update:model-value="updateLayerProperty('threshold', 'value', $event)"
+            :min="0"
+            :max="255"
+          />
+        </ToolRow>
+
+        <ToolRow
           :model-value="workplace.currentVariant.layers['levels'].enabled"
           @update:model-value="updateLayerEnable('levels', $event)"
           title="toolbar.Shadow_Highlight"
@@ -125,7 +143,7 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
             @update:model-value="updateLayerProperty('contrast', 'value', $event)"
           />
         </ToolRow>
-
+        <!--
         <ToolRow
           :model-value="workplace.currentVariant.layers['gamma'].enabled"
           @update:model-value="updateLayerEnable('gamma', $event)"
@@ -136,7 +154,7 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
             @update:model-value="updateLayerProperty('gamma', 'value', $event)"
           />
         </ToolRow>
-
+        -->
         <ToolRow
           :model-value="workplace.currentVariant.layers['blackAndWhite'].enabled"
           @update:model-value="updateLayerEnable('blackAndWhite', $event)"
@@ -234,6 +252,12 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
           :model-value="workplace.currentVariant.layers['ruleOfThirds'].enabled"
           @update:model-value="updateLayerEnable('ruleOfThirds', $event)"
           title="toolbar.Rule_of_Thirds"
+        >
+        </ToolRow>
+        <ToolRow
+          :model-value="workplace.currentVariant.layers['falseColor'].enabled"
+          @update:model-value="updateLayerEnable('falseColor', $event)"
+          title="toolbar.FalseColor"
         >
         </ToolRow>
       </ToolList>

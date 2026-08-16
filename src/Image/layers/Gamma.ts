@@ -29,14 +29,6 @@ export function gamma(_variantRuntime: VariantRuntime, src: ImageData, slider: n
   const lut = getGammaLut(slider);
 
   const dst = src;
-  // const dst = new ImageData(src.width, src.height);
-  // const cacheName = 'gamma';
-  // let dst = variantRuntime.layerCache.get(cacheName);
-  // if (dst === undefined) {
-  //   dst = new ImageData(src.width, src.height);
-  //   variantRuntime.layerCache.set(cacheName, dst);
-  //   console.log('[GammaLayer] gamma(): cache miss, creating new ImageData');
-  // }
 
   const srcPixels = src.data;
   const dstPixels = dst.data;

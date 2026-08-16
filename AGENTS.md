@@ -57,7 +57,6 @@ Neither the user nor the AI should bypass the documented workflow.
 # Repository Structure
 
 ```text
-
 src/
 ├── App.vue                     -- Vue entry point for Screen
 ├── Image/
@@ -85,25 +84,10 @@ src/
 
 Always begin with:
 
-```
-ai/AI_INDEX.md
-```
+- ai/AI_INDEX.md
+- ai/AI_PHILOSOPHY.md
 
-Then read:
-
-```
-ai/AI_PHILOSOPHY.md
-```
-
-Then:
-
-```
-ai/AI_RULES.md
-```
-
-Finally, read only the documentation relevant to the current task.
-
-Do not read or modify unrelated documents.
+Finally, read only the documentation relevant to the current task. Do not read or modify unrelated documents.
 
 ---
 
@@ -238,7 +222,7 @@ Pull Request
 The complete workflow is documented in:
 
 ```
-ai/DEVELOPMENT_WORKFLOW.md
+docs/20-process/DEVELOPMENT_WORKFLOW.md
 ```
 
 ---

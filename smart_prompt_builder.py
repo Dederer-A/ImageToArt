@@ -8,7 +8,6 @@ CORE_FILES = [
     "AGENTS.md",
     "ai/AI_PHILOSOPHY.md",
     "ai/AI_INDEX.md",
-    "ai/AI_RULES.md",
     "ai/CODING_STANDARDS.md",
     "ai/GIT_WORKFLOW.md",
 ]
