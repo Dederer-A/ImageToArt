@@ -47,10 +47,6 @@
             color: oklch(var(--nc));
         }
 
-        h3:focus {
-            outline: none;
-        }
-
         .hero-section {
             @apply relative min-h-[70vh] flex items-center justify-center bg-brand-surfaceAlt border-b border-white/10 px-6 py-24 overflow-hidden;
         }
@@ -433,14 +429,14 @@
     </footer>
 
     <!-- Modals -->
-    <dialog id="privacy_modal" class="modal">
+    <dialog id="privacy_modal" class="modal" autofocus tabindex="-1">
         <div class="modal-box modal-box-custom ">
             <!-- Top-right close button -->
             <form method="dialog">
-                <button class="btn btn-sm btn-circle btn-ghost absolute right-4 top-4 text-white" tabindex="-1">✕</button>
+                <button tabindex="-1" class="btn btn-sm btn-circle btn-ghost absolute right-4 top-4 text-white">✕</button>
             </form>
 
-            <h3 tabindex="-1" class="outline-none">Privacy</h3>
+            <h3>Privacy</h3>
 
             <div class="modal-body-scroll">
                 <p>Your privacy is important.</p>
@@ -498,15 +494,14 @@
     </dialog>
 
     <!-- ============================= -->
-
-    <dialog id="terms_modal" class="modal">
+    <dialog id="terms_modal" class="modal"  autofocus tabindex="-1">
         <div class="modal-box modal-box-custom">
             <!-- Top-right close button -->
             <form method="dialog">
-                <button class="btn btn-sm btn-circle btn-ghost absolute right-4 top-4 text-white" tabindex="-1">✕</button>
+                <button tabindex="-1" class="btn btn-sm btn-circle btn-ghost absolute right-4 top-4 text-white">✕</button>
             </form>
             
-            <h3 tabindex="-1" class="outline-none">Terms of Use</h3>
+            <h3>Terms of Use</h3>
 
             <div class="modal-body-scroll">
       <p>
@@ -570,41 +565,26 @@
 
     <!-- Custom Modal Handlers -->
     <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            document.querySelectorAll('dialog').forEach(dialog => {
+                dialog.addEventListener('click', (event) => {
+                    // Close only if the click is directly on the dialog backdrop, 
+                    // and not on any of its child elements inside the content box.
+                    if (event.target === dialog) {
+                        dialog.close();
+                    }
+                });
+            });
 
-document.addEventListener("DOMContentLoaded", () => {
-    document.querySelectorAll('dialog').forEach(dialog => {
-        // 1. Automatically blur the default focused element in Safari right when any dialog opens
-        const observer = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
-                if (mutation.attributeName === 'open' && dialog.open) {
-                    setTimeout(() => {
-                        if (document.activeElement && dialog.contains(document.activeElement)) {
-                            document.activeElement.blur();
-                        }
-                    }, 10);
+            window.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape') {
+                    document.querySelectorAll('dialog[open]').forEach(dialog => {
+                        dialog.close();
+                    });
                 }
             });
         });
-        observer.observe(dialog, { attributes: true });
-
-        // 2. Close modal when clicking directly on the backdrop (outside modal-box)
-        dialog.addEventListener('click', (event) => {
-            if (event.target === dialog) {
-                dialog.close();
-            }
-        });
-    });
-
-    // 3. Close any open modal when pressing the ESC key
-    window.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape') {
-            document.querySelectorAll('dialog[open]').forEach(dialog => {
-                dialog.close();
-            });
-        }
-    });
-});
-
     </script>
+
 </body>
 </html>
