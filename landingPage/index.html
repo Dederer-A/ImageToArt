@@ -79,7 +79,7 @@
             @apply text-gray-400 text-sm leading-relaxed;
         }
 
-.screenshots-section {
+        .screenshots-section {
             @apply py-20 border-y border-white/5 overflow-hidden;
         }
 
@@ -142,6 +142,10 @@
         .features-section .tool-list span {
             @apply block text-[0.88rem] text-slate-400 leading-relaxed;
         }
+
+        .badge-free {
+            @apply inline-block bg-emerald-900/40 text-emerald-300 text-xs font-bold px-3 py-1 rounded-full border border-emerald-900/60 mb-6;
+        }
     </style>
 </head>
 <body class="bg-brand-bg text-neutral-content">
@@ -153,8 +157,9 @@
         </div>
 
         <div class="max-w-xl text-center relative z-10">
+            <div class="badge-free">100% FREE • NO ADS • NO SUBSCRIPTIONS</div>
             <h1 class="hero-title">Image To Art</h1>
-            <p class="hero-description">A lightweight image reference tool designed specifically for artists to process image variants, apply precise layers, and find composition assistance effortlessly.</p>
+            <p class="hero-description">A lightweight image reference tool designed specifically for artists to process image variants, apply precise layers, and find composition assistance effortlessly. Entirely free, with no ads and no subscriptions ever.</p>
             <div class="flex gap-4 justify-center items-center">
                 <a href="#" class="inline-block transition-opacity hover:opacity-80">
                     <img src="./img/app_store.svg" alt="Download on the App Store" class="h-12">
@@ -196,12 +201,12 @@
                 <p class="card-text">Simple and intuitive interface optimized for artists needing quick reference adjustments without complex overhead.</p>
             </div>
             <div class="card-box">
-                <h3 class="card-title">Performance</h3>
-                <p class="card-text">Fast image processing and variant generation utilizing a dedicated image engine built for smooth local execution.</p>
+                <h3 class="card-title">Performance & Cost</h3>
+                <p class="card-text">Fast image processing at zero cost. We provide a powerful, ad-free engine, completely free of subscriptions or hidden fees.</p>
             </div>
             <div class="card-box">
-                <h3 class="card-title">Security</h3>
-                <p class="card-text">Your reference documents and local data are securely protected and processed right on your device.</p>
+                <h3 class="card-title">Security & Privacy</h3>
+                <p class="card-text">Your reference documents and local data are securely protected and processed right on your device. No cloud uploads, no tracking.</p>
             </div>
         </div>
     </section>
@@ -283,6 +288,65 @@
       </div>
     </section>
 
+
+
+    <!-- Testimonials / User Reviews Section -->
+    <section class="py-20 bg-brand-darker border-t border-white/5 px-6">
+        <div class="max-w-7xl mx-auto text-center">
+            <h2 class="section-title mb-16">What Artists Are Saying</h2>
+            <div class="grid md:grid-cols-3 gap-8 text-left">
+                
+                <!-- Review 1 -->
+                <div class="card-box relative flex flex-col justify-between">
+                    <div>
+                        <div class="text-amber-400 text-lg mb-3">★★★★★</div>
+                        <p class="text-slate-200 text-sm italic mb-6 leading-relaxed">"This app is an absolute lifesaver for value studies and checking composition. The fact that it's completely free with zero ads or annoying pop-ups makes it rare and wonderful!"</p>
+                    </div>
+                    <div class="flex items-center gap-3 pt-4 border-t border-[#2a2a2a]">
+                        <div class="w-10 h-10 rounded-full bg-purple-900/50 border border-purple-500/30 flex items-center justify-center font-bold text-white text-xs">EL</div>
+                        <div>
+                            <div class="text-white font-semibold text-sm">Elena Larionova</div>
+                            <div class="text-gray-400 text-xs">Digital Concept Artist</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review 2 -->
+                <div class="card-box relative flex flex-col justify-between">
+                    <div>
+                        <div class="text-amber-400 text-lg mb-3">★★★★★</div>
+                        <p class="text-slate-200 text-sm italic mb-6 leading-relaxed">"Super lightweight and fast. I love using the Squint and Golden Ratio tools during sketching. No hidden subscription walls—just clean, direct utility for daily practice."</p>
+                    </div>
+                    <div class="flex items-center gap-3 pt-4 border-t border-[#2a2a2a]">
+                        <div class="w-10 h-10 rounded-full bg-indigo-900/50 border border-indigo-500/30 flex items-center justify-center font-bold text-white text-xs">MK</div>
+                        <div>
+                            <div class="text-white font-semibold text-sm">Marcus Kincaid</div>
+                            <div class="text-gray-400 text-xs">Traditional Painter & Illustrator</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review 3 -->
+                <div class="card-box relative flex flex-col justify-between">
+                    <div>
+                        <div class="text-amber-400 text-lg mb-3">★★★★★</div>
+                        <p class="text-slate-200 text-sm italic mb-6 leading-relaxed">"Privacy-focused and works completely offline. Being free with no forced ads means I can stay in the creative zone without interruptions. Highly recommended!"</p>
+                    </div>
+                    <div class="flex items-center gap-3 pt-4 border-t border-[#2a2a2a]">
+                        <div class="w-10 h-10 rounded-full bg-pink-900/50 border border-pink-500/30 flex items-center justify-center font-bold text-white text-xs">SO</div>
+                        <div>
+                            <div class="text-white font-semibold text-sm">Sofia Ortiz</div>
+                            <div class="text-gray-400 text-xs">Storyboard Artist</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+
+
     <!-- FAQ Section -->
     <section class="py-20 container mx-auto px-6 max-w-4xl">
         <h2 class="section-title mb-16">Frequently Asked Questions</h2>
@@ -294,6 +358,14 @@
                     <span class="faq-icon transition-transform duration-200 text-white">▼</span>
                 </div>
                 <p class="card-text faq-content hidden mt-4 pt-4 border-t border-[#2a2a2a]">No. All document processing and layer manipulations happen entirely and securely on your local device. Your files never leave your phone.</p>
+            </div>
+
+            <div class="card-box cursor-pointer select-none" onclick="this.querySelector('.faq-content').classList.toggle('hidden'); this.querySelector('.faq-icon').classList.toggle('rotate-180');">
+                <div class="flex justify-between items-center">
+                    <h3 class="card-title !mb-0 !border-0 !pb-0">How much does the app cost?</h3>
+                    <span class="faq-icon transition-transform duration-200 text-white">▼</span>
+                </div>
+                <p class="card-text faq-content hidden mt-4 pt-4 border-t border-[#2a2a2a]">The app is completely free. There are no subscriptions, no premium features to buy, and absolutely no advertisements to interrupt your workflow.</p>
             </div>
 
             <div class="card-box cursor-pointer select-none" onclick="this.querySelector('.faq-content').classList.toggle('hidden'); this.querySelector('.faq-icon').classList.toggle('rotate-180');">
@@ -319,7 +391,7 @@
     <section class="py-20 bg-brand-surfaceAlt border-t border-white/10 text-center px-6">
         <div class="max-w-xl mx-auto">
             <h2 class="section-title mb-6">Ready to Improve Your Workflow?</h2>
-            <p class="hero-description mb-8">Download ImageToArt today and take your reference management and composition analysis to the next level.</p>
+            <p class="hero-description mb-8">Download ImageToArt today for a completely free, ad-free experience and take your reference management and composition analysis to the next level.</p>
             <div class="flex gap-4 justify-center items-center">
                 <a href="#" class="inline-block transition-opacity hover:opacity-80">
                     <img src="./img/app_store.svg" alt="Download on the App Store" class="h-12">
