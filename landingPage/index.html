@@ -47,6 +47,10 @@
             color: oklch(var(--nc));
         }
 
+        h3:focus {
+            outline: none;
+        }
+
         .hero-section {
             @apply relative min-h-[70vh] flex items-center justify-center bg-brand-surfaceAlt border-b border-white/10 px-6 py-24 overflow-hidden;
         }
@@ -96,15 +100,28 @@
         }
 
         .modal-box-custom {
-            @apply bg-brand-surface border border-white/10;
+            @apply bg-brand-surface border border-white/10 max-h-[85vh] flex flex-col overflow-hidden;
         }
 
-        .modal-box > h3 {
+        /* Add a scrollable container for the text body inside the modal */
+        .modal-body-scroll {
+            @apply overflow-y-auto pr-2 my-2 space-y-3 flex-1 text-gray-400;
+        }
+
+        .modal-box  h3 {
             @apply font-serif font-bold text-lg text-white;
         }
 
-        .modal-box > p {
-            @apply py-4 text-gray-400;
+        .modal-box .modal-body-scroll h3 {
+            @apply font-serif font-bold text-lg text-white pt-5;
+        }
+
+        .modal-box .modal-body-scroll p {
+            @apply pt-1 text-gray-400;
+        }
+
+        .modal-box .modal-body-scroll hr {
+            @apply border-gray-600 border-dashed;
         }
 
         .features-section {
@@ -417,24 +434,177 @@
 
     <!-- Modals -->
     <dialog id="privacy_modal" class="modal">
-        <div class="modal-box modal-box-custom">
-            <h3>Privacy Policy</h3>
-            <p>ImageToArt respects your privacy. All document processing and layer manipulations are performed locally on your device ensuring your reference files remain private and secure.</p>
+        <div class="modal-box modal-box-custom ">
+            <!-- Top-right close button -->
+            <form method="dialog">
+                <button class="btn btn-sm btn-circle btn-ghost absolute right-4 top-4 text-white" tabindex="-1">✕</button>
+            </form>
+
+            <h3 tabindex="-1" class="outline-none">Privacy</h3>
+
+            <div class="modal-body-scroll">
+                <p>Your privacy is important.</p>
+                <p>This application is designed with a <strong>local-first</strong> approach.</p>
+
+                <h3>Local Storage</h3>
+                <p>
+                    All of your data — including images, settings, projects, and application preferences—is stored locally on your
+                    device.
+                </p>
+                <p>The application does <strong>not</strong> upload your files or personal data to our servers.</p>
+
+                <h3>No Account Required</h3>
+                <p>You can use the application without creating an account or providing personal information.</p>
+
+                <h3>Internet Access</h3>
+                <p>The core functionality works entirely offline.</p>
+                <p>
+                    If the application ever offers optional online features (such as checking for updates or connecting to
+                    third-party services), those features will be clearly identified and will never upload your files without your
+                    explicit permission.
+                </p>
+
+                <h3>Your Images</h3>
+                <p>Your reference images remain your property at all times.</p>
+                <p>
+                    Image analysis is performed locally on your device whenever possible. Your images are never shared or
+                    transmitted without your knowledge and consent.
+                </p>
+
+                <h3>Data Collection</h3>
+                <p>The application does not collect or sell your personal data.</p>
+                <p>
+                    If anonymous diagnostic or crash reports are ever introduced, they will be optional and disabled unless you
+                    choose to enable them.
+                </p>
+
+                <h3>Changes</h3>
+                <p>
+                    If this privacy policy changes in future releases, the updated version will be published with the application.
+                </p>
+
+                <p>&nbsp;</p>
+                <hr/>
+
+                <p>
+                    <strong>In short:</strong> your images stay on your device, your data stays under your control, and the
+                    application is designed to respect your privacy by default.
+                </p>
+            </div>
             <div class="modal-action">
                 <form method="dialog"><button class="btn btn-sm btn-ghost">Close</button></form>
             </div>
         </div>
     </dialog>
+
+    <!-- ============================= -->
 
     <dialog id="terms_modal" class="modal">
         <div class="modal-box modal-box-custom">
-            <h3>Terms of Use</h3>
-            <p>By using ImageToArt, you agree to use this lightweight reference tool for your artistic projects under the terms provided in our documentation.</p>
+            <!-- Top-right close button -->
+            <form method="dialog">
+                <button class="btn btn-sm btn-circle btn-ghost absolute right-4 top-4 text-white" tabindex="-1">✕</button>
+            </form>
+            
+            <h3 tabindex="-1" class="outline-none">Terms of Use</h3>
+
+            <div class="modal-body-scroll">
+      <p>
+        ImageToArt is provided for educational and artistic reference purposes only. The application is intended to
+        assist artists in analyzing reference images and should not be considered a substitute for professional
+        instruction, artistic judgment, or creative skill.
+      </p>
+
+      <h3>No Warranty</h3>
+      <p>
+        This application is provided <strong>"as is"</strong> and <strong>"as available"</strong>, without warranties of
+        any kind, whether express or implied. To the fullest extent permitted by applicable law, the developers disclaim
+        all warranties, including but not limited to merchantability, fitness for a particular purpose, and
+        non-infringement.
+      </p>
+      <p>
+        We do not guarantee that the application will be error-free, uninterrupted, secure, or suitable for every device
+        or use case.
+      </p>
+
+      <h3>Limitation of Liability</h3>
+      <p>
+        To the fullest extent permitted by law, the developers shall not be liable for any direct, indirect, incidental,
+        consequential, or special damages arising from the use of, or inability to use, this application, even if
+        advised of the possibility of such damages.
+      </p>
+
+      <h3>Reference Images</h3>
+      <p>
+        Users are solely responsible for ensuring they have the necessary rights, permissions, or licenses to use any
+        images imported into the application. The developers do not verify ownership or copyright status of
+        user-provided content.
+      </p>
+
+      <h3>Generated Results</h3>
+      <p>
+        The analysis results and visual transformations produced by ImageToArt are intended solely as drawing and
+        painting aids. They should not be considered technically accurate measurements or professional advice.
+      </p>
+
+      <h3>Third-Party Software</h3>
+      <p>
+        ImageToArt incorporates third-party open-source software. Their respective licenses and copyright notices are
+        available in the <strong>Open Source Licenses</strong>
+        section of the application.
+      </p>
+
+      <h3>Changes</h3>
+      <p>
+        This disclaimer may be updated from time to time to reflect improvements to the application or changes in legal
+        requirements. Continued use of the application constitutes acceptance of the current version of this disclaimer.
+      </p>
+
+            </div>
+
             <div class="modal-action">
                 <form method="dialog"><button class="btn btn-sm btn-ghost">Close</button></form>
             </div>
         </div>
     </dialog>
 
+    <!-- Custom Modal Handlers -->
+    <script>
+
+document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll('dialog').forEach(dialog => {
+        // 1. Automatically blur the default focused element in Safari right when any dialog opens
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.attributeName === 'open' && dialog.open) {
+                    setTimeout(() => {
+                        if (document.activeElement && dialog.contains(document.activeElement)) {
+                            document.activeElement.blur();
+                        }
+                    }, 10);
+                }
+            });
+        });
+        observer.observe(dialog, { attributes: true });
+
+        // 2. Close modal when clicking directly on the backdrop (outside modal-box)
+        dialog.addEventListener('click', (event) => {
+            if (event.target === dialog) {
+                dialog.close();
+            }
+        });
+    });
+
+    // 3. Close any open modal when pressing the ESC key
+    window.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+            document.querySelectorAll('dialog[open]').forEach(dialog => {
+                dialog.close();
+            });
+        }
+    });
+});
+
+    </script>
 </body>
 </html>
