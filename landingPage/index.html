@@ -37,7 +37,7 @@
     </script>
 
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     
     <!-- Custom CSS using @apply -->
     <style type="text/tailwindcss">
@@ -56,7 +56,7 @@
         }
 
         .hero-description {
-            @apply text-gray-400 font-light text-lg leading-relaxed mb-10 relative z-10;
+            @apply text-slate-300 font-normal text-lg leading-relaxed mb-10 relative z-10;
         }
 
         .section-title {
@@ -72,11 +72,20 @@
         }
 
         .card-title {
-            @apply text-lg mt-0 mb-5 text-slate-100 border-b border-[#2a2a2a] pb-3 font-semibold;
+            @apply text-lg mt-0 mb-5 text-white border-b border-[#2a2a2a] pb-3 font-semibold;
         }
 
         .card-text {
-            @apply text-gray-400 text-sm leading-relaxed;
+            @apply text-slate-300 text-sm leading-relaxed;
+        }
+
+        .card-person {
+            @apply text-white font-semibold text-sm;
+            
+        }
+
+        .card-person-role {
+            @apply text-slate-300 text-xs;
         }
 
         .screenshots-section {
@@ -96,15 +105,14 @@
         }
 
         .modal-box-custom {
-            @apply bg-brand-surface border border-white/10 max-h-[85vh] flex flex-col overflow-hidden;
+            @apply bg-brand-surface border border-white/25 max-h-[85vh] flex flex-col overflow-hidden shadow-2xl;
         }
 
-        /* Add a scrollable container for the text body inside the modal */
         .modal-body-scroll {
-            @apply overflow-y-auto pr-2 my-2 space-y-3 flex-1 text-gray-400;
+            @apply overflow-y-auto pr-2 my-2 space-y-3 flex-1 text-slate-300 text-base leading-relaxed;
         }
 
-        .modal-box  h3 {
+        .modal-box h3 {
             @apply font-serif font-bold text-lg text-white;
         }
 
@@ -113,11 +121,11 @@
         }
 
         .modal-box .modal-body-scroll p {
-            @apply pt-1 text-gray-400;
+            @apply pt-1 text-slate-300;
         }
 
         .modal-box .modal-body-scroll hr {
-            @apply border-gray-600 border-dashed;
+            @apply border-slate-600 border-dashed;
         }
 
         .features-section {
@@ -133,7 +141,7 @@
         }
 
         .features-section .section-subtitle {
-            @apply text-[1.1rem] text-slate-400 text-center mb-[50px] max-w-[600px] mx-auto;
+            @apply text-[1.1rem] text-slate-300 text-center mb-[50px] max-w-[600px] mx-auto;
         }
 
         .features-section .tools-grid {
@@ -153,11 +161,11 @@
         }
 
         .features-section .tool-list span {
-            @apply block text-[0.88rem] text-slate-400 leading-relaxed;
+            @apply block text-[0.88rem] text-slate-300 leading-relaxed;
         }
 
         .badge-free {
-            @apply inline-block bg-emerald-900/40 text-emerald-300 text-xs font-bold px-3 py-1 rounded-full border border-emerald-900/60 mb-6;
+            @apply inline-block bg-emerald-900/60 text-emerald-200 text-xs font-bold px-3 py-1 rounded-full border border-emerald-700/60 mb-6;
         }
     </style>
 </head>
@@ -184,7 +192,7 @@
         </div>
     </header>
 
-<!-- App Interface Section -->
+    <!-- App Interface Section -->
     <section class="screenshots-section">
         <div class="screenshots-container">
             <div class="screen-mockup">
@@ -301,8 +309,6 @@
       </div>
     </section>
 
-
-
     <!-- Testimonials / User Reviews Section -->
     <section class="py-20 bg-brand-darker border-t border-white/5 px-6">
         <div class="max-w-7xl mx-auto text-center">
@@ -318,8 +324,8 @@
                     <div class="flex items-center gap-3 pt-4 border-t border-[#2a2a2a]">
                         <div class="w-10 h-10 rounded-full bg-purple-900/50 border border-purple-500/30 flex items-center justify-center font-bold text-white text-xs">EL</div>
                         <div>
-                            <div class="text-white font-semibold text-sm">Elena Larionova</div>
-                            <div class="text-gray-400 text-xs">Digital Concept Artist</div>
+                            <div class="card-person">Elena Larionova</div>
+                            <div class="card-person-role">Digital Concept Artist</div>
                         </div>
                     </div>
                 </div>
@@ -333,8 +339,8 @@
                     <div class="flex items-center gap-3 pt-4 border-t border-[#2a2a2a]">
                         <div class="w-10 h-10 rounded-full bg-indigo-900/50 border border-indigo-500/30 flex items-center justify-center font-bold text-white text-xs">MK</div>
                         <div>
-                            <div class="text-white font-semibold text-sm">Marcus Kincaid</div>
-                            <div class="text-gray-400 text-xs">Traditional Painter & Illustrator</div>
+                            <div class="card-person">Marcus Kincaid</div>
+                            <div class="card-person-role">Traditional Painter & Illustrator</div>
                         </div>
                     </div>
                 </div>
@@ -348,8 +354,8 @@
                     <div class="flex items-center gap-3 pt-4 border-t border-[#2a2a2a]">
                         <div class="w-10 h-10 rounded-full bg-pink-900/50 border border-pink-500/30 flex items-center justify-center font-bold text-white text-xs">SO</div>
                         <div>
-                            <div class="text-white font-semibold text-sm">Sofia Ortiz</div>
-                            <div class="text-gray-400 text-xs">Storyboard Artist</div>
+                            <div class="card-person">Sofia Ortiz</div>
+                            <div class="card-person-role">Storyboard Artist</div>
                         </div>
                     </div>
                 </div>
@@ -357,8 +363,6 @@
             </div>
         </div>
     </section>
-
-
 
     <!-- FAQ Section -->
     <section class="py-20 container mx-auto px-6 max-w-4xl">
@@ -417,7 +421,7 @@
     </section>
 
     <!-- Footer -->
-    <footer class="footer footer-center p-10 text-gray-500 text-sm">
+    <footer class="footer footer-center p-10 text-slate-400 text-sm">
         <nav class="grid grid-flow-col gap-6">
             <button class="link link-hover" onclick="privacy_modal.showModal()">Privacy Policy</button>
             <button class="link link-hover" onclick="terms_modal.showModal()">Terms of Use</button>
@@ -430,7 +434,7 @@
 
     <!-- Modals -->
     <dialog id="privacy_modal" class="modal" autofocus tabindex="-1">
-        <div class="modal-box modal-box-custom ">
+        <div class="modal-box modal-box-custom">
             <!-- Top-right close button -->
             <form method="dialog">
                 <button tabindex="-1" class="btn btn-sm btn-circle btn-ghost absolute right-4 top-4 text-white">✕</button>
@@ -471,8 +475,7 @@
                 <p>The application does not collect or sell your personal data.</p>
                 <p>
                     If anonymous diagnostic or crash reports are ever introduced, they will be optional and disabled unless you
-                    choose to enable them.
-                </p>
+                    choose to enable them.</p>
 
                 <h3>Changes</h3>
                 <p>
@@ -488,13 +491,12 @@
                 </p>
             </div>
             <div class="modal-action">
-                <form method="dialog"><button class="btn btn-sm btn-ghost">Close</button></form>
+                <form method="dialog"><button class="btn btn-sm btn-ghost text-white">Close</button></form>
             </div>
         </div>
     </dialog>
 
-    <!-- ============================= -->
-    <dialog id="terms_modal" class="modal"  autofocus tabindex="-1">
+    <dialog id="terms_modal" class="modal" autofocus tabindex="-1">
         <div class="modal-box modal-box-custom">
             <!-- Top-right close button -->
             <form method="dialog">
@@ -504,61 +506,60 @@
             <h3>Terms of Use</h3>
 
             <div class="modal-body-scroll">
-      <p>
-        ImageToArt is provided for educational and artistic reference purposes only. The application is intended to
-        assist artists in analyzing reference images and should not be considered a substitute for professional
-        instruction, artistic judgment, or creative skill.
-      </p>
+                <p>
+                    ImageToArt is provided for educational and artistic reference purposes only. The application is intended to
+                    assist artists in analyzing reference images and should not be considered a substitute for professional
+                    instruction, artistic judgment, or creative skill.
+                </p>
 
-      <h3>No Warranty</h3>
-      <p>
-        This application is provided <strong>"as is"</strong> and <strong>"as available"</strong>, without warranties of
-        any kind, whether express or implied. To the fullest extent permitted by applicable law, the developers disclaim
-        all warranties, including but not limited to merchantability, fitness for a particular purpose, and
-        non-infringement.
-      </p>
-      <p>
-        We do not guarantee that the application will be error-free, uninterrupted, secure, or suitable for every device
-        or use case.
-      </p>
+                <h3>No Warranty</h3>
+                <p>
+                    This application is provided <strong>"as is"</strong> and <strong>"as available"</strong>, without warranties of
+                    any kind, whether express or implied. To the fullest extent permitted by applicable law, the developers disclaim
+                    all warranties, including but not limited to merchantability, fitness for a particular purpose, and
+                    non-infringement.
+                </p>
+                <p>
+                    We do not guarantee that the application will be error-free, uninterrupted, secure, or suitable for every device
+                    or use case.
+                </p>
 
-      <h3>Limitation of Liability</h3>
-      <p>
-        To the fullest extent permitted by law, the developers shall not be liable for any direct, indirect, incidental,
-        consequential, or special damages arising from the use of, or inability to use, this application, even if
-        advised of the possibility of such damages.
-      </p>
+                <h3>Limitation of Liability</h3>
+                <p>
+                    To the fullest extent permitted by law, the developers shall not be liable for any direct, indirect, incidental,
+                    consequential, or special damages arising from the use of, or inability to use, this application, even if
+                    advised of the possibility of such damages.
+                </p>
 
-      <h3>Reference Images</h3>
-      <p>
-        Users are solely responsible for ensuring they have the necessary rights, permissions, or licenses to use any
-        images imported into the application. The developers do not verify ownership or copyright status of
-        user-provided content.
-      </p>
+                <h3>Reference Images</h3>
+                <p>
+                    Users are solely responsible for ensuring they have the necessary rights, permissions, or licenses to use any
+                    images imported into the application. The developers do not verify ownership or copyright status of
+                    user-provided content.
+                </p>
 
-      <h3>Generated Results</h3>
-      <p>
-        The analysis results and visual transformations produced by ImageToArt are intended solely as drawing and
-        painting aids. They should not be considered technically accurate measurements or professional advice.
-      </p>
+                <h3>Generated Results</h3>
+                <p>
+                    The analysis results and visual transformations produced by ImageToArt are intended solely as drawing and
+                    painting aids. They should not be considered technically accurate measurements or professional advice.
+                </p>
 
-      <h3>Third-Party Software</h3>
-      <p>
-        ImageToArt incorporates third-party open-source software. Their respective licenses and copyright notices are
-        available in the <strong>Open Source Licenses</strong>
-        section of the application.
-      </p>
+                <h3>Third-Party Software</h3>
+                <p>
+                    ImageToArt incorporates third-party open-source software. Their respective licenses and copyright notices are
+                    available in the <strong>Open Source Licenses</strong>
+                    section of the application.
+                </p>
 
-      <h3>Changes</h3>
-      <p>
-        This disclaimer may be updated from time to time to reflect improvements to the application or changes in legal
-        requirements. Continued use of the application constitutes acceptance of the current version of this disclaimer.
-      </p>
-
+                <h3>Changes</h3>
+                <p>
+                    This disclaimer may be updated from time to time to reflect improvements to the application or changes in legal
+                    requirements. Continued use of the application constitutes acceptance of the current version of this disclaimer.
+                </p>
             </div>
 
             <div class="modal-action">
-                <form method="dialog"><button class="btn btn-sm btn-ghost">Close</button></form>
+                <form method="dialog"><button class="btn btn-sm btn-ghost text-white">Close</button></form>
             </div>
         </div>
     </dialog>
@@ -568,8 +569,6 @@
         document.addEventListener("DOMContentLoaded", () => {
             document.querySelectorAll('dialog').forEach(dialog => {
                 dialog.addEventListener('click', (event) => {
-                    // Close only if the click is directly on the dialog backdrop, 
-                    // and not on any of its child elements inside the content box.
                     if (event.target === dialog) {
                         dialog.close();
                     }
