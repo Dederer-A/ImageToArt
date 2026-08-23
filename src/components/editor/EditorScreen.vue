@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
-import { Grid2x2, FlipHorizontal, FlipVertical, Contrast } from '@lucide/vue';
+import { Grid2x2, FlipHorizontal, FlipVertical, Contrast, Palette } from '@lucide/vue';
 
 import { Toggle } from '@/components/ui/toggle';
 
@@ -125,6 +125,7 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
                   'transform',
                   $event ||
                     workplace.currentVariant.layers['transform'].properties.mirrorVertical ||
+                    workplace.currentVariant.layers['transform'].properties.falseColor ||
                     workplace.currentVariant.layers['transform'].properties.inverse
                 );
               "
@@ -143,12 +144,32 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
                   'transform',
                   workplace.currentVariant.layers['transform'].properties.mirrorHorizontal ||
                     $event ||
+                    workplace.currentVariant.layers['transform'].properties.falseColor ||
                     workplace.currentVariant.layers['transform'].properties.inverse
                 );
               "
               aria-label="Toggle Mirror Vertical"
             >
               <FlipVertical class="h-4 w-4" />
+            </Toggle>
+            <Toggle
+              variant="outline"
+              size="sm"
+              class="data-[state=on]:bg-black data-[state=on]:text-white shrink-0"
+              :pressed="workplace.currentVariant.layers['transform'].properties.falseColor"
+              @update:model-value="
+                updateLayerProperty('transform', 'falseColor', $event);
+                updateLayerEnable(
+                  'transform',
+                  workplace.currentVariant.layers['transform'].properties.mirrorHorizontal ||
+                    workplace.currentVariant.layers['transform'].properties.mirrorVertical ||
+                    $event ||
+                    workplace.currentVariant.layers['transform'].properties.inverse
+                );
+              "
+              aria-label="Toggle False Color"
+            >
+              <Palette class="h-4 w-4" />
             </Toggle>
             <Toggle
               variant="outline"
@@ -161,6 +182,7 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
                   'transform',
                   workplace.currentVariant.layers['transform'].properties.mirrorHorizontal ||
                     workplace.currentVariant.layers['transform'].properties.mirrorVertical ||
+                    workplace.currentVariant.layers['transform'].properties.falseColor ||
                     $event
                 );
               "
@@ -317,12 +339,6 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
           :model-value="workplace.currentVariant.layers['ruleOfThirds'].enabled"
           @update:model-value="updateLayerEnable('ruleOfThirds', $event)"
           title="toolbar.Rule_of_Thirds"
-        >
-        </ToolRow>
-        <ToolRow
-          :model-value="workplace.currentVariant.layers['falseColor'].enabled"
-          @update:model-value="updateLayerEnable('falseColor', $event)"
-          title="toolbar.FalseColor"
         >
         </ToolRow>
       </ToolList>

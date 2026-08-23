@@ -8,6 +8,7 @@ export class TransformLayer implements LayerEngine {
   defaultProperties: any = {
     mirrorVertical: false,
     mirrorHorizontal: false,
+    falseColor: false,
     inverse: false,
   };
 
@@ -16,13 +17,51 @@ export class TransformLayer implements LayerEngine {
   }
 }
 
+// Pre-generate a thermal/false-color gradient LUT (0-255 mapped to RGB)
+const FALSE_COLOR_LUT = (() => {
+  const lut = new Uint8ClampedArray(256 * 4); // RGBA for each of the 256 gray levels
+
+  for (let i = 0; i < 256; i++) {
+    const t = i / 255; // Normalized 0 to 1
+    let r = 0,
+      g = 0,
+      b = 0;
+
+    if (t < 0.25) {
+      const localT = t * 4;
+      b = Math.round(localT * 255);
+    } else if (t < 0.5) {
+      const localT = (t - 0.25) * 4;
+      b = Math.round((1 - localT) * 255);
+      g = Math.round(localT * 255);
+    } else if (t < 0.75) {
+      const localT = (t - 0.5) * 4;
+      g = 255;
+      r = Math.round(localT * 255);
+    } else {
+      const localT = (t - 0.75) * 4;
+      g = 255;
+      r = 255;
+      b = Math.round(localT * 255);
+    }
+
+    const idx = i * 4;
+    lut[idx] = r;
+    lut[idx + 1] = g;
+    lut[idx + 2] = b;
+    lut[idx + 3] = 255;
+  }
+
+  return lut;
+})();
+
 export function transform(
   src: ImageData,
-  params: { mirrorVertical?: boolean; mirrorHorizontal?: boolean; inverse?: boolean }
+  params: { mirrorVertical?: boolean; mirrorHorizontal?: boolean; falseColor?: boolean; inverse?: boolean }
 ): ImageData {
-  const { mirrorVertical = false, mirrorHorizontal = false, inverse = false } = params;
+  const { mirrorVertical = false, mirrorHorizontal = false, falseColor = false, inverse = false } = params;
 
-  if (!mirrorVertical && !mirrorHorizontal && !inverse) {
+  if (!mirrorVertical && !mirrorHorizontal && !falseColor && !inverse) {
     return src;
   }
 
@@ -77,6 +116,16 @@ export function transform(
         srcData[idx2 + 2] = b;
         srcData[idx2 + 3] = a;
       }
+    }
+  }
+
+  if (falseColor) {
+    for (let i = 0; i < srcData.length; i += 4) {
+      const gray = (0.299 * srcData[i] + 0.587 * srcData[i + 1] + 0.114 * srcData[i + 2]) | 0;
+      const lutIdx = gray * 4;
+      srcData[i] = FALSE_COLOR_LUT[lutIdx];
+      srcData[i + 1] = FALSE_COLOR_LUT[lutIdx + 1];
+      srcData[i + 2] = FALSE_COLOR_LUT[lutIdx + 2];
     }
   }
 
