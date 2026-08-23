@@ -16,5 +16,9 @@
   "Rule_of_Thirds": "Rule of Thirds",
   "delete_variant": "Delete Variant",
   "delete_image": "Delete Image",
-  "FalseColor": "False Color"
+  "FalseColor": "False Color",
+  "Transform": "Transform",
+  "Mirror_Vertical": "Mirror Vertical",
+  "Mirror_Horizontal": "Mirror Horizontal",
+  "Inverse": "Inverse"
 }

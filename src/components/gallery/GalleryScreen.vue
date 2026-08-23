@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 
 import { ImagePlus, ChevronDownIcon, Info, TriangleAlert, Shield, Code2 } from '@lucide/vue';
 
@@ -13,11 +13,13 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 import type { PersistedDocumentInfo } from '@/workplace';
+import { UpdateService, type VersionInfo } from '@/services/UpdateService';
 
 import PrivacyModal from '@/components/modal/PrivacyModal.vue';
 import AboutModal from '@/components/modal/AboutModal.vue';
 import DisclaimerModal from '@/components/modal/DisclaimerModal.vue';
 import OpenSourceModal from '@/components/modal/OpenSourceModal.vue';
+import UpdateModal from '@/components/modal/UpdateModal.vue';
 
 defineProps<{
   images: PersistedDocumentInfo[];
@@ -32,6 +34,15 @@ const aboutOpen = ref(false);
 const disclaimerOpen = ref(false);
 const privacyOpen = ref(false);
 const openSourceOpen = ref(false);
+const updateModalOpen = ref(false);
+const versionInfo = ref<VersionInfo | null>(null);
+
+onMounted(async () => {
+  await UpdateService.checkAndShowUpdate((info) => {
+    versionInfo.value = info;
+    updateModalOpen.value = true;
+  });
+});
 </script>
 
 <template>
@@ -100,4 +111,9 @@ const openSourceOpen = ref(false);
   <DisclaimerModal v-model:open="disclaimerOpen" />
   <PrivacyModal v-model:open="privacyOpen" />
   <OpenSourceModal v-model:open="openSourceOpen" />
+  <UpdateModal
+    v-model:open="updateModalOpen"
+    :version="versionInfo?.version ?? 0"
+    :updates="versionInfo?.updates ?? []"
+  />
 </template>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="luxury">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - Image To Art</title>
+    
+    <!-- Tailwind CSS & DaisyUI -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Theme Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            bg: '#121212',
+                            surface: '#181818',
+                            surfaceAlt: '#1a1a1a',
+                            darker: '#151515',
+                            cardBg: '#202020',
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['Playfair Display', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS using @apply -->
+    <style type="text/tailwindcss">
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #121212;
+            color: oklch(var(--nc));
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-box-custom {
+            @apply bg-brand-surface border border-white/25 max-h-[85vh] flex flex-col overflow-hidden shadow-2xl;
+        }
+
+        .modal-body-scroll {
+            @apply overflow-y-auto pr-2 my-2 space-y-3 flex-1 text-slate-300 text-base leading-relaxed;
+        }
+
+        .page-content h3 {
+            @apply font-serif font-bold text-lg text-white pt-5;
+        }
+
+        .page-content p {
+            @apply pt-1 text-slate-300;
+        }
+
+        .page-content hr {
+            @apply border-slate-600 border-dashed;
+        }
+    </style>
+</head>
+<body class="bg-brand-bg text-neutral-content">
+
+    <!-- Top Navigation -->
+    <div class="max-w-4xl mx-auto w-full px-6 pt-10 flex items-center justify-between">
+        <a href="index.html" class="inline-flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-sm font-medium">
+            <span>←</span> Back to Home
+        </a>
+        <a href="index.html" class="font-serif font-bold text-2xl md:text-3xl text-white tracking-tight hover:opacity-90 transition-opacity">
+            ImageToArt
+        </a>
+    </div>
+
+    <!-- Main Content -->
+    <main class="flex-1 max-w-4xl mx-auto w-full px-6 py-10">
+        <div class="bg-brand-surface border border-white/25 rounded-2xl p-8 md:p-12 shadow-2xl page-content">
+            <h1 class="font-serif font-bold text-3xl text-white mb-6">Privacy Policy</h1>
+
+            <div class="space-y-4 text-slate-300 text-base leading-relaxed">
+                <p>Your privacy is important.</p>
+                <p>This application is designed with a <strong>local-first</strong> approach.</p>
+
+                <h3>Local Storage</h3>
+                <p>
+                    All of your data — including images, settings, projects, and application preferences—is stored locally on your
+                    device.
+                </p>
+                <p>The application does <strong>not</strong> upload your files or personal data to our servers.</p>
+
+                <h3>No Account Required</h3>
+                <p>You can use the application without creating an account or providing personal information.</p>
+
+                <h3>Internet Access</h3>
+                <p>The core functionality works entirely offline.</p>
+                <p>
+                    The application connects to the internet solely to check for public application version updates,
+                    without transmitting any personal data, analytics, or user files.
+                </p>
+
+                <h3>Your Images</h3>
+                <p>Your reference images remain your property at all times.</p>
+                <p>
+                    Image analysis is performed locally on your device whenever possible. Your images are never shared or
+                    transmitted without your knowledge and consent.
+                </p>
+
+                <h3>Data Collection</h3>
+                <p>The application does not collect or sell your personal data.</p>
+                <p>
+                    If anonymous diagnostic or crash reports are ever introduced, they will be optional and disabled unless you
+                    choose to enable them.
+                </p>
+
+                <h3>Changes</h3>
+                <p>
+                    If this privacy policy changes in future releases, the updated version will be published with the application.
+                </p>
+
+                <p>&nbsp;</p>
+                <hr class="border-slate-600 border-dashed"/>
+
+                <p>
+                    <strong>In short:</strong> your images stay on your device, your data stays under your control, and the
+                    application is designed to respect your privacy by default.
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer footer-center p-10 text-slate-400 text-sm border-t border-white/5 mt-auto">
+        <nav class="grid grid-flow-col gap-6">
+            <a href="privacy-policy.html" class="link link-hover text-white font-medium">Privacy Policy</a>
+            <a href="term-of-use.html" class="link link-hover">Terms of Use</a>
+            <a href="mailto:support@imagetoart.example.com" class="link link-hover">Support: support@imagetoart.example.com</a>
+        </nav>
+        <aside>
+            <p>Copyright © 2026 - All rights reserved</p>
+        </aside>
+    </footer>
+
+    <!-- Hidden dialog for background fetching on index.html -->
+    <dialog id="privacy_modal" class="modal" autofocus tabindex="-1">
+        <div class="modal-box modal-box-custom">
+            <form method="dialog">
+                <button tabindex="-1" class="btn btn-sm btn-circle btn-ghost absolute right-4 top-4 text-white">✕</button>
+            </form>
+
+            <h3>Privacy</h3>
+
+            <div class="modal-body-scroll">
+                <p>Your privacy is important.</p>
+                <p>This application is designed with a <strong>local-first</strong> approach.</p>
+
+                <h3>Local Storage</h3>
+                <p>
+                    All of your data — including images, settings, projects, and application preferences—is stored locally on your
+                    device.
+                </p>
+                <p>The application does <strong>not</strong> upload your files or personal data to our servers.</p>
+
+                <h3>No Account Required</h3>
+                <p>You can use the application without creating an account or providing personal information.</p>
+
+                <h3>Internet Access</h3>
+                <p>The core functionality works entirely offline.</p>
+                <p>
+                    If the application ever offers optional online features (such as checking for updates or connecting to
+                    third-party services), those features will be clearly identified and will never upload your files without your
+                    explicit permission.
+                </p>
+
+                <h3>Your Images</h3>
+                <p>Your reference images remain your property at all times.</p>
+                <p>
+                    Image analysis is performed locally on your device whenever possible. Your images are never shared or
+                    transmitted without your knowledge and consent.
+                </p>
+
+                <h3>Data Collection</h3>
+                <p>The application does not collect or sell your personal data.</p>
+                <p>
+                    If anonymous diagnostic or crash reports are ever introduced, they will be optional and disabled unless you
+                    choose to enable them.</p>
+
+                <h3>Changes</h3>
+                <p>
+                    If this privacy policy changes in future releases, the updated version will be published with the application.
+                </p>
+
+                <p>&nbsp;</p>
+                <hr/>
+
+                <p>
+                    <strong>In short:</strong> your images stay on your device, your data stays under your control, and the
+                    application is designed to respect your privacy by default.
+                </p>
+            </div>
+            <div class="modal-action">
+                <form method="dialog"><button class="btn btn-sm btn-ghost text-white">Close</button></form>
+            </div>
+        </div>
+    </dialog>
+
+</body>
+</html>
