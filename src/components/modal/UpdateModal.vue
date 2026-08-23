@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Capacitor } from '@capacitor/core';
+import { APP_STORE_URL } from '@/services/UpdateService';
 
 defineProps<{
   version: number;
@@ -22,7 +23,6 @@ const open = defineModel<boolean>('open', {
 });
 
 const isIOS = Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'ios';
-const APP_STORE_URL = 'https://apps.apple.com/app/id0000000000'; // Replace with actual App Store URL / ID when published
 
 function openAppStore() {
   window.open(APP_STORE_URL, '_blank');

@@ -1,11 +1,12 @@
 import { Directory, Encoding, Filesystem } from '@capacitor/filesystem';
 
 export const CURRENT_APP_VERSION = 1;
+export const APP_STORE_URL = 'https://apps.apple.com/app/id0000000000'; // Replace with actual App Store URL / ID when published
+
 const LATEST_VERSION_URL = 'https://imagetoart.example.com/latest_version.json';
 const LOCAL_VERSION_FILENAME = 'latest_version.json';
 
 const DEV_MODE = false; // Set to true to force-test the update modal in development
-
 const MOCK_UPDATE_INFO: VersionInfo = {
   version: 999,
   updates: [
@@ -28,7 +29,7 @@ export class UpdateService {
     }
 
     try {
-      const response = await fetch(LATEST_VERSION_URL);
+      const response = await fetch(LATEST_VERSION_URL + '?version=' + CURRENT_APP_VERSION);
       if (!response.ok) {
         throw new Error(`Failed to fetch latest version: ${response.statusText}`);
       }

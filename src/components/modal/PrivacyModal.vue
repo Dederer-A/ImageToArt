@@ -32,9 +32,8 @@ const open = defineModel<boolean>('open', {
       <h2>Internet Access</h2>
       <p>The core functionality works entirely offline.</p>
       <p>
-        If the application ever offers optional online features (such as checking for updates or connecting to
-        third-party services), those features will be clearly identified and will never upload your files without your
-        explicit permission.
+        The application connects to the internet solely to check for public application version updates,
+        without transmitting any personal data, analytics, or user files.
       </p>
     </section>
 
