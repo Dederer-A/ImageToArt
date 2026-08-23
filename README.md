@@ -58,6 +58,10 @@ Open the project in Xcode:
 npx cap open ios
 ```
 
+```bash
+pnpm build && npx cap sync ios && npx cap open ios
+```
+
 ---
 
 ## Android
