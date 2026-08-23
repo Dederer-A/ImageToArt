@@ -101,19 +101,70 @@ export const useWorkplaceStore = defineStore('workplace', () => {
     return runtime;
   }
 
+  function createDocumentObject(filename: string, imageData: ImageData): Document {
+    const docId = crypto.randomUUID();
+    const originalVariantId = crypto.randomUUID();
+    const editableVariantId = crypto.randomUUID();
+
+    const createLayers = () => {
+      const layers: Record<string, any> = {};
+      layerRegistry.list().forEach((layerEngine) => {
+        layers[layerEngine.type] = {
+          enabled: false,
+          type: layerEngine.type,
+          properties: { ...layerEngine.defaultProperties },
+        };
+      });
+      return layers;
+    };
+
+    const originalVariant: Variant = {
+      id: originalVariantId,
+      isOriginal: true,
+      layers: createLayers(),
+    };
+
+    const editableVariant: Variant = {
+      id: editableVariantId,
+      isOriginal: false,
+      layers: createLayers(),
+    };
+
+    return {
+      id: docId,
+      filename,
+      imageData,
+      variants: [originalVariant, editableVariant],
+      currentVariantId: editableVariantId,
+      version: '1.0.0',
+    };
+  }
+
   function initializeDocument(filename: string, imageData: ImageData) {
     console.log(
       `[WorkplaceStore] initializeDocument(): filename=${filename}, imageData=${imageData.width}x${imageData.height}`
     );
-    document.value = {
-      id: crypto.randomUUID(),
-      filename,
-      imageData,
-      variants: [],
-      version: '1.0.0',
-    };
-    createVariant();
+    document.value = createDocumentObject(filename, imageData);
+    document.value.variants.forEach((variant) => {
+      const runtime = new VariantRuntime(variant.id);
+      variantRuntimes.value[variant.id] = runtime;
+    });
     imageProcess();
+    saveDocumentDebounced();
+  }
+
+  async function importAndSaveDocument(
+    filename: string,
+    imageData: ImageData,
+    setAsCurrent: boolean = false
+  ): Promise<string> {
+    const doc = createDocumentObject(filename, imageData);
+    await Persistence.save(doc);
+    if (setAsCurrent) {
+      await Persistence.setCurrentDocument(doc.id);
+      await loadDocument(doc.id);
+    }
+    return doc.id;
   }
 
   function findVariantIndex(variants: Variant[], variantId: string): number {
@@ -328,6 +379,7 @@ export const useWorkplaceStore = defineStore('workplace', () => {
     updateVariantImageData, // Should be used only in ImageEngine
 
     clearDocument,
+    importAndSaveDocument,
 
     // From persistence
     saveDocument,

@@ -6,7 +6,7 @@ const config: CapacitorConfig = {
   webDir: 'dist',
   plugins: {
     CapacitorShareTarget: {
-      iosAppGroup: 'group.com.imagetoart.app',
+      appGroupId: 'group.com.imagetoart.app',
     },
     StatusBar: {
       overlaysWebView: false,
