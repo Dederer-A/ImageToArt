@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="luxury">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Use - Image To Art</title>
+    
+    <!-- Tailwind CSS & DaisyUI -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Theme Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            bg: '#121212',
+                            surface: '#181818',
+                            surfaceAlt: '#1a1a1a',
+                            darker: '#151515',
+                            cardBg: '#202020',
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['Playfair Display', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS using @apply -->
+    <style type="text/tailwindcss">
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #121212;
+            color: oklch(var(--nc));
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-box-custom {
+            @apply bg-brand-surface border border-white/25 max-h-[85vh] flex flex-col overflow-hidden shadow-2xl;
+        }
+
+        .modal-body-scroll {
+            @apply overflow-y-auto pr-2 my-2 space-y-3 flex-1 text-slate-300 text-base leading-relaxed;
+        }
+
+        .page-content h3 {
+            @apply font-serif font-bold text-lg text-white pt-5;
+        }
+
+        .page-content p {
+            @apply pt-1 text-slate-300;
+        }
+
+        .page-content hr {
+            @apply border-slate-600 border-dashed;
+        }
+    </style>
+</head>
+<body class="bg-brand-bg text-neutral-content">
+
+    <!-- Top Navigation -->
+    <div class="max-w-4xl mx-auto w-full px-6 pt-10 flex items-center justify-between">
+        <a href="index.html" class="inline-flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-sm font-medium">
+            <span>←</span> Back to Home
+        </a>
+        <a href="index.html" class="font-serif font-bold text-2xl md:text-3xl text-white tracking-tight hover:opacity-90 transition-opacity">
+            ImageToArt
+        </a>
+    </div>
+
+    <!-- Main Content -->
+    <main class="flex-1 max-w-4xl mx-auto w-full px-6 py-10">
+        <div class="bg-brand-surface border border-white/25 rounded-2xl p-8 md:p-12 shadow-2xl page-content">
+            <h1 class="font-serif font-bold text-3xl text-white mb-6">Terms of Use</h1>
+
+            <div class="space-y-4 text-slate-300 text-base leading-relaxed">
+                <p>
+                    ImageToArt is provided for educational and artistic reference purposes only. The application is intended to
+                    assist artists in analyzing reference images and should not be considered a substitute for professional
+                    instruction, artistic judgment, or creative skill.
+                </p>
+
+                <h3>No Warranty</h3>
+                <p>
+                    This application is provided <strong>"as is"</strong> and <strong>"as available"</strong>, without warranties of
+                    any kind, whether express or implied. To the fullest extent permitted by applicable law, the developers disclaim
+                    all warranties, including but not limited to merchantability, fitness for a particular purpose, and
+                    non-infringement.
+                </p>
+                <p>
+                    We do not guarantee that the application will be error-free, uninterrupted, secure, or suitable for every device
+                    or use case.
+                </p>
+
+                <h3>Limitation of Liability</h3>
+                <p>
+                    To the fullest extent permitted by law, the developers shall not be liable for any direct, indirect, incidental,
+                    consequential, or special damages arising from the use of, or inability to use, this application, even if
+                    advised of the possibility of such damages.
+                </p>
+
+                <h3>Reference Images</h3>
+                <p>
+                    Users are solely responsible for ensuring they have the necessary rights, permissions, or licenses to use any
+                    images imported into the application. The developers do not verify ownership or copyright status of
+                    user-provided content.
+                </p>
+
+                <h3>Generated Results</h3>
+                <p>
+                    The analysis results and visual transformations produced by ImageToArt are intended solely as drawing and
+                    painting aids. They should not be considered technically accurate measurements or professional advice.
+                </p>
+
+                <h3>Third-Party Software</h3>
+                <p>
+                    ImageToArt incorporates third-party open-source software. Their respective licenses and copyright notices are
+                    available in the <strong>Open Source Licenses</strong>
+                    section of the application.
+                </p>
+
+                <h3>Changes</h3>
+                <p>
+                    This disclaimer may be updated from time to time to reflect improvements to the application or changes in legal
+                    requirements. Continued use of the application constitutes acceptance of the current version of this disclaimer.
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer footer-center p-10 text-slate-400 text-sm border-t border-white/5 mt-auto">
+        <nav class="grid grid-flow-col gap-6">
+            <a href="privacy-policy.html" class="link link-hover">Privacy Policy</a>
+            <a href="term-of-use.html" class="link link-hover text-white font-medium">Terms of Use</a>
+            <a href="mailto:support@imagetoart.example.com" class="link link-hover">Support: support@imagetoart.example.com</a>
+        </nav>
+        <aside>
+            <p>Copyright © 2026 - All rights reserved</p>
+        </aside>
+    </footer>
+
+    <!-- Hidden dialog for background fetching on index.html -->
+    <dialog id="terms_modal" class="modal" autofocus tabindex="-1">
+        <div class="modal-box modal-box-custom">
+            <form method="dialog">
+                <button tabindex="-1" class="btn btn-sm btn-circle btn-ghost absolute right-4 top-4 text-white">✕</button>
+            </form>
+            
+            <h3>Terms of Use</h3>
+
+            <div class="modal-body-scroll">
+                <p>
+                    ImageToArt is provided for educational and artistic reference purposes only. The application is intended to
+                    assist artists in analyzing reference images and should not be considered a substitute for professional
+                    instruction, artistic judgment, or creative skill.
+                </p>
+
+                <h3>No Warranty</h3>
+                <p>
+                    This application is provided <strong>"as is"</strong> and <strong>"as available"</strong>, without warranties of
+                    any kind, whether express or implied. To the fullest extent permitted by applicable law, the developers disclaim
+                    all warranties, including but not limited to merchantability, fitness for a particular purpose, and
+                    non-infringement.
+                </p>
+                <p>
+                    We do not guarantee that the application will be error-free, uninterrupted, secure, or suitable for every device
+                    or use case.
+                </p>
+
+                <h3>Limitation of Liability</h3>
+                <p>
+                    To the fullest extent permitted by law, the developers shall not be liable for any direct, indirect, incidental,
+                    consequential, or special damages arising from the use of, or inability to use, this application, even if
+                    advised of the possibility of such damages.
+                </p>
+
+                <h3>Reference Images</h3>
+                <p>
+                    Users are solely responsible for ensuring they have the necessary rights, permissions, or licenses to use any
+                    images imported into the application. The developers do not verify ownership or copyright status of
+                    user-provided content.
+                </p>
+
+                <h3>Generated Results</h3>
+                <p>
+                    The analysis results and visual transformations produced by ImageToArt are intended solely as drawing and
+                    painting aids. They should not be considered technically accurate measurements or professional advice.
+                </p>
+
+                <h3>Third-Party Software</h3>
+                <p>
+                    ImageToArt incorporates third-party open-source software. Their respective licenses and copyright notices are
+                    available in the <strong>Open Source Licenses</strong>
+                    section of the application.
+                </p>
+
+                <h3>Changes</h3>
+                <p>
+                    This disclaimer may be updated from time to time to reflect improvements to the application or changes in legal
+                    requirements. Continued use of the application constitutes acceptance of the current version of this disclaimer.
+                </p>
+            </div>
+
+            <div class="modal-action">
+                <form method="dialog"><button class="btn btn-sm btn-ghost text-white">Close</button></form>
+            </div>
+        </div>
+    </dialog>
+
+</body>
+</html>
