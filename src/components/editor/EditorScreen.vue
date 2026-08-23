@@ -108,7 +108,11 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
         <p>{{ $t('toolbar.Original_Image_description_2') }}</p>
       </div>
       <ToolList v-else class="divide-y divide-border">
-        <ToolRow title="toolbar.Transform" :model-value="workplace.currentVariant.layers['transform'].enabled">
+        <ToolRow
+          title="toolbar.Transform"
+          :model-value="workplace.currentVariant.layers['transform'].enabled"
+          @update:model-value="updateLayerEnable('transform', $event)"
+        >
           <div class="flex items-center gap-2">
             <Toggle
               variant="outline"
