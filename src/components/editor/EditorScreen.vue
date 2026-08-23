@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
-import { Grid2x2 } from '@lucide/vue';
+import { Grid2x2, FlipHorizontal, FlipVertical, Contrast } from '@lucide/vue';
 
 import { Toggle } from '@/components/ui/toggle';
 
@@ -67,10 +67,12 @@ function duplicateVariant() {
 }
 
 function updateLayerProperty(layerType: string, propertyName: string, event: any) {
+  console.log(`[EditorScreen] updateLayerProperty: ${layerType} : ${propertyName} : ${event}`);
   workplace.updateLayerProperty(layerType, propertyName, event);
 }
 
 function updateLayerEnable(layerType: string, event: boolean | undefined) {
+  console.log(`[EditorScreen] updateLayerEnable: ${layerType} : ${event}`);
   workplace.updateLayerEnable(layerType, event ? event : false);
 }
 </script>
@@ -106,6 +108,65 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
         <p>{{ $t('toolbar.Original_Image_description_2') }}</p>
       </div>
       <ToolList v-else class="divide-y divide-border">
+        <ToolRow title="toolbar.Transform" :model-value="workplace.currentVariant.layers['transform'].enabled">
+          <div class="flex items-center gap-2">
+            <Toggle
+              variant="outline"
+              size="sm"
+              class="data-[state=on]:bg-black data-[state=on]:text-white shrink-0"
+              :pressed="workplace.currentVariant.layers['transform'].properties.mirrorHorizontal"
+              @update:model-value="
+                updateLayerProperty('transform', 'mirrorHorizontal', $event);
+                updateLayerEnable(
+                  'transform',
+                  $event ||
+                    workplace.currentVariant.layers['transform'].properties.mirrorVertical ||
+                    workplace.currentVariant.layers['transform'].properties.inverse
+                );
+              "
+              aria-label="Toggle Mirror Horizontal"
+            >
+              <FlipHorizontal class="h-4 w-4" />
+            </Toggle>
+            <Toggle
+              variant="outline"
+              size="sm"
+              class="data-[state=on]:bg-black data-[state=on]:text-white shrink-0"
+              :pressed="workplace.currentVariant.layers['transform'].properties.mirrorVertical"
+              @update:model-value="
+                updateLayerProperty('transform', 'mirrorVertical', $event);
+                updateLayerEnable(
+                  'transform',
+                  workplace.currentVariant.layers['transform'].properties.mirrorHorizontal ||
+                    $event ||
+                    workplace.currentVariant.layers['transform'].properties.inverse
+                );
+              "
+              aria-label="Toggle Mirror Vertical"
+            >
+              <FlipVertical class="h-4 w-4" />
+            </Toggle>
+            <Toggle
+              variant="outline"
+              size="sm"
+              class="data-[state=on]:bg-black data-[state=on]:text-white shrink-0"
+              :pressed="workplace.currentVariant.layers['transform'].properties.inverse"
+              @update:model-value="
+                updateLayerProperty('transform', 'inverse', $event);
+                updateLayerEnable(
+                  'transform',
+                  workplace.currentVariant.layers['transform'].properties.mirrorHorizontal ||
+                    workplace.currentVariant.layers['transform'].properties.mirrorVertical ||
+                    $event
+                );
+              "
+              aria-label="Toggle Inverse"
+            >
+              <Contrast class="h-4 w-4" />
+            </Toggle>
+          </div>
+        </ToolRow>
+
         <ToolRow
           :model-value="workplace.currentVariant.layers['threshold'].enabled"
           @update:model-value="updateLayerEnable('threshold', $event)"

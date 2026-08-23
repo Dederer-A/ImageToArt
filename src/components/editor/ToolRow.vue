@@ -5,9 +5,12 @@ import { Switch } from '@/components/ui/switch';
 
 interface Props {
   title: string;
+  withSwitch?: boolean;
 }
 
-defineProps<Props>();
+withDefaults(defineProps<Props>(), {
+  withSwitch: true,
+});
 const isEnabled = defineModel<boolean>({ required: false });
 
 const slots = useSlots();
@@ -16,7 +19,7 @@ const hasControl = computed(() => !!slots.default);
 
 <template>
   <div class="flex items-center gap-3 py-3" :class="{ 'opacity-50': false }">
-    <Switch v-model="isEnabled" class="shrink-0 my-auto" />
+    <Switch v-if="withSwitch" v-model="isEnabled" class="shrink-0 my-auto" />
 
     <div class="w-35 shrink-0 truncate text-sm font-medium">
       <div class="text-sm font-medium leading-none">{{ $t(title) }}</div>

@@ -14,6 +14,7 @@ import { EdgeLayer } from '@/Image/layers/Edge';
 import { LevelsLayer } from '@/Image/layers/Levels';
 import { ThresholdLayer } from '@/Image/layers/Threshold';
 import { FalseColorLayer } from '@/Image/layers/FalseColor';
+import { TransformLayer } from '@/Image/layers/Transform';
 
 export interface Document {
   id: string;
@@ -59,6 +60,7 @@ export class LayerRegistry {
     this.register(new LevelsLayer());
     this.register(new ThresholdLayer());
     this.register(new FalseColorLayer());
+    this.register(new TransformLayer());
 
     this.list().forEach((layer: LayerEngine) => {
       console.log(`[LayerRegistry] ${layer.order} : ${layer.type}`);
