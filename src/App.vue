@@ -25,6 +25,12 @@ async function refreshWorkplaceState() {
 
 onMounted(async () => {
   workplace.initialize();
+  
+  const currentId = await Persistence.getCurrentDocumentId();
+  if (currentId) {
+    await workplace.loadDocument(currentId);
+  }
+  
   await refreshWorkplaceState();
 
   if (Persistence.isSupported()) {

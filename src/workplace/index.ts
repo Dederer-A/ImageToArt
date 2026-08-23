@@ -162,6 +162,7 @@ export const useWorkplaceStore = defineStore('workplace', () => {
     await Persistence.save(doc);
     if (setAsCurrent) {
       await Persistence.setCurrentDocument(doc.id);
+      await loadDocument(doc.id);
     }
     return doc.id;
   }
