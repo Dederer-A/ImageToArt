@@ -18,8 +18,8 @@ const THUMBNAIL_JPEG_QUALITY = 0.75;
 export interface PersistedDocumentInfo {
   id: string;
   thumbnailUrl: string;
+  mtime: number;
 }
-
 interface CurrentDocument {
   id: string;
 }
@@ -129,9 +129,7 @@ export class Persistence {
    * Only thumbnail files are inspected.
    * JSON files are NOT read or parsed.
    *
-   * The returned thumbnailUrl can be used directly as:
-   *
-   *   <img :src="item.thumbnailUrl">
+   * Returns all persisted documents, sorted by modification date (newest first)
    */
   static async list(): Promise<PersistedDocumentInfo[]> {
     if (!this.isSupported()) {
@@ -154,18 +152,32 @@ export class Persistence {
         }
 
         const id = filename.slice(0, -THUMBNAIL_SUFFIX.length);
+        const thumbnailPath = this.getThumbnailPath(id);
 
         const thumbnailUrl = await this.getThumbnailUrl(id);
-
         if (!thumbnailUrl) {
           continue;
+        }
+
+        let mtime = 0;
+        try {
+          const stat = await Filesystem.stat({
+            directory: Directory.Data,
+            path: thumbnailPath,
+          });
+          mtime = stat.mtime ?? 0;
+        } catch {
+          // do nothing
         }
 
         documents.push({
           id,
           thumbnailUrl,
+          mtime,
         });
       }
+
+      documents.sort((a, b) => b.mtime - a.mtime);
 
       return documents;
     } catch {
