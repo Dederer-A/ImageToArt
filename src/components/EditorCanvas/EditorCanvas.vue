@@ -199,7 +199,12 @@ onBeforeUnmount(() => {
             "
             :ref="(el) => registerVariantCanvas(index, el)"
             class="absolute left-1/2 top-1/2 block max-h-full max-w-full"
-            style="transform: translate(-50%, -50%)"
+            style="
+              transform: translate(-50%, -50%);
+              image-rendering: auto;
+              image-rendering: smooth;
+              image-rendering: -webkit-optimize-contrast;
+            "
           />
         </div>
       </div>
@@ -230,4 +235,10 @@ onBeforeUnmount(() => {
       <slot name="screen-overlay" />
     </div>
   </main>
-</template>
+  <!--
+canvas {
+  image-rendering: auto;
+  image-rendering: smooth;
+  image-rendering: -webkit-optimize-contrast;
+}
+--></template>

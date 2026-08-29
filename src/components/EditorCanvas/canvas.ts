@@ -10,6 +10,8 @@ export function drawImageData(canvas: HTMLCanvasElement, imageData: ImageData | 
   if (!ctx) {
     return;
   }
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
   ctx.putImageData(imageData, 0, 0);
 }
 

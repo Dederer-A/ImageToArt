@@ -79,6 +79,8 @@ async function imageDataToBlob(imageData: ImageData): Promise<Blob> {
 
   const ctx = canvas.getContext('2d')!;
 
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
   ctx.putImageData(imageData, 0, 0);
 
   return new Promise((resolve) => {
