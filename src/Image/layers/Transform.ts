@@ -10,6 +10,7 @@ export class TransformLayer implements LayerEngine {
     mirrorHorizontal: false,
     falseColor: false,
     inverse: false,
+    stippling: false,
   };
 
   render(_variantRuntime: VariantRuntime, src: ImageData, parameters: any): ImageData {
@@ -57,11 +58,23 @@ const FALSE_COLOR_LUT = (() => {
 
 export function transform(
   src: ImageData,
-  params: { mirrorVertical?: boolean; mirrorHorizontal?: boolean; falseColor?: boolean; inverse?: boolean }
+  params: {
+    mirrorVertical?: boolean;
+    mirrorHorizontal?: boolean;
+    falseColor?: boolean;
+    inverse?: boolean;
+    stippling?: boolean;
+  }
 ): ImageData {
-  const { mirrorVertical = false, mirrorHorizontal = false, falseColor = false, inverse = false } = params;
+  const {
+    mirrorVertical = false,
+    mirrorHorizontal = false,
+    falseColor = false,
+    inverse = false,
+    stippling = false,
+  } = params;
 
-  if (!mirrorVertical && !mirrorHorizontal && !falseColor && !inverse) {
+  if (!mirrorVertical && !mirrorHorizontal && !falseColor && !inverse && !stippling) {
     return src;
   }
 
@@ -134,6 +147,50 @@ export function transform(
       srcData[i] = 255 - srcData[i];
       srcData[i + 1] = 255 - srcData[i + 1];
       srcData[i + 2] = 255 - srcData[i + 2];
+    }
+  }
+
+  if (stippling) {
+    // Buffer for error propagation across pixels
+    const errorBuffer = new Float32Array(width * height);
+
+    // Step 1: Convert to grayscale and initialize error buffer
+    for (let i = 0; i < srcData.length; i += 4) {
+      const gray = 0.299 * srcData[i] + 0.587 * srcData[i + 1] + 0.114 * srcData[i + 2];
+      srcData[i] = gray;
+      srcData[i + 1] = gray;
+      srcData[i + 2] = gray;
+    }
+
+    // Step 2: Perform Floyd-Steinberg Dithering
+    for (let y = 0; y < height; y++) {
+      for (let x = 0; x < width; x++) {
+        const pixelIdx = y * width + x;
+        const idx = pixelIdx * 4;
+
+        const oldPixel = srcData[idx] + errorBuffer[pixelIdx];
+        const newPixel = oldPixel < 128 ? 0 : 255;
+
+        srcData[idx] = newPixel;
+        srcData[idx + 1] = newPixel;
+        srcData[idx + 2] = newPixel;
+
+        const error = oldPixel - newPixel;
+
+        // Distribute quantization error to neighboring pixels
+        if (x + 1 < width) {
+          errorBuffer[pixelIdx + 1] += error * (7 / 16);
+        }
+        if (x - 1 >= 0 && y + 1 < height) {
+          errorBuffer[pixelIdx + width - 1] += error * (3 / 16);
+        }
+        if (y + 1 < height) {
+          errorBuffer[pixelIdx + width] += error * (5 / 16);
+        }
+        if (x + 1 < width && y + 1 < height) {
+          errorBuffer[pixelIdx + width + 1] += error * (1 / 16);
+        }
+      }
     }
   }
 

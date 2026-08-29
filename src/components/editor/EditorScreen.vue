@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
-import { Grid2x2, FlipHorizontal, FlipVertical, Contrast, Palette } from '@lucide/vue';
+import { Grid2x2, FlipHorizontal, FlipVertical, Contrast, Palette, Sparkles } from '@lucide/vue';
 
 import { Toggle } from '@/components/ui/toggle';
 
@@ -126,7 +126,8 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
                   $event ||
                     workplace.currentVariant.layers['transform'].properties.mirrorVertical ||
                     workplace.currentVariant.layers['transform'].properties.falseColor ||
-                    workplace.currentVariant.layers['transform'].properties.inverse
+                    workplace.currentVariant.layers['transform'].properties.inverse ||
+                    workplace.currentVariant.layers['transform'].properties.stippling
                 );
               "
               aria-label="Toggle Mirror Horizontal"
@@ -145,7 +146,8 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
                   workplace.currentVariant.layers['transform'].properties.mirrorHorizontal ||
                     $event ||
                     workplace.currentVariant.layers['transform'].properties.falseColor ||
-                    workplace.currentVariant.layers['transform'].properties.inverse
+                    workplace.currentVariant.layers['transform'].properties.inverse ||
+                    workplace.currentVariant.layers['transform'].properties.stippling
                 );
               "
               aria-label="Toggle Mirror Vertical"
@@ -164,7 +166,8 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
                   workplace.currentVariant.layers['transform'].properties.mirrorHorizontal ||
                     workplace.currentVariant.layers['transform'].properties.mirrorVertical ||
                     $event ||
-                    workplace.currentVariant.layers['transform'].properties.inverse
+                    workplace.currentVariant.layers['transform'].properties.inverse ||
+                    workplace.currentVariant.layers['transform'].properties.stippling
                 );
               "
               aria-label="Toggle False Color"
@@ -183,12 +186,33 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
                   workplace.currentVariant.layers['transform'].properties.mirrorHorizontal ||
                     workplace.currentVariant.layers['transform'].properties.mirrorVertical ||
                     workplace.currentVariant.layers['transform'].properties.falseColor ||
-                    $event
+                    $event ||
+                    workplace.currentVariant.layers['transform'].properties.stippling
                 );
               "
               aria-label="Toggle Inverse"
             >
               <Contrast class="h-4 w-4" />
+            </Toggle>
+            <Toggle
+              variant="outline"
+              size="sm"
+              class="data-[state=on]:bg-black data-[state=on]:text-white shrink-0"
+              :pressed="workplace.currentVariant.layers['transform'].properties.stippling"
+              @update:model-value="
+                updateLayerProperty('transform', 'stippling', $event);
+                updateLayerEnable(
+                  'transform',
+                  workplace.currentVariant.layers['transform'].properties.mirrorHorizontal ||
+                    workplace.currentVariant.layers['transform'].properties.mirrorVertical ||
+                    workplace.currentVariant.layers['transform'].properties.falseColor ||
+                    workplace.currentVariant.layers['transform'].properties.inverse ||
+                    $event
+                );
+              "
+              aria-label="Toggle Stippling"
+            >
+              <Sparkles class="h-4 w-4" />
             </Toggle>
           </div>
         </ToolRow>
