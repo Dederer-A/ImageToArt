@@ -11,12 +11,16 @@ export class TransformLayer implements LayerEngine {
     falseColor: false,
     inverse: false,
     stippling: false,
+    stipplingSize: 1,
   };
 
   render(_variantRuntime: VariantRuntime, src: ImageData, parameters: any): ImageData {
     return transform(src, parameters);
   }
 }
+
+// Default size for stippling dot grid (1 = 1x1 pixel, 2 = 2x2 pixels block, etc.)
+const DEFAULT_STIPPLING_SIZE = 2;
 
 // Pre-generate a thermal/false-color gradient LUT (0-255 mapped to RGB)
 const FALSE_COLOR_LUT = (() => {
@@ -64,6 +68,7 @@ export function transform(
     falseColor?: boolean;
     inverse?: boolean;
     stippling?: boolean;
+    stipplingSize?: number;
   }
 ): ImageData {
   const {
@@ -72,6 +77,7 @@ export function transform(
     falseColor = false,
     inverse = false,
     stippling = false,
+    stipplingSize = DEFAULT_STIPPLING_SIZE,
   } = params;
 
   if (!mirrorVertical && !mirrorHorizontal && !falseColor && !inverse && !stippling) {
@@ -151,10 +157,16 @@ export function transform(
   }
 
   if (stippling) {
-    // Buffer for error propagation across pixels
-    const errorBuffer = new Float32Array(width * height);
+    const dotSize = Math.max(1, Math.floor(stipplingSize));
 
-    // Step 1: Convert to grayscale and initialize error buffer
+    // Number of block columns and rows based on dotSize grid
+    const blocksW = Math.ceil(width / dotSize);
+    const blocksH = Math.ceil(height / dotSize);
+
+    // Buffer for error propagation between blocks
+    const errorBuffer = new Float32Array(blocksW * blocksH);
+
+    // Step 1: Pre-calculate grayscale luminance values in-place
     for (let i = 0; i < srcData.length; i += 4) {
       const gray = 0.299 * srcData[i] + 0.587 * srcData[i + 1] + 0.114 * srcData[i + 2];
       srcData[i] = gray;
@@ -162,33 +174,59 @@ export function transform(
       srcData[i + 2] = gray;
     }
 
-    // Step 2: Perform Floyd-Steinberg Dithering
-    for (let y = 0; y < height; y++) {
-      for (let x = 0; x < width; x++) {
-        const pixelIdx = y * width + x;
-        const idx = pixelIdx * 4;
+    // Step 2: Perform Block-based Floyd-Steinberg Dithering
+    for (let by = 0; by < blocksH; by++) {
+      for (let bx = 0; bx < blocksW; bx++) {
+        const blockIdx = by * blocksW + bx;
 
-        const oldPixel = srcData[idx] + errorBuffer[pixelIdx];
-        const newPixel = oldPixel < 128 ? 0 : 255;
+        const startX = bx * dotSize;
+        const startY = by * dotSize;
+        const endX = Math.min(startX + dotSize, width);
+        const endY = Math.min(startY + dotSize, height);
 
-        srcData[idx] = newPixel;
-        srcData[idx + 1] = newPixel;
-        srcData[idx + 2] = newPixel;
+        // Compute average luminance across the current block
+        let sumLuminance = 0;
+        let pixelCount = 0;
+
+        for (let y = startY; y < endY; y++) {
+          for (let x = startX; x < endX; x++) {
+            const idx = (y * width + x) * 4;
+            sumLuminance += srcData[idx];
+            pixelCount++;
+          }
+        }
+
+        const avgLuminance = sumLuminance / pixelCount;
+        const oldPixel = avgLuminance + errorBuffer[blockIdx];
+        // Add noise to reduce muare (+-15..20%)
+        const jitter = (Math.random() - 0.75) * 30;
+        const threshold = 128 + jitter;
+        const newPixel = oldPixel < threshold ? 0 : 255;
+
+        // Fill the entire block with the resulting black or white value
+        for (let y = startY; y < endY; y++) {
+          for (let x = startX; x < endX; x++) {
+            const idx = (y * width + x) * 4;
+            srcData[idx] = newPixel;
+            srcData[idx + 1] = newPixel;
+            srcData[idx + 2] = newPixel;
+          }
+        }
 
         const error = oldPixel - newPixel;
 
-        // Distribute quantization error to neighboring pixels
-        if (x + 1 < width) {
-          errorBuffer[pixelIdx + 1] += error * (7 / 16);
+        // Propagate quantization error to neighboring blocks (Floyd-Steinberg weights)
+        if (bx + 1 < blocksW) {
+          errorBuffer[blockIdx + 1] += error * (7 / 16);
         }
-        if (x - 1 >= 0 && y + 1 < height) {
-          errorBuffer[pixelIdx + width - 1] += error * (3 / 16);
+        if (bx - 1 >= 0 && by + 1 < blocksH) {
+          errorBuffer[blockIdx + blocksW - 1] += error * (3 / 16);
         }
-        if (y + 1 < height) {
-          errorBuffer[pixelIdx + width] += error * (5 / 16);
+        if (by + 1 < blocksH) {
+          errorBuffer[blockIdx + blocksW] += error * (5 / 16);
         }
-        if (x + 1 < width && y + 1 < height) {
-          errorBuffer[pixelIdx + width + 1] += error * (1 / 16);
+        if (bx + 1 < blocksW && by + 1 < blocksH) {
+          errorBuffer[blockIdx + blocksW + 1] += error * (1 / 16);
         }
       }
     }
