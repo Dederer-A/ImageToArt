@@ -113,7 +113,7 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
           :model-value="workplace.currentVariant.layers['transform'].enabled"
           @update:model-value="updateLayerEnable('transform', $event)"
         >
-          <div class="flex items-center gap-2">
+          <div class="flex flex-wrap items-center gap-2">
             <Toggle
               variant="outline"
               size="sm"
