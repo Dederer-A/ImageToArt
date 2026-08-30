@@ -18,16 +18,17 @@ export class SquintLayer implements LayerEngine {
 export function squint(variantRuntime: VariantRuntime, src: ImageData, slider: number): ImageData {
   slider = Math.max(0, Math.min(100, slider));
 
-  if (slider === 0) {
-    return src;
-    // return new ImageData(new Uint8ClampedArray(src.data), src.width, src.height);
-  }
+  const MIN_SQUINT = 5; // minimal effect (slider = 0)
+  const MAX_SQUINT = 100; // maximum effect (slider = 100)
+
+  const t = slider / 100;
+  const value = MIN_SQUINT + (MAX_SQUINT - MIN_SQUINT) * t;
 
   let image = src;
 
-  image = stackblur(variantRuntime, image, slider);
-  image = contrast(variantRuntime, image, slider * 0.35);
-  image = saturation(variantRuntime, image, slider * 0.4);
+  image = stackblur(variantRuntime, image, value);
+  image = contrast(variantRuntime, image, value * 0.35);
+  image = saturation(variantRuntime, image, value * 0.4);
 
   return image;
 }
