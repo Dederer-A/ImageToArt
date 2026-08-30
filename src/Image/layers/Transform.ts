@@ -11,7 +11,7 @@ export class TransformLayer implements LayerEngine {
     falseColor: false,
     inverse: false,
     stippling: false,
-    stipplingSize: 1,
+    stipplingSize: 2,
   };
 
   render(_variantRuntime: VariantRuntime, src: ImageData, parameters: any): ImageData {

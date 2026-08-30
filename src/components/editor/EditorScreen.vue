@@ -36,7 +36,7 @@ function toggleUi() {
 }
 
 function toggleGrig() {
-  if (!workplace || !workplace.currentVariant) return;
+  if (!workplace || !workplace.currentVariant || workplace.currentVariant.isOriginal) return;
   workplace.updateLayerEnable('grid', !workplace.currentVariant.layers['grid'].enabled);
 }
 
@@ -79,7 +79,7 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
 
 <template>
   <div class="relative h-dvh w-full overflow-hidden bg-background">
-      <EditorCanvas :ui-visible="uiVisible" @click="toggleUi" @double-click="toggleGrig">
+    <EditorCanvas :ui-visible="uiVisible" @click="toggleUi" @double-click="toggleGrig">
       <template #viewport-overlay>
         <!-- Perspective Grid -->
         <!-- Crop Overlay -->
@@ -100,12 +100,13 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
     />
 
     <BottomToolPanel v-if="workplace.currentVariant" :visible="uiVisible" :height="30">
-      <div v-if="workplace.currentVariant.isOriginal" class="p-4">
-        <p class="text-lg pb-1">
+      <div v-if="workplace.currentVariant.isOriginal">
+        <p>
           <strong>{{ $t('toolbar.Original_Image_title') }}</strong>
         </p>
         <p>{{ $t('toolbar.Original_Image_description_1') }}</p>
         <p>{{ $t('toolbar.Original_Image_description_2') }}</p>
+        <p>{{ $t('toolbar.Original_Image_description_3') }}</p>
       </div>
       <ToolList v-else class="divide-y divide-border">
         <ToolRow
