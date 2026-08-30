@@ -336,7 +336,7 @@ export const useWorkplaceStore = defineStore('workplace', () => {
 
   async function loadDocument(documentId: string) {
     console.log('[WorkplaceStore] loadDocument()');
-    const doc = await Persistence.load(documentId);
+    const doc = await Persistence.load(documentId, layerRegistry);
     console.log(`[WorkplaceStore] loadDocument(): doc=${doc ? 'loaded' : 'null'}`);
     console.log(`[WorkplaceStore] loadDocument(): doc.imageData=${doc?.imageData ? 'exists' : 'null'}`);
     if (doc) {

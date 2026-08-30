@@ -15,18 +15,7 @@ export class PosterizeLayer implements LayerEngine {
 export function posterize(_variantRuntime: VariantRuntime, src: ImageData, slider: number): ImageData {
   slider = Math.max(0, Math.min(100, slider));
 
-  //   if (slider === 0) {
-  //     return new ImageData(new Uint8ClampedArray(src.data), src.width, src.height);
-  //   }
-
   const dst = src;
-  // const cacheName = 'posterize';
-  // let dst = variantRuntime.layerCache.get(cacheName);
-  // if (dst === undefined) {
-  //   dst = new ImageData(src.width, src.height);
-  //   variantRuntime.layerCache.set(cacheName, dst);
-  //   console.log('[PosterizeLayer] posterize(): cache miss, creating new ImageData');
-  // }
 
   const srcPixels = src.data;
   const dstPixels = dst.data;
@@ -35,15 +24,15 @@ export function posterize(_variantRuntime: VariantRuntime, src: ImageData, slide
   // Configuration
   // ------------------------------------------------------------
 
-  const MAX_LEVELS = 8; // original image
-  const MIN_LEVELS = 2; // strongest posterization
+  const MIN_LEVELS = 2; // strongest posterization (slider = 0)
+  const MAX_LEVELS = 8; // mildest posterization (slider = 100)
 
   // ------------------------------------------------------------
 
   const t = slider / 100;
 
-  // Linear interpolation
-  const levels = Math.round(MAX_LEVELS - (MAX_LEVELS - MIN_LEVELS) * t);
+  // Linear interpolation: 0 -> MIN_LEVELS, 100 -> MAX_LEVELS
+  const levels = Math.round(MIN_LEVELS + (MAX_LEVELS - MIN_LEVELS) * t);
 
   const step = 255 / (levels - 1);
 

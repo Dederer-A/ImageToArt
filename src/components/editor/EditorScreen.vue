@@ -290,6 +290,17 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
         </ToolRow>
 
         <ToolRow
+          :model-value="workplace.currentVariant.layers['inkHatching'].enabled"
+          @update:model-value="updateLayerEnable('inkHatching', $event)"
+          title="toolbar.inkHatching"
+        >
+          <SliderToolControl
+            :model-value="workplace.currentVariant.layers['inkHatching'].properties.value"
+            @update:model-value="updateLayerProperty('inkHatching', 'value', $event)"
+          />
+        </ToolRow>
+
+        <ToolRow
           :model-value="workplace.currentVariant.layers['squint'].enabled"
           @update:model-value="updateLayerEnable('squint', $event)"
           title="toolbar.Squint"

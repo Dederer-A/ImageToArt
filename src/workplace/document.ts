@@ -14,6 +14,7 @@ import { EdgeLayer } from '@/Image/layers/Edge';
 import { LevelsLayer } from '@/Image/layers/Levels';
 import { ThresholdLayer } from '@/Image/layers/Threshold';
 import { TransformLayer } from '@/Image/layers/Transform';
+import { InkHatchingLayer } from '@/Image/layers/InkHatchingFilter';
 
 export interface Document {
   id: string;
@@ -59,6 +60,7 @@ export class LayerRegistry {
     this.register(new LevelsLayer());
     this.register(new ThresholdLayer());
     this.register(new TransformLayer());
+    this.register(new InkHatchingLayer());
 
     this.list().forEach((layer: LayerEngine) => {
       console.log(`[LayerRegistry] ${layer.order} : ${layer.type}`);

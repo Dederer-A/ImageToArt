@@ -1,4 +1,4 @@
-import { type Document } from './document';
+import { LayerRegistry, type Document, type Layer } from './document';
 
 import { Capacitor } from '@capacitor/core';
 import { Directory, Encoding, Filesystem } from '@capacitor/filesystem';
@@ -192,7 +192,7 @@ export class Persistence {
    * The original JPG is loaded separately and converted
    * back into ImageData.
    */
-  static async load(id: string): Promise<Document | null> {
+  static async load(id: string, layerRegistry?: LayerRegistry): Promise<Document | null> {
     if (!this.isSupported()) {
       return null;
     }
@@ -212,10 +212,14 @@ export class Persistence {
 
       const imageData = await this.loadOriginalImageData(id);
 
-      return {
+      const document: Document = {
         ...serialized,
         imageData,
       };
+
+      this.reconcileDocumentLayers(document, layerRegistry);
+
+      return document;
     } catch (error) {
       console.error(`[Persistence] Failed to load document ${id}`, error);
 
@@ -444,6 +448,55 @@ export class Persistence {
 
   private static getJsonPath(id: string): string {
     return `${DOCUMENTS_DIRECTORY}/${id}${JSON_SUFFIX}`;
+  }
+
+  /**
+   * Reconciles layers across all variants of a loaded document with LayerRegistry.
+   *
+   * Ensures that:
+   * 1. Missing layer types registered in LayerRegistry are added with default state.
+   * 2. Obsolete layer types not present in LayerRegistry are removed.
+   * 3. Layers are ordered strictly according to LayerRegistry.list().
+   * 4. Existing layer configurations (enabled status and properties) are preserved.
+   */
+  private static reconcileDocumentLayers(document: Document, layerRegistry?: LayerRegistry): void {
+    let registry = layerRegistry;
+    if (!registry || registry.list().length === 0) {
+      registry = new LayerRegistry();
+      registry.initialize();
+    }
+
+    const activeEngines = registry.list();
+    if (!document.variants || !Array.isArray(document.variants)) {
+      return;
+    }
+
+    for (const variant of document.variants) {
+      const existingLayers = variant.layers || {};
+      const updatedLayers: Record<string, Layer> = {};
+
+      for (const engine of activeEngines) {
+        const existing = existingLayers[engine.type];
+        if (existing) {
+          updatedLayers[engine.type] = {
+            enabled: existing.enabled ?? false,
+            type: engine.type,
+            properties: {
+              ...engine.defaultProperties,
+              ...(existing.properties || {}),
+            },
+          };
+        } else {
+          updatedLayers[engine.type] = {
+            enabled: false,
+            type: engine.type,
+            properties: { ...engine.defaultProperties },
+          };
+        }
+      }
+
+      variant.layers = updatedLayers;
+    }
   }
 
   // ===========================================================================
