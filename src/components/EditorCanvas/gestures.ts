@@ -5,6 +5,7 @@ const DOUBLE_TAP_DELAY = 250; // Window to catch a second tap
 
 const CLICK_MOVE_THRESHOLD = 10;
 const DIRECTION_LOCK_DISTANCE = 20;
+const SWIPE_DOWN_THRESHOLD = 80; // Distance required to trigger a downward swipe
 
 const PREVIEW_FADE_DISTANCE = 200;
 const FLICK_VELOCITY = 0.6; // px/ms
@@ -32,6 +33,8 @@ export interface GestureOptions {
   onTap(): void;
 
   onDoubleTap?(): void; // Optional double-tap callback
+
+  onSwipeDown?(): void; // Optional swipe-down callback
 }
 
 export interface GestureController {
@@ -170,6 +173,14 @@ export function createGestures(options: GestureOptions): GestureController {
             dragStartPosition = options.getCurrentIndex();
             options.animator.beginDrag();
             options.animator.drag(dragStartPosition);
+          } else if (dy > Math.abs(dx) * 1.5 && dy > SWIPE_DOWN_THRESHOLD) {
+            clearHoldTimer();
+            
+            if (options.onSwipeDown) {
+              options.onSwipeDown();
+            }
+            
+            reset(e.currentTarget as HTMLElement);
           }
 
           return;

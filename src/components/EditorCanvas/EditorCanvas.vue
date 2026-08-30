@@ -20,6 +20,7 @@ withDefaults(
 const emit = defineEmits<{
   (e: 'click'): void;
   (e: 'double-click'): void;
+  (e: 'swipe-down'): void;
 }>();
 
 // -----------------------------------------------------------------------------
@@ -93,6 +94,10 @@ const gestures = createGestures({
 
   onDoubleTap() {
     emit('double-click');
+  },
+
+  onSwipeDown() {
+    emit('swipe-down');
   },
 });
 
