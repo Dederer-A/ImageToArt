@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
-import { Grid2x2, FlipHorizontal, FlipVertical, Contrast, Palette } from '@lucide/vue';
+import { Grid2x2, FlipHorizontal, FlipVertical, Contrast, Palette, Sparkles } from '@lucide/vue';
 
 import { Toggle } from '@/components/ui/toggle';
 
@@ -36,7 +36,7 @@ function toggleUi() {
 }
 
 function toggleGrig() {
-  if (!workplace || !workplace.currentVariant) return;
+  if (!workplace || !workplace.currentVariant || workplace.currentVariant.isOriginal) return;
   workplace.updateLayerEnable('grid', !workplace.currentVariant.layers['grid'].enabled);
 }
 
@@ -79,7 +79,7 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
 
 <template>
   <div class="relative h-dvh w-full overflow-hidden bg-background">
-    <EditorCanvas @click="toggleUi" @double-click="toggleGrig">
+    <EditorCanvas :ui-visible="uiVisible" @click="toggleUi" @double-click="toggleGrig">
       <template #viewport-overlay>
         <!-- Perspective Grid -->
         <!-- Crop Overlay -->
@@ -100,12 +100,13 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
     />
 
     <BottomToolPanel v-if="workplace.currentVariant" :visible="uiVisible" :height="30">
-      <div v-if="workplace.currentVariant.isOriginal" class="p-4">
-        <p class="text-lg pb-1">
+      <div v-if="workplace.currentVariant.isOriginal">
+        <p>
           <strong>{{ $t('toolbar.Original_Image_title') }}</strong>
         </p>
         <p>{{ $t('toolbar.Original_Image_description_1') }}</p>
         <p>{{ $t('toolbar.Original_Image_description_2') }}</p>
+        <p>{{ $t('toolbar.Original_Image_description_3') }}</p>
       </div>
       <ToolList v-else class="divide-y divide-border">
         <ToolRow
@@ -113,12 +114,12 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
           :model-value="workplace.currentVariant.layers['transform'].enabled"
           @update:model-value="updateLayerEnable('transform', $event)"
         >
-          <div class="flex items-center gap-2">
+          <div class="flex flex-wrap items-center gap-2">
             <Toggle
               variant="outline"
               size="sm"
               class="data-[state=on]:bg-black data-[state=on]:text-white shrink-0"
-              :pressed="workplace.currentVariant.layers['transform'].properties.mirrorHorizontal"
+              :model-value="workplace.currentVariant.layers['transform'].properties.mirrorHorizontal"
               @update:model-value="
                 updateLayerProperty('transform', 'mirrorHorizontal', $event);
                 updateLayerEnable(
@@ -126,7 +127,8 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
                   $event ||
                     workplace.currentVariant.layers['transform'].properties.mirrorVertical ||
                     workplace.currentVariant.layers['transform'].properties.falseColor ||
-                    workplace.currentVariant.layers['transform'].properties.inverse
+                    workplace.currentVariant.layers['transform'].properties.inverse ||
+                    workplace.currentVariant.layers['transform'].properties.stippling
                 );
               "
               aria-label="Toggle Mirror Horizontal"
@@ -137,7 +139,7 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
               variant="outline"
               size="sm"
               class="data-[state=on]:bg-black data-[state=on]:text-white shrink-0"
-              :pressed="workplace.currentVariant.layers['transform'].properties.mirrorVertical"
+              :model-value="workplace.currentVariant.layers['transform'].properties.mirrorVertical"
               @update:model-value="
                 updateLayerProperty('transform', 'mirrorVertical', $event);
                 updateLayerEnable(
@@ -145,7 +147,8 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
                   workplace.currentVariant.layers['transform'].properties.mirrorHorizontal ||
                     $event ||
                     workplace.currentVariant.layers['transform'].properties.falseColor ||
-                    workplace.currentVariant.layers['transform'].properties.inverse
+                    workplace.currentVariant.layers['transform'].properties.inverse ||
+                    workplace.currentVariant.layers['transform'].properties.stippling
                 );
               "
               aria-label="Toggle Mirror Vertical"
@@ -156,7 +159,7 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
               variant="outline"
               size="sm"
               class="data-[state=on]:bg-black data-[state=on]:text-white shrink-0"
-              :pressed="workplace.currentVariant.layers['transform'].properties.falseColor"
+              :model-value="workplace.currentVariant.layers['transform'].properties.falseColor"
               @update:model-value="
                 updateLayerProperty('transform', 'falseColor', $event);
                 updateLayerEnable(
@@ -164,7 +167,8 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
                   workplace.currentVariant.layers['transform'].properties.mirrorHorizontal ||
                     workplace.currentVariant.layers['transform'].properties.mirrorVertical ||
                     $event ||
-                    workplace.currentVariant.layers['transform'].properties.inverse
+                    workplace.currentVariant.layers['transform'].properties.inverse ||
+                    workplace.currentVariant.layers['transform'].properties.stippling
                 );
               "
               aria-label="Toggle False Color"
@@ -175,7 +179,7 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
               variant="outline"
               size="sm"
               class="data-[state=on]:bg-black data-[state=on]:text-white shrink-0"
-              :pressed="workplace.currentVariant.layers['transform'].properties.inverse"
+              :model-value="workplace.currentVariant.layers['transform'].properties.inverse"
               @update:model-value="
                 updateLayerProperty('transform', 'inverse', $event);
                 updateLayerEnable(
@@ -183,12 +187,33 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
                   workplace.currentVariant.layers['transform'].properties.mirrorHorizontal ||
                     workplace.currentVariant.layers['transform'].properties.mirrorVertical ||
                     workplace.currentVariant.layers['transform'].properties.falseColor ||
-                    $event
+                    $event ||
+                    workplace.currentVariant.layers['transform'].properties.stippling
                 );
               "
               aria-label="Toggle Inverse"
             >
               <Contrast class="h-4 w-4" />
+            </Toggle>
+            <Toggle
+              variant="outline"
+              size="sm"
+              class="data-[state=on]:bg-black data-[state=on]:text-white shrink-0"
+              :model-value="workplace.currentVariant.layers['transform'].properties.stippling"
+              @update:model-value="
+                updateLayerProperty('transform', 'stippling', $event);
+                updateLayerEnable(
+                  'transform',
+                  workplace.currentVariant.layers['transform'].properties.mirrorHorizontal ||
+                    workplace.currentVariant.layers['transform'].properties.mirrorVertical ||
+                    workplace.currentVariant.layers['transform'].properties.falseColor ||
+                    workplace.currentVariant.layers['transform'].properties.inverse ||
+                    $event
+                );
+              "
+              aria-label="Toggle Stippling"
+            >
+              <Sparkles class="h-4 w-4" />
             </Toggle>
           </div>
         </ToolRow>
@@ -314,11 +339,12 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
               variant="outline"
               size="sm"
               class="data-[state=on]:bg-black data-[state=on]:text-white shrink-0"
-              @click="
+              :model-value="workplace.currentVariant.layers['grid'].properties.proportional"
+              @update:model-value="
                 updateLayerProperty(
                   'grid',
                   'proportional',
-                  !workplace.currentVariant.layers['grid'].properties.proportional
+                  $event
                 )
               "
               aria-label="Toggle Proportional Grid"

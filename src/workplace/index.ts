@@ -42,6 +42,9 @@ export const useWorkplaceStore = defineStore('workplace', () => {
       throw new Error('[WorkplaceStore] variantImageDataByIndex: document or currentVariantIndex is null');
     const variantId = document.value.variants[index].id;
     const runtime = getVariantRuntime(variantId);
+    console.log(
+      `[WorkplaceStore] variantImageDataByIndex: variantId: ${variantId}, runtime: ${runtime}, renderedImageData: ${runtime.renderedImageData}`
+    );
     if (!runtime.renderedImageData) throw new Error('[WorkplaceStore] variantImageDataByIndex: runtime is null');
     return runtime.renderedImageData;
   }
@@ -144,12 +147,22 @@ export const useWorkplaceStore = defineStore('workplace', () => {
     console.log(
       `[WorkplaceStore] initializeDocument(): filename=${filename}, imageData=${imageData.width}x${imageData.height}`
     );
+    var editableVariantId = '';
     document.value = createDocumentObject(filename, imageData);
     document.value.variants.forEach((variant) => {
+      editableVariantId = variant.id;
       const runtime = new VariantRuntime(variant.id);
       variantRuntimes.value[variant.id] = runtime;
+      if (document.value) {
+        document.value.currentVariantId = editableVariantId;
+        // !!!!!!!!!
+        if (!document.value || !currentVariant.value || !currentVariantRuntime.value) return;
+        console.log(`[WorkplaceStore] imageProcess() ${currentVariantRuntime.value.variantId}`);
+        // TODO in case of the first Variant do need to render, just copy the source image data to the variant image data
+        ImageEngine.render(document.value.imageData, currentVariantRuntime.value);
+      }
     });
-    imageProcess();
+
     saveDocumentDebounced();
   }
 
@@ -249,6 +262,7 @@ export const useWorkplaceStore = defineStore('workplace', () => {
 
   function imageProcess() {
     if (!document.value || !currentVariant.value || !currentVariantRuntime.value) return;
+    console.log(`[WorkplaceStore] imageProcess() ${currentVariantRuntime.value.variantId}`);
     // TODO in case of the first Variant do need to render, just copy the source image data to the variant image data
     ImageEngine.processImageData(document.value.imageData, currentVariantRuntime.value);
   }

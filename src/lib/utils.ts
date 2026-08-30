@@ -41,6 +41,8 @@ export function resizeFileToImageData(file: File): Promise<ImageData> {
           reject(new Error('Could not get 2D canvas context'));
           return;
         }
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
         ctx.drawImage(img, 0, 0, width, height);
         const imageData = ctx.getImageData(0, 0, width, height);
         resolve(imageData);

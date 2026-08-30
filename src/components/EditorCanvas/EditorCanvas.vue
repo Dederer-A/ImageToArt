@@ -8,6 +8,15 @@ import { createGestures } from './gestures';
 
 const workplace = useWorkplaceStore();
 
+withDefaults(
+  defineProps<{
+    uiVisible?: boolean;
+  }>(),
+  {
+    uiVisible: true,
+  }
+);
+
 const emit = defineEmits<{
   (e: 'click'): void;
   (e: 'double-click'): void;
@@ -191,24 +200,34 @@ onBeforeUnmount(() => {
             height: viewportHeight + 'px',
           }"
         >
-          <canvas
-            v-if="
-              index === workplace.currentVariantIndex ||
-              index === workplace.currentVariantIndex - 1 ||
-              index === workplace.currentVariantIndex + 1
-            "
-            :ref="(el) => registerVariantCanvas(index, el)"
-            class="absolute left-1/2 top-1/2 block max-h-full max-w-full"
-            style="transform: translate(-50%, -50%)"
-          />
+          <div
+            class="absolute inset-x-0 transition-all duration-300 ease-in-out"
+            :class="[uiVisible ? 'top-[3.5rem] bottom-[30dvh]' : 'top-0 bottom-0']"
+          >
+            <canvas
+              v-if="
+                index === workplace.currentVariantIndex ||
+                index === workplace.currentVariantIndex - 1 ||
+                index === workplace.currentVariantIndex + 1
+              "
+              :ref="(el) => registerVariantCanvas(index, el)"
+              class="absolute left-1/2 top-1/2 block max-h-full max-w-full"
+              style="transform: translate(-50%, -50%); image-rendering: smooth"
+            />
+          </div>
         </div>
       </div>
 
-      <canvas
-        ref="originalCanvasRef"
-        class="pointer-events-none absolute left-1/2 top-1/2 block max-h-full max-w-full"
-        style="transform: translate(-50%, -50%); opacity: 0"
-      />
+      <div
+        class="absolute inset-x-0 pointer-events-none transition-all duration-300 ease-in-out"
+        :class="[uiVisible ? 'top-[3.5rem] bottom-[30dvh]' : 'top-0 bottom-0']"
+      >
+        <canvas
+          ref="originalCanvasRef"
+          class="absolute left-1/2 top-1/2 block max-h-full max-w-full"
+          style="transform: translate(-50%, -50%); opacity: 0"
+        />
+      </div>
       <!--
       <svg
         ref="rulersSvgRef"
@@ -230,4 +249,10 @@ onBeforeUnmount(() => {
       <slot name="screen-overlay" />
     </div>
   </main>
-</template>
+  <!--
+canvas {
+  image-rendering: auto;
+  image-rendering: smooth;
+  image-rendering: -webkit-optimize-contrast;
+}
+--></template>

@@ -60,7 +60,7 @@ const canReset = computed(() => {
   >
     <header
       v-if="visible"
-      class="safe-top absolute inset-x-0 top-0 z-20 flex items-center justify-between border-b border-border bg-background/80 backdrop-blur-xl px-4 py-2"
+      class="absolute inset-x-0 top-0 z-20 flex h-14 items-center justify-between border-b border-border bg-background/80 px-4 backdrop-blur-xl"
     >
       <!-- Left group -->
       <Button variant="ghost" size="icon" @click="emit('back')">

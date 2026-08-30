@@ -525,6 +525,8 @@ async function imageDataToJpegBlob(imageData: ImageData, quality: number, maxSiz
   if (!context) {
     throw new Error('Cannot create 2D canvas context');
   }
+  context.imageSmoothingEnabled = true;
+  context.imageSmoothingQuality = 'high';
 
   if (width === imageData.width && height === imageData.height) {
     context.putImageData(imageData, 0, 0);
@@ -540,6 +542,8 @@ async function imageDataToJpegBlob(imageData: ImageData, quality: number, maxSiz
     if (!sourceContext) {
       throw new Error('Cannot create source canvas context');
     }
+    sourceContext.imageSmoothingEnabled = true;
+    sourceContext.imageSmoothingQuality = 'high';
 
     sourceContext.putImageData(imageData, 0, 0);
 
@@ -623,6 +627,8 @@ async function blobToImageData(blob: Blob): Promise<ImageData> {
       throw new Error('Cannot create 2D canvas context');
     }
 
+    context.imageSmoothingEnabled = true;
+    context.imageSmoothingQuality = 'high';
     context.drawImage(bitmap, 0, 0);
 
     return context.getImageData(0, 0, bitmap.width, bitmap.height);
