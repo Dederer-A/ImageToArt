@@ -202,7 +202,7 @@ onBeforeUnmount(() => {
         >
           <div
             class="absolute inset-x-0 transition-all duration-300 ease-in-out"
-            :class="[uiVisible ? 'top-[calc(3.5rem+env(safe-area-inset-top)+16px)] bottom-[30dvh]' : 'top-0 bottom-0']"
+            :class="[uiVisible ? 'top-[calc(3.5rem+env(safe-area-inset-top))] bottom-[30dvh]' : 'top-0 bottom-0']"
           >
             <canvas
               v-if="
@@ -220,7 +220,7 @@ onBeforeUnmount(() => {
 
       <div
         class="absolute inset-x-0 pointer-events-none transition-all duration-300 ease-in-out"
-        :class="[uiVisible ? 'top-[calc(3.5rem+env(safe-area-inset-top)+16px)] bottom-[30dvh]' : 'top-0 bottom-0']"
+        :class="[uiVisible ? 'top-[calc(3.5rem+env(safe-area-inset-top))] bottom-[30dvh]' : 'top-0 bottom-0']"
       >
         <canvas
           ref="originalCanvasRef"
