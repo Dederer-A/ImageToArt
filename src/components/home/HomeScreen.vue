@@ -21,7 +21,8 @@ const openSourceOpen = ref(false);
 </script>
 
 <template>
-  <div class="h-dvh flex flex-col items-center justify-center px-8 text-center">
+  <div class="h-full w-full relative">
+    <div class="h-dvh flex flex-col items-center justify-center px-8 text-center">
     <div class="space-y-3">
       <h1 class="text-4xl font-bold">Image to Art</h1>
 
@@ -63,4 +64,5 @@ const openSourceOpen = ref(false);
   <DisclaimerModal v-model:open="disclaimerOpen" />
   <PrivacyModal v-model:open="privacyOpen" />
   <OpenSourceModal v-model:open="openSourceOpen" />
+  </div>
 </template>

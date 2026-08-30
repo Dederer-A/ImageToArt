@@ -37,23 +37,38 @@ const openSourceOpen = ref(false);
 const updateModalOpen = ref(false);
 const versionInfo = ref<VersionInfo | null>(null);
 
+const scrollContainer = ref<HTMLElement | null>(null);
+
+// Persist scroll position across mounts
+const savedScrollPosition = sessionStorage.getItem('galleryScrollPosition') || '0';
+
 onMounted(async () => {
+  if (scrollContainer.value) {
+    scrollContainer.value.scrollTop = parseInt(savedScrollPosition, 10);
+  }
+
   await UpdateService.checkAndShowUpdate((info) => {
     versionInfo.value = info;
     updateModalOpen.value = true;
   });
 });
+
+function handleScroll(e: Event) {
+  const target = e.target as HTMLElement;
+  sessionStorage.setItem('galleryScrollPosition', target.scrollTop.toString());
+}
 </script>
 
 <template>
-  <div class="h-dvh flex flex-col justify-between px-6 py-8">
+  <div class="h-full w-full relative">
+    <div class="h-dvh flex flex-col justify-between px-6 py-8">
     <div class="space-y-2 text-center">
       <h1 class="text-3xl font-bold">{{ $t('common.gallery.Title') }}</h1>
       <p class="text-muted-foreground">{{ $t('common.gallery.Description') }}</p>
     </div>
 
     <!-- Scrollable gallery -->
-    <div class="flex-1 min-h-0 my-6 overflow-y-auto">
+    <div ref="scrollContainer" class="flex-1 min-h-0 my-6 overflow-y-auto" @scroll="handleScroll">
       <div class="grid grid-cols-3 gap-3 content-start">
         <div
           v-for="img in images"
@@ -116,4 +131,5 @@ onMounted(async () => {
     :version="versionInfo?.version ?? 0"
     :updates="versionInfo?.updates ?? []"
   />
+  </div>
 </template>
