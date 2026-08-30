@@ -119,7 +119,7 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
               variant="outline"
               size="sm"
               class="data-[state=on]:bg-black data-[state=on]:text-white shrink-0"
-              :pressed="workplace.currentVariant.layers['transform'].properties.mirrorHorizontal"
+              :model-value="workplace.currentVariant.layers['transform'].properties.mirrorHorizontal"
               @update:model-value="
                 updateLayerProperty('transform', 'mirrorHorizontal', $event);
                 updateLayerEnable(
@@ -139,7 +139,7 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
               variant="outline"
               size="sm"
               class="data-[state=on]:bg-black data-[state=on]:text-white shrink-0"
-              :pressed="workplace.currentVariant.layers['transform'].properties.mirrorVertical"
+              :model-value="workplace.currentVariant.layers['transform'].properties.mirrorVertical"
               @update:model-value="
                 updateLayerProperty('transform', 'mirrorVertical', $event);
                 updateLayerEnable(
@@ -159,7 +159,7 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
               variant="outline"
               size="sm"
               class="data-[state=on]:bg-black data-[state=on]:text-white shrink-0"
-              :pressed="workplace.currentVariant.layers['transform'].properties.falseColor"
+              :model-value="workplace.currentVariant.layers['transform'].properties.falseColor"
               @update:model-value="
                 updateLayerProperty('transform', 'falseColor', $event);
                 updateLayerEnable(
@@ -179,7 +179,7 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
               variant="outline"
               size="sm"
               class="data-[state=on]:bg-black data-[state=on]:text-white shrink-0"
-              :pressed="workplace.currentVariant.layers['transform'].properties.inverse"
+              :model-value="workplace.currentVariant.layers['transform'].properties.inverse"
               @update:model-value="
                 updateLayerProperty('transform', 'inverse', $event);
                 updateLayerEnable(
@@ -199,7 +199,7 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
               variant="outline"
               size="sm"
               class="data-[state=on]:bg-black data-[state=on]:text-white shrink-0"
-              :pressed="workplace.currentVariant.layers['transform'].properties.stippling"
+              :model-value="workplace.currentVariant.layers['transform'].properties.stippling"
               @update:model-value="
                 updateLayerProperty('transform', 'stippling', $event);
                 updateLayerEnable(
@@ -339,11 +339,12 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
               variant="outline"
               size="sm"
               class="data-[state=on]:bg-black data-[state=on]:text-white shrink-0"
-              @click="
+              :model-value="workplace.currentVariant.layers['grid'].properties.proportional"
+              @update:model-value="
                 updateLayerProperty(
                   'grid',
                   'proportional',
-                  !workplace.currentVariant.layers['grid'].properties.proportional
+                  $event
                 )
               "
               aria-label="Toggle Proportional Grid"
