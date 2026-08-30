@@ -37,12 +37,26 @@ const openSourceOpen = ref(false);
 const updateModalOpen = ref(false);
 const versionInfo = ref<VersionInfo | null>(null);
 
+const scrollContainer = ref<HTMLElement | null>(null);
+
+// Persist scroll position across mounts
+const savedScrollPosition = sessionStorage.getItem('galleryScrollPosition') || '0';
+
 onMounted(async () => {
+  if (scrollContainer.value) {
+    scrollContainer.value.scrollTop = parseInt(savedScrollPosition, 10);
+  }
+
   await UpdateService.checkAndShowUpdate((info) => {
     versionInfo.value = info;
     updateModalOpen.value = true;
   });
 });
+
+function handleScroll(e: Event) {
+  const target = e.target as HTMLElement;
+  sessionStorage.setItem('galleryScrollPosition', target.scrollTop.toString());
+}
 </script>
 
 <template>
@@ -53,7 +67,7 @@ onMounted(async () => {
     </div>
 
     <!-- Scrollable gallery -->
-    <div class="flex-1 min-h-0 my-6 overflow-y-auto">
+    <div ref="scrollContainer" class="flex-1 min-h-0 my-6 overflow-y-auto" @scroll="handleScroll">
       <div class="grid grid-cols-3 gap-3 content-start">
         <div
           v-for="img in images"
