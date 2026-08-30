@@ -79,7 +79,7 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
 
 <template>
   <div class="relative h-dvh w-full overflow-hidden bg-background">
-    <EditorCanvas @click="toggleUi" @double-click="toggleGrig">
+      <EditorCanvas :ui-visible="uiVisible" @click="toggleUi" @double-click="toggleGrig">
       <template #viewport-overlay>
         <!-- Perspective Grid -->
         <!-- Crop Overlay -->
