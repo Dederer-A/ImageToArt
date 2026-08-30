@@ -91,18 +91,34 @@ async function goBack() {
 </script>
 
 <template>
-  <main class="absolute inset-0 pt-safe-top pb-safe-bottom">
-    <EditorScreen v-if="currentDocumentId" :image="currentDocumentId" @go-back="goBack" />
+  <main class="absolute inset-0 pt-safe-top pb-safe-bottom bg-background grid">
+    <Transition name="fade">
+      <EditorScreen v-if="currentDocumentId" :key="'editor'" :image="currentDocumentId" @go-back="goBack" />
 
-    <GalleryScreen
-      v-else-if="imagesList.length > 0"
-      :images="imagesList"
-      @upload="selectImage"
-      @select="onSelectImage"
-    />
+      <GalleryScreen
+        v-else-if="imagesList.length > 0"
+        :key="'gallery'"
+        :images="imagesList"
+        @upload="selectImage"
+        @select="onSelectImage"
+      />
 
-    <HomeScreen v-else @upload="selectImage" />
+      <HomeScreen v-else :key="'home'" @upload="selectImage" />
+    </Transition>
 
     <input ref="fileInput" type="file" accept="image/*" class="hidden" @change="onFileSelected" />
   </main>
 </template>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease-in-out;
+  grid-area: 1 / 1;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>

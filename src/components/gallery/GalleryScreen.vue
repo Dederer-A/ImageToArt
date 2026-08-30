@@ -60,7 +60,8 @@ function handleScroll(e: Event) {
 </script>
 
 <template>
-  <div class="h-dvh flex flex-col justify-between px-6 py-8">
+  <div class="h-full w-full relative">
+    <div class="h-dvh flex flex-col justify-between px-6 py-8">
     <div class="space-y-2 text-center">
       <h1 class="text-3xl font-bold">{{ $t('common.gallery.Title') }}</h1>
       <p class="text-muted-foreground">{{ $t('common.gallery.Description') }}</p>
@@ -130,4 +131,5 @@ function handleScroll(e: Event) {
     :version="versionInfo?.version ?? 0"
     :updates="versionInfo?.updates ?? []"
   />
+  </div>
 </template>
