@@ -23,7 +23,7 @@ const hasControl = computed(() => !!slots.default);
       <Switch v-model="isEnabled" />
     </div>
 
-    <div class="w-35 shrink-0 truncate text-sm font-medium h-8 flex items-center">
+    <div class="w-25 shrink-0 truncate text-sm font-medium h-8 flex items-center">
       <div class="text-sm font-medium leading-none">{{ $t(title) }}</div>
     </div>
 
