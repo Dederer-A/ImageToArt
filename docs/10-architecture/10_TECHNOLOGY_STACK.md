@@ -417,12 +417,7 @@ Git
 
 Hosted on GitHub.
 
-Development workflow uses:
-
-- GitHub Issues
-- GitHub Projects
-- Pull Requests
-- Code Reviews
+Only user can commit / push and create MR's.
 
 ---
 
