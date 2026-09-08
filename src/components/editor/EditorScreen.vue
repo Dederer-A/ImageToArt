@@ -288,7 +288,7 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
             @update:model-value="updateLayerProperty('posterize', 'value', $event)"
           />
         </ToolRow>
-
+<!--
         <ToolRow
           :model-value="workplace.currentVariant.layers['inkHatching'].enabled"
           @update:model-value="updateLayerEnable('inkHatching', $event)"
@@ -298,7 +298,7 @@ function updateLayerEnable(layerType: string, event: boolean | undefined) {
             :model-value="workplace.currentVariant.layers['inkHatching'].properties.value"
             @update:model-value="updateLayerProperty('inkHatching', 'value', $event)"
           />
-        </ToolRow>
+        </ToolRow> -->
 
         <ToolRow
           :model-value="workplace.currentVariant.layers['squint'].enabled"
